@@ -16,9 +16,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.shortcuts import redirect
+from django.shortcuts import render
 from django.conf import settings
 from django.conf.urls.static import static
+from auctions.models import Auction
+from django.db.models import Count
+from django.db.models import Q
+
+def homepage(request):
+    query = request.GET.get('search', '').strip()
+    auctions = Auction.objects.filter(is_active=True)
+    if query:
+        auctions = auctions.filter(Q(title__icontains=query) | Q(description__icontains=query))
+    auctions = auctions.order_by('-created_at')
+    categories = Auction.objects.values('id', 'title').annotate(count=Count('id'))[:5]  # Placeholder for categories
+    return render(request, 'home.html', {'auctions': auctions, 'categories': categories, 'search_query': query})
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,7 +41,7 @@ urlpatterns = [
     path('notifications/', include('notifications.urls')),
     path('payments/', include('payments.urls')),
     path('newsletter-signup/', include('newsletter.urls')),
-    path('', lambda request: redirect('auction_list'), name='home'),
+    path('', homepage, name='home'),
 ]
 
 if settings.DEBUG:
