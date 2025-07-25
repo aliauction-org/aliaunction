@@ -1,38 +1,83 @@
 {% extends 'base.html' %}
 {% block content %}
-  <h2>Payment History</h2>
-  
-  <h3>Payments Made</h3>
-  <ul>
-    {% for payment in payments_made %}
-      <li>
-        {{ payment.auction.title }} - INR {{ payment.amount }} - {{ payment.status }} - {{ payment.created_at }}
-        {% if payment.screenshot %}
-          <a href="{{ payment.screenshot.url }}" target="_blank">View Screenshot</a>
+  <div class="card" style="max-width:1100px;margin:2rem auto;padding:2.5rem 2rem;">
+    <h2 style="text-align:center;margin-bottom:2rem;">Payment History</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:2.5rem;justify-content:space-between;">
+      <div style="flex:1;min-width:320px;">
+        <h3 style="margin-bottom:1rem;">Payments Made</h3>
+        {% if payments_made %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Auction</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Screenshot</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for payment in payments_made %}
+            <tr>
+              <td>{{ payment.auction.title }}</td>
+              <td>₹{{ payment.amount }}</td>
+              <td>{{ payment.status|title }}</td>
+              <td>{{ payment.created_at|date:'M d, Y H:i' }}</td>
+              <td>
+                {% if payment.screenshot %}
+                  <a href="{{ payment.screenshot.url }}" target="_blank" style="color:#3a8dde;font-weight:500;">View</a>
+                {% else %}-{% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+          <div style="color:#b0b6d6;">No payments made yet.</div>
         {% endif %}
-      </li>
-    {% empty %}
-      <li>No payments made yet.</li>
-    {% endfor %}
-  </ul>
-
-  <h3>Payments Received</h3>
-  <ul>
-    {% for payment in payments_received %}
-      <li>
-        {{ payment.auction.title }} - INR {{ payment.amount }} - {{ payment.status }} - {{ payment.created_at }}
-        {% if payment.screenshot %}
-          <a href="{{ payment.screenshot.url }}" target="_blank">View Screenshot</a>
+      </div>
+      <div style="flex:1;min-width:320px;">
+        <h3 style="margin-bottom:1rem;">Payments Received</h3>
+        {% if payments_received %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Auction</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Screenshot</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for payment in payments_received %}
+            <tr>
+              <td>{{ payment.auction.title }}</td>
+              <td>₹{{ payment.amount }}</td>
+              <td>{{ payment.status|title }}</td>
+              <td>{{ payment.created_at|date:'M d, Y H:i' }}</td>
+              <td>
+                {% if payment.screenshot %}
+                  <a href="{{ payment.screenshot.url }}" target="_blank" style="color:#3a8dde;font-weight:500;">View</a>
+                {% else %}-{% endif %}
+              </td>
+              <td>
+                {% if payment.status == 'pending' %}
+                  <form method="post" action="{% url 'confirm_payment_received' payment.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Confirm</button>
+                  </form>
+                {% else %}-{% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+          <div style="color:#b0b6d6;">No payments received yet.</div>
         {% endif %}
-        {% if payment.status == 'pending' %}
-          <form method="post" action="{% url 'confirm_payment_received' payment.id %}" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit">Confirm Payment</button>
-          </form>
-        {% endif %}
-      </li>
-    {% empty %}
-      <li>No payments received yet.</li>
-    {% endfor %}
-  </ul>
+      </div>
+    </div>
+  </div>
 {% endblock %} 

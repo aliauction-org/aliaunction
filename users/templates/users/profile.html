@@ -1,16 +1,28 @@
 {% extends 'base.html' %}
 {% block content %}
-  <h2>Profile</h2>
-  <p><strong>Username:</strong> {{ user.username }}</p>
-  <p><strong>Email:</strong> {{ user.email }}</p>
-  <p><a href="{% url 'password_reset' %}">Change Password</a></p>
-  <h3>Bid History</h3>
-  <ul>
-    {% for bid in bids %}
-      <li>{{ bid.auction.title }}: ${{ bid.amount }} at {{ bid.timestamp }}</li>
-    {% empty %}
-      <li>No bids yet.</li>
-    {% endfor %}
-  </ul>
-  <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Logout</button></form>
+<div class="card" style="max-width:600px;margin:2rem auto;padding:2.5rem 2rem;">
+  <h2 style="text-align:center;margin-bottom:2rem;">Profile</h2>
+  <div style="display:flex;flex-wrap:wrap;gap:2rem;align-items:flex-start;justify-content:space-between;">
+    <div style="flex:1;min-width:220px;">
+      <div style="font-size:1.1rem;margin-bottom:1.2rem;"><strong>Username:</strong> {{ user.username }}</div>
+      <div style="font-size:1.1rem;margin-bottom:1.2rem;"><strong>Email:</strong> {{ user.email }}</div>
+      <div style="margin-bottom:1.5rem;">
+        <a href="{% url 'password_reset' %}" style="color:#3a8dde;font-weight:600;text-decoration:none;">Change Password</a>
+      </div>
+      <form method="post" action="{% url 'logout' %}">{% csrf_token %}
+        <button type="submit" style="background:linear-gradient(90deg,#3a8dde,#7ecbff);color:#fff;font-weight:600;font-size:1.05rem;border-radius:2rem;padding:0.6rem 2.2rem;box-shadow:0 2px 8px 0 rgba(49,130,206,0.10);border:none;cursor:pointer;">Logout</button>
+      </form>
+    </div>
+    <div style="flex:2;min-width:220px;">
+      <h3 style="margin-bottom:1rem;">Bid History</h3>
+      <ul style="padding-left:1.2rem;">
+        {% for bid in bids %}
+          <li style="margin-bottom:0.7rem;"><span style="font-weight:500;color:#7ecbff;">{{ bid.auction.title }}</span>: ₹{{ bid.amount }} <span style="color:#b0b6d6;font-size:0.97rem;">at {{ bid.timestamp }}</span></li>
+        {% empty %}
+          <li style="color:#b0b6d6;">No bids yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
 {% endblock %} 

@@ -1,15 +1,24 @@
 {% extends 'base.html' %}
 {% block content %}
-  <h2>Payment Profile</h2>
-  <p>Set up your payment details for receiving payouts from auctions.</p>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save Payment Profile</button>
-  </form>
-  {% if messages %}
-    {% for message in messages %}
-      <div>{{ message }}</div>
-    {% endfor %}
-  {% endif %}
+  <div class="card" style="max-width:520px;margin:2rem auto;padding:2.5rem 2rem;">
+    <h2 style="text-align:center;margin-bottom:0.7rem;">Payment Profile</h2>
+    <div style="color:#7ecbff;text-align:center;margin-bottom:1.5rem;">Set up your payment details to receive auction payouts securely.</div>
+    <form method="post" enctype="multipart/form-data" style="display:flex;flex-direction:column;gap:1.2rem;">
+      {% csrf_token %}
+      {% for field in form %}
+        <div style="display:flex;flex-direction:column;gap:0.3rem;">
+          <label for="{{ field.id_for_label }}" style="font-weight:600;color:#e6e9f0;font-size:1.08rem;">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}<small style="color:#b0b6d6;">{{ field.help_text }}</small>{% endif %}
+          {% for error in field.errors %}<div class="alert">{{ error }}</div>{% endfor %}
+        </div>
+      {% endfor %}
+      <button type="submit" style="margin-top:1rem;">Save Payment Profile</button>
+    </form>
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert" style="margin-top:1rem;">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  </div>
 {% endblock %} 

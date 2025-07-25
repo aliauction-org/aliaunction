@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Aliaunction</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>AuctionVistas</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
     <nav>
@@ -11,8 +12,8 @@
             <li><a href="{% url 'auction_list' %}">Auction Listings</a></li>
             {% if user.is_authenticated %}
                 <li>
-                  <a href="#" id="notification-bell">🔔 <span id="notification-count" style="color:red;"></span></a>
-                  <div id="notification-dropdown" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; z-index:1000; min-width:250px;"></div>
+                  <a href="#" id="notification-bell">🔔 <span id="notification-count" style="color:#ff4b6e;"></span></a>
+                  <div id="notification-dropdown" style="display:none; position:absolute; background:#23284a; border:1px solid #3a8dde; z-index:1000; min-width:250px;"></div>
                 </li>
                 <li><a href="{% url 'create_auction' %}">Create Auction</a></li>
                 <li><a href="{% url 'profile' %}">Profile</a></li>
@@ -27,8 +28,85 @@
             <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
         </ul>
     </nav>
-    <hr>
-    {% block content %}{% endblock %}
+    <div class="header-gradient">
+        Item (Auctions)
+    </div>
+    <div class="container">
+        <div class="live-auctions-title">
+            <span style="font-size:1.5rem; color:#ff4b6e;">●</span> Live Auctions
+        </div>
+        <div class="live-auctions-desc">Discover and bid on unique items from trusted sellers in real time.</div>
+        <div class="auction-grid">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    <div class="newsletter">
+        <div>
+            <h2>Stay Ahead with AuctionVistas</h2>
+            <div>Get the latest updates on live auctions, exclusive items, and bidding tips delivered to your inbox.</div>
+            <form method="post" action="{% url 'newsletter_signup' %}" style="margin-top:1rem; display:flex; align-items:center;">
+                {% csrf_token %}
+                <input type="email" name="email" placeholder="Your email address" required>
+                <button type="submit">Subscribe</button>
+            </form>
+            {% if newsletter_message %}
+                <div class="alert" style="margin-top:0.7rem;">{{ newsletter_message }}</div>
+            {% endif %}
+            <div style="font-size:0.95rem; margin-top:0.5rem;">Join our community of passionate bidders and sellers!</div>
+        </div>
+        <div>
+            <!-- Placeholder for newsletter illustration -->
+            <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="120" height="120" rx="24" fill="url(#paint0_linear)"/>
+                <defs>
+                <linearGradient id="paint0_linear" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#3a8dde"/>
+                <stop offset="1" stop-color="#7ecbff"/>
+                </linearGradient>
+                </defs>
+            </svg>
+        </div>
+    </div>
+    <footer>
+        <div class="footer-content">
+            <div>
+                <h3>AuctionVistas</h3>
+                <div style="max-width:260px; color:#b0b6d6; font-size:0.95rem;">AuctionVistas is your trusted platform for discovering, bidding, and winning unique items. Experience secure transactions, real-time updates, and a vibrant auction community.</div>
+                <div style="margin-top:1rem;">
+                    <a href="#"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twitter.svg" width="22" style="margin-right:8px;filter:invert(0.7);"></a>
+                    <a href="#"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg" width="22" style="margin-right:8px;filter:invert(0.7);"></a>
+                    <a href="#"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/instagram.svg" width="22" style="filter:invert(0.7);"></a>
+                </div>
+            </div>
+            <div>
+                <h3>Marketplace</h3>
+                <ul>
+                    <li><a href="#">Live Auctions</a></li>
+                    <li><a href="#">Upcoming Items</a></li>
+                    <li><a href="#">Sell with Us</a></li>
+                    <li><a href="#">Categories</a></li>
+                    <li><a href="#">How It Works</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Buyer & Seller Guides</a></li>
+                    <li><a href="#">Safe Bidding Tips</a></li>
+                    <li><a href="#">Contact Support</a></li>
+                    <li><a href="#">Terms & Privacy</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3>Latest News</h3>
+                <ul>
+                    <li>How to Win Your First Auction</li>
+                    <li>Spotlight: Rare Finds of the Month</li>
+                </ul>
+            </div>
+        </div>
+    </footer>
     <script>
   function fetchNotifications() {
     fetch('/notifications/api/unread/')

@@ -1,14 +1,48 @@
 {% extends 'base.html' %}
 {% block content %}
-  <h2>Contact Us</h2>
-  {% if messages %}
-    {% for message in messages %}
-      <div>{{ message }}</div>
-    {% endfor %}
-  {% endif %}
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Send</button>
-  </form>
+<div style="display:flex;justify-content:center;align-items:center;min-height:60vh;background:#f5f7fa;border-radius:24px;padding:2rem 0;box-shadow:0 2px 24px 0 rgba(44,62,80,0.06);margin:2rem 0;gap:3rem;flex-wrap:wrap;">
+  <div style="flex:1;min-width:270px;max-width:400px;padding:2rem 1rem;">
+    <div style="color:#7ecbff;font-size:0.95rem;letter-spacing:1px;">WE'RE HERE TO HELP YOU</div>
+    <div style="font-size:2.1rem;font-weight:700;color:#23284a;margin:0.7rem 0 0.5rem 0;line-height:1.1;">
+      <span style="color:#23284a;">Discuss</span> Your <br>Chemical Solution Needs
+    </div>
+    <div style="color:#6b7280;font-size:1rem;margin-bottom:2rem;">Are you looking for top-quality chemical solutions tailored to your needs? Reach out to us.</div>
+    <div style="display:flex;align-items:center;gap:0.7rem;margin-bottom:1rem;">
+      <span style="background:#e6f4ff;padding:0.5rem;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;"><svg width="20" height="20" fill="#3a8dde" viewBox="0 0 24 24"><path d="M2 4v16h20V4H2zm18 14H4V6h16v12zm-8-2c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></span>
+      <div>
+        <div style="font-size:0.95rem;color:#6b7280;">E-mail</div>
+        <div style="font-weight:500;color:#23284a;">support@auctionvistas.com</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.7rem;">
+      <span style="background:#e6f4ff;padding:0.5rem;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;"><svg width="20" height="20" fill="#3a8dde" viewBox="0 0 24 24"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.11-.21c1.21.49 2.53.76 3.88.76a1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 5a1 1 0 011-1h3.5a1 1 0 011 1c0 1.35.27 2.67.76 3.88a1 1 0 01-.21 1.11l-2.2 2.2z"/></svg></span>
+      <div>
+        <div style="font-size:0.95rem;color:#6b7280;">Phone number</div>
+        <div style="font-weight:500;color:#23284a;">+91 98765 43210</div>
+      </div>
+    </div>
+  </div>
+  <div style="flex:1;min-width:320px;max-width:420px;">
+    <form method="post" style="background:#fff;border-radius:24px;box-shadow:0 2px 24px 0 rgba(44,62,80,0.10);padding:2.2rem 2rem;display:flex;flex-direction:column;gap:1.2rem;">
+      {% csrf_token %}
+      {% for field in form %}
+        <div style="display:flex;flex-direction:column;gap:0.3rem;">
+          <label for="{{ field.id_for_label }}" style="font-weight:500;color:#23284a;">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}<small style="color:#b0b6d6;">{{ field.help_text }}</small>{% endif %}
+          {% for error in field.errors %}<div class="alert">{{ error }}</div>{% endfor %}
+        </div>
+      {% endfor %}
+      <button type="submit" style="margin-top:1rem;background:linear-gradient(90deg,#3a8dde,#7ecbff);color:#fff;font-weight:600;font-size:1.1rem;border-radius:2rem;padding:0.7rem 0;box-shadow:0 2px 8px 0 rgba(49,130,206,0.10);display:flex;align-items:center;justify-content:center;gap:0.7rem;">
+        <span>Send Message</span>
+        <svg width="22" height="22" fill="#fff" viewBox="0 0 24 24"><path d="M2 21l21-9-21-9v7l15 2-15 2z"/></svg>
+      </button>
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert" style="margin-top:1rem;">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    </form>
+  </div>
+</div>
 {% endblock %} 

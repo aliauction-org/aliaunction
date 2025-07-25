@@ -1,7 +1,7 @@
-# Aliaunction: Online Auction System
+# AuctionVistas: Online Auction System
 
 ## Overview
-Aliaunction is a full-featured online auction platform built with Django, designed for real-time, secure, and user-friendly bidding, payments, and management. It supports manual payment flows, in-app and email notifications, reviews, and a robust admin dashboard.
+AuctionVistas is a full-featured online auction platform built with Django, designed for real-time, secure, and user-friendly bidding, payments, and management. It supports manual payment flows, in-app and email notifications, reviews, and a robust admin dashboard.
 
 ---
 
@@ -11,6 +11,7 @@ Aliaunction is a full-featured online auction platform built with Django, design
 - **Auction Listing & Bidding**: Create auctions, upload images, real-time bidding (AJAX polling), Indian currency formatting.
 - **Manual Payment Integration**: Platform and user payment profiles (bank, UPI, QR), payment proof uploads, admin/seller verification.
 - **Notifications**: In-app (real-time, AJAX) and email notifications for outbid, auction won, auction ended, etc.
+- **Newsletter Signup**: Users can subscribe to auction updates via the newsletter form in the footer. Emails are securely stored and manageable via the Django admin.
 - **Ratings & Reviews**: Users can rate and review auctions after bidding.
 - **Admin Dashboard**: Approve/block/end auctions, manage commissions, verify payments, view all data.
 - **Contact Us Page**: Simple contact form, messages stored for admin review.
@@ -103,4 +104,15 @@ MIT (or specify your license)
 
 ## Contact
 For support, use the Contact Us page in the app or open an issue on GitHub.
+
+## Newsletter Setup & Management
+
+AuctionVistas includes a built-in newsletter signup system:
+
+- Users can subscribe to auction updates using the form in the footer of every page.
+- Subscribed emails are stored in the database (`NewsletterSubscriber` model).
+- Admins can view and manage subscribers in the Django admin panel.
+- You can export emails for use in third-party services (Mailchimp, Brevo, etc.).
+
+To enable or customize newsletter features (e.g., double opt-in, welcome emails, or unsubscribe), see the `newsletter` app code or contact the maintainer.
 
