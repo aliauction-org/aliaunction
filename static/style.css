@@ -85,11 +85,11 @@ hr {
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition: none;
 }
 .card:hover {
-  transform: translateY(-6px) scale(1.025);
-  box-shadow: 0 8px 32px 0 rgba(58, 141, 222, 0.18), 0 2px 12px 0 rgba(24,28,47,0.13);
+  transform: none;
+  box-shadow: 0 4px 32px 0 rgba(58, 141, 222, 0.10), 0 1.5px 8px 0 rgba(24,28,47,0.10);
 }
 .card img {
   width: 100%;
@@ -116,15 +116,16 @@ hr {
   margin-bottom: 0.5rem;
 }
 .card .timer {
-  background: linear-gradient(90deg, #3a8dde 0%, #7ecbff 100%);
-  color: #fff;
-  font-weight: 600;
-  border-radius: 8px;
-  padding: 0.4rem 1.2rem;
+  background: #223a5f;
+  color: #7ecbff;
+  font-weight: 700;
+  border-radius: 12px;
+  padding: 0.7rem 1.2rem;
   margin-top: 0.7rem;
-  font-size: 1.05rem;
+  font-size: 1.08rem;
   letter-spacing: 1px;
-  box-shadow: 0 2px 8px 0 rgba(49, 130, 206, 0.10);
+  box-shadow: none;
+  display: inline-block;
 }
 
 .live-auctions-title {
@@ -144,15 +145,15 @@ hr {
 
 /* Newsletter Gradient Box */
 .newsletter {
-  background: linear-gradient(90deg, #3a8dde 0%, #7ecbff 100%);
-  color: #fff;
+  background: linear-gradient(90deg, #23284a 0%, #2b3a67 100%);
+  color: #e6e9f0;
   border-radius: 18px;
-  box-shadow: 0 4px 32px 0 rgba(58, 141, 222, 0.10);
-  padding: 2rem 2.5rem;
+  box-shadow: 0 2px 12px 0 rgba(58, 141, 222, 0.04);
+  padding: 1.5rem 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 3rem 0 2rem 0;
+  margin: 2rem 0 1.5rem 0;
   flex-wrap: wrap;
   gap: 2rem;
 }
@@ -258,6 +259,31 @@ button, input[type="submit"] {
 button:hover, input[type="submit"]:hover {
   background: linear-gradient(90deg, #225ea8, #3a8dde);
   color: #fff;
+}
+
+.card-btn {
+  display: block;
+  width: 100%;
+  max-width: 220px;
+  margin: 1.2rem auto 0 auto;
+  background: linear-gradient(90deg, #3a8dde, #5fa8d3);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-radius: 1.2rem;
+  padding: 0.7rem 0;
+  text-align: center;
+  box-shadow: 0 2px 8px 0 rgba(49,130,206,0.10);
+  text-decoration: none;
+  transition: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card-btn:hover {
+  background: linear-gradient(90deg, #3a8dde, #5fa8d3);
+  color: #fff;
+  box-shadow: 0 2px 8px 0 rgba(49,130,206,0.10);
 }
 
 @media (max-width: 900px) {
