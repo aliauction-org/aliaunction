@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Django
+*.log
+*.pot
+*.pyc
+*.pyo
+*.db
+*.sqlite3
+media/
+staticfiles/
+
+# Virtualenv
+venv/
+ENV/
+.env
+.venv
+
+# VSCode
+.vscode/
+
+# MacOS
+.DS_Store
+
+# PyCharm
+.idea/
+
+# Test/coverage
+htmlcov/
+.coverage
+.tox/
+
+# Other
+*.bak
+*.swp
+*.swo
+
+# Ignore local settings
+local_settings.py 
