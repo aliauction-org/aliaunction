@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Platform Payment Details</h2>
+  {% if platform_details %}
+    <p><strong>Bank Name:</strong> {{ platform_details.bank_name }}</p>
+    <p><strong>Account Number:</strong> {{ platform_details.account_number }}</p>
+    <p><strong>IFSC Code:</strong> {{ platform_details.ifsc_code }}</p>
+    <p><strong>Account Holder:</strong> {{ platform_details.account_holder_name }}</p>
+    {% if platform_details.upi_id %}
+      <p><strong>UPI ID:</strong> {{ platform_details.upi_id }}</p>
+    {% endif %}
+    {% if platform_details.qr_code %}
+      <p><strong>QR Code:</strong></p>
+      <img src="{{ platform_details.qr_code.url }}" alt="Payment QR Code" style="max-width:300px;">
+    {% endif %}
+    {% if platform_details.additional_instructions %}
+      <p><strong>Additional Instructions:</strong></p>
+      <p>{{ platform_details.additional_instructions }}</p>
+    {% endif %}
+  {% else %}
+    <p>Platform payment details not configured yet.</p>
+  {% endif %}
+{% endblock %} 

@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load indian_format %}
+{% block content %}
+  <h2>{{ auction.title }}</h2>
+  <p>{{ auction.description }}</p>
+  <p><strong>Current Price:</strong> INR <span id="current-price">{{ auction.current_price|indian_currency }}</span></p>
+  <p><strong>Ends at:</strong> {{ auction.end_time }}</p>
+  {% if auction.image %}
+    <img src="{{ auction.image.url }}" alt="{{ auction.title }}" style="max-width:400px; max-height:400px;" />
+  {% endif %}
+  <h3>Bid History</h3>
+  <ul id="bid-history">
+    {% for bid in bids %}
+      <li>INR {{ bid.amount|indian_currency }} by {{ bid.user.username }} at {{ bid.timestamp }}</li>
+    {% empty %}
+      <li>No bids yet.</li>
+    {% endfor %}
+  </ul>
+  <script>
+    function formatIndianNumber(x) {
+      x = x.toString().split('.');
+      var intPart = x[0];
+      var decPart = x.length > 1 ? '.' + x[1] : '';
+      var lastThree = intPart.substring(intPart.length-3);
+      var otherNumbers = intPart.substring(0,intPart.length-3);
+      if(otherNumbers != '')
+          lastThree = ',' + lastThree;
+      var formatted = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree + decPart;
+      return formatted;
+    }
+    function updateAuctionStatus() {
+      fetch('{% url 'auction_status_api' auction.id %}')
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('current-price').textContent = formatIndianNumber(data.current_price);
+          let bidList = '';
+          data.bids.forEach(bid => {
+            bidList += `<li>INR ${formatIndianNumber(bid.amount)} by ${bid.user} at ${bid.timestamp}</li>`;
+          });
+          if (!bidList) {
+            bidList = '<li>No bids yet.</li>';
+          }
+          document.getElementById('bid-history').innerHTML = bidList;
+        });
+    }
+    setInterval(updateAuctionStatus, 2000);
+  </script>
+  <h3>Reviews</h3>
+  <a href="{% url 'auction_reviews' auction.id %}">View all reviews</a>
+  {% if user.is_authenticated and has_bid and not already_reviewed %}
+    <a href="{% url 'submit_review' auction.id %}">Leave a review</a>
+  {% endif %}
+  
+  {% if is_winner and not auction.is_active %}
+    <h3>Payment Information</h3>
+    <p><strong>Congratulations! You won this auction.</strong></p>
+    <p><strong>Amount to Pay:</strong> INR {{ auction.current_price|indian_currency }}</p>
+    <a href="{% url 'platform_payment_details' %}">View Platform Payment Details</a>
+    {% if not has_payment_proof %}
+      <a href="{% url 'upload_payment_proof' auction.id %}">Upload Payment Proof</a>
+    {% else %}
+      <p><em>Payment proof uploaded. Waiting for verification.</em></p>
+    {% endif %}
+  {% endif %}
+  {% if user.is_authenticated %}
+    <h3>Place a Bid</h3>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Place Bid</button>
+    </form>
+  {% else %}
+    <p><a href="{% url 'login' %}">Login</a> to place a bid.</p>
+  {% endif %}
+  {% if messages %}
+    {% for message in messages %}
+      <div>{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endblock %} 

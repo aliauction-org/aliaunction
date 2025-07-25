@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Profile</h2>
+  <p><strong>Username:</strong> {{ user.username }}</p>
+  <p><strong>Email:</strong> {{ user.email }}</p>
+  <p><a href="{% url 'password_reset' %}">Change Password</a></p>
+  <h3>Bid History</h3>
+  <ul>
+    {% for bid in bids %}
+      <li>{{ bid.auction.title }}: ${{ bid.amount }} at {{ bid.timestamp }}</li>
+    {% empty %}
+      <li>No bids yet.</li>
+    {% endfor %}
+  </ul>
+  <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Logout</button></form>
+{% endblock %} 

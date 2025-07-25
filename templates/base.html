@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Aliaunction</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{% url 'auction_list' %}">Auction Listings</a></li>
+            {% if user.is_authenticated %}
+                <li>
+                  <a href="#" id="notification-bell">🔔 <span id="notification-count" style="color:red;"></span></a>
+                  <div id="notification-dropdown" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; z-index:1000; min-width:250px;"></div>
+                </li>
+                <li><a href="{% url 'create_auction' %}">Create Auction</a></li>
+                <li><a href="{% url 'profile' %}">Profile</a></li>
+                <li><a href="{% url 'payment_profile' %}">Payment Profile</a></li>
+                <li><a href="{% url 'payment_history' %}">Payment History</a></li>
+                <li><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Logout</button></form></li>
+                <li><a href="#">Track Refunds</a></li>
+            {% else %}
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'register' %}">Signup</a></li>
+            {% endif %}
+            <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
+        </ul>
+    </nav>
+    <hr>
+    {% block content %}{% endblock %}
+    <script>
+  function fetchNotifications() {
+    fetch('/notifications/api/unread/')
+      .then(response => response.json())
+      .then(data => {
+        const count = data.notifications.length;
+        document.getElementById('notification-count').textContent = count > 0 ? count : '';
+        let dropdown = document.getElementById('notification-dropdown');
+        if (count > 0) {
+          let html = '<ul style="list-style:none; margin:0; padding:0;">';
+          data.notifications.forEach(n => {
+            html += `<li style='padding:8px; border-bottom:1px solid #eee;'>${n.message} <button onclick='markRead(${n.id})'>Mark as read</button></li>`;
+          });
+          html += '</ul>';
+          dropdown.innerHTML = html;
+        } else {
+          dropdown.innerHTML = '<div style="padding:8px;">No new notifications.</div>';
+        }
+      });
+  }
+  function markRead(id) {
+    fetch(`/notifications/api/read/${id}/`)
+      .then(() => fetchNotifications());
+  }
+  setInterval(fetchNotifications, 3000);
+  document.getElementById('notification-bell').addEventListener('click', function(e) {
+    e.preventDefault();
+    let dropdown = document.getElementById('notification-dropdown');
+    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+  });
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#notification-bell')) {
+      document.getElementById('notification-dropdown').style.display = 'none';
+    }
+  });
+</script>
+</body>
+</html> 

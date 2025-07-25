@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Payment History</h2>
+  
+  <h3>Payments Made</h3>
+  <ul>
+    {% for payment in payments_made %}
+      <li>
+        {{ payment.auction.title }} - INR {{ payment.amount }} - {{ payment.status }} - {{ payment.created_at }}
+        {% if payment.screenshot %}
+          <a href="{{ payment.screenshot.url }}" target="_blank">View Screenshot</a>
+        {% endif %}
+      </li>
+    {% empty %}
+      <li>No payments made yet.</li>
+    {% endfor %}
+  </ul>
+
+  <h3>Payments Received</h3>
+  <ul>
+    {% for payment in payments_received %}
+      <li>
+        {{ payment.auction.title }} - INR {{ payment.amount }} - {{ payment.status }} - {{ payment.created_at }}
+        {% if payment.screenshot %}
+          <a href="{{ payment.screenshot.url }}" target="_blank">View Screenshot</a>
+        {% endif %}
+        {% if payment.status == 'pending' %}
+          <form method="post" action="{% url 'confirm_payment_received' payment.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">Confirm Payment</button>
+          </form>
+        {% endif %}
+      </li>
+    {% empty %}
+      <li>No payments received yet.</li>
+    {% endfor %}
+  </ul>
+{% endblock %} 

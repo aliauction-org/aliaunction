@@ -1,0 +1,43 @@
+from django.contrib import admin
+from .models import Payment, Refund, PlatformPaymentDetails, UserPaymentProfile, PaymentProof
+from django.utils import timezone
+
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('user', 'auction', 'amount', 'status', 'timestamp')
+    list_filter = ('status', 'auction', 'user')
+    search_fields = ('auction__title', 'user__username')
+
+@admin.register(Refund)
+class RefundAdmin(admin.ModelAdmin):
+    list_display = ('payment', 'amount', 'status', 'timestamp')
+    list_filter = ('status',)
+
+def verify_payment(modeladmin, request, queryset):
+    for payment in queryset:
+        payment.status = 'verified'
+        payment.verified_by = request.user
+        payment.verified_at = timezone.now()
+        payment.save()
+verify_payment.short_description = "Verify selected payments"
+
+def reject_payment(modeladmin, request, queryset):
+    queryset.update(status='rejected')
+reject_payment.short_description = "Reject selected payments"
+
+@admin.register(PlatformPaymentDetails)
+class PlatformPaymentDetailsAdmin(admin.ModelAdmin):
+    list_display = ('bank_name', 'account_holder_name', 'account_number', 'updated_at')
+    readonly_fields = ('updated_at',)
+
+@admin.register(UserPaymentProfile)
+class UserPaymentProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'bank_name', 'account_holder_name', 'account_number', 'created_at')
+    search_fields = ('user__username', 'bank_name', 'account_holder_name')
+
+@admin.register(PaymentProof)
+class PaymentProofAdmin(admin.ModelAdmin):
+    list_display = ('auction', 'payer', 'payee', 'amount', 'direction', 'status', 'created_at')
+    list_filter = ('status', 'direction', 'auction')
+    search_fields = ('auction__title', 'payer__username', 'payee__username')
+    actions = [verify_payment, reject_payment]
