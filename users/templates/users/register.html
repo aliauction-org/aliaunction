@@ -24,7 +24,7 @@
                 <label for="{{ form.username.id_for_label }}">Username</label>
                 {{ form.username }}
                 {% if form.username.help_text %}
-                    <div class="help-text">{{ form.username.help_text }}</div>
+                    <div class="help-text">{{ form.username.help_text|safe }}</div>
                 {% endif %}
                 {% if form.username.errors %}
                     <div class="error-text">{{ form.username.errors.0 }}</div>
@@ -44,11 +44,7 @@
                 {{ form.password1 }}
                 {% if form.password1.help_text %}
                     <div class="help-text">
-                        <ul>
-                            {% for help_text in form.password1.help_text %}
-                                <li>{{ help_text }}</li>
-                            {% endfor %}
-                        </ul>
+                        {{ form.password1.help_text|safe }}
                     </div>
                 {% endif %}
                 {% if form.password1.errors %}
@@ -197,17 +193,24 @@
 
 .help-text {
     margin-top: 0.5rem;
-    font-size: 0.9rem;
     color: #666;
+    font-size: 0.9rem;
+    line-height: 1.4;
 }
 
 .help-text ul {
     margin: 0.5rem 0;
     padding-left: 1.5rem;
+    list-style-type: disc;
 }
 
 .help-text li {
     margin-bottom: 0.25rem;
+}
+
+.help-item {
+    margin-bottom: 0.25rem;
+    padding-left: 0;
 }
 
 .error-text {
