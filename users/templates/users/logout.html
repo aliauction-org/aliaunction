@@ -1,5 +1,229 @@
 {% extends 'base.html' %}
 {% block content %}
-  <h2>Logged out</h2>
-  <p>You have been logged out. <a href="{% url 'login' %}">Login again</a></p>
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="logout-icon">👋</div>
+            <h1>Successfully Logged Out</h1>
+            <p>You have been securely logged out of your AuctionVistas account</p>
+        </div>
+
+        <div class="auth-content">
+            <div class="logout-info">
+                <h3>What happens next?</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-icon">🔒</div>
+                        <div class="info-content">
+                            <h4>Session Ended</h4>
+                            <p>Your session has been securely terminated</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">📱</div>
+                        <div class="info-content">
+                            <h4>Safe & Secure</h4>
+                            <p>All your data remains protected and secure</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">🔄</div>
+                        <div class="info-content">
+                            <h4>Ready to Return</h4>
+                            <p>You can log back in anytime to continue bidding</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="auth-actions">
+                <a href="{% url 'login' %}" class="auth-button primary">Sign In Again</a>
+                <a href="{% url 'home' %}" class="auth-button secondary">Back to Home</a>
+            </div>
+        </div>
+
+        <div class="auth-footer">
+            <p>Need help? <a href="{% url 'marketplace:contact_support' %}" class="auth-link">Contact Support</a></p>
+        </div>
+    </div>
+</div>
+
+<style>
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, #23284a 0%, #3a8dde 100%);
+}
+
+.auth-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    padding: 3rem;
+    max-width: 500px;
+    width: 100%;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.logout-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.auth-header h1 {
+    color: #23284a;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.auth-header p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.auth-content {
+    margin-bottom: 2rem;
+}
+
+.logout-info {
+    margin-bottom: 2rem;
+}
+
+.logout-info h3 {
+    text-align: center;
+    color: #23284a;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+}
+
+.info-item:hover {
+    transform: translateY(-2px);
+}
+
+.info-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.info-content h4 {
+    color: #23284a;
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem 0;
+}
+
+.info-content p {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.auth-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.auth-button {
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s ease;
+    flex: 1;
+    max-width: 200px;
+}
+
+.auth-button.primary {
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    color: white;
+    border: none;
+}
+
+.auth-button.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+}
+
+.auth-button.secondary {
+    background: transparent;
+    color: #3a8dde;
+    border: 2px solid #3a8dde;
+}
+
+.auth-button.secondary:hover {
+    background: #3a8dde;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.auth-footer {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.auth-footer p {
+    color: #666;
+    margin: 0;
+}
+
+.auth-link {
+    color: #3a8dde;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.auth-link:hover {
+    color: #10b981;
+}
+
+@media (max-width: 768px) {
+    .auth-container {
+        padding: 1rem;
+    }
+    
+    .auth-card {
+        padding: 2rem;
+    }
+    
+    .auth-header h1 {
+        font-size: 2rem;
+    }
+    
+    .auth-actions {
+        flex-direction: column;
+    }
+    
+    .auth-button {
+        max-width: none;
+    }
+}
+</style>
 {% endblock %} 

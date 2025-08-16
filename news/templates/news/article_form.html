@@ -1,0 +1,374 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="article-form-container">
+    <div class="form-header">
+        <h1>{{ title }}</h1>
+        <p>Share your knowledge and insights with the auction community</p>
+    </div>
+
+    <div class="form-content">
+        <form method="post" enctype="multipart/form-data" class="article-form">
+            {% csrf_token %}
+            
+            <div class="form-section">
+                <h3>Article Details</h3>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="{{ form.title.id_for_label }}">Title *</label>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                            <div class="error-message">{{ form.title.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.category.id_for_label }}">Category *</label>
+                        {{ form.category }}
+                        {% if form.category.errors %}
+                            <div class="error-message">{{ form.category.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.status.id_for_label }}">Status</label>
+                        {{ form.status }}
+                        {% if form.status.errors %}
+                            <div class="error-message">{{ form.status.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="{{ form.tags.id_for_label }}">Tags</label>
+                        {{ form.tags }}
+                        <small class="help-text">Hold Ctrl/Cmd to select multiple tags</small>
+                        {% if form.tags.errors %}
+                            <div class="error-message">{{ form.tags.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Content</h3>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="{{ form.excerpt.id_for_label }}">Excerpt</label>
+                        {{ form.excerpt }}
+                        <small class="help-text">Brief summary of your article (optional)</small>
+                        {% if form.excerpt.errors %}
+                            <div class="error-message">{{ form.excerpt.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="{{ form.content.id_for_label }}">Content *</label>
+                        {{ form.content }}
+                        <small class="help-text">Write your article content here. You can use basic HTML tags.</small>
+                        {% if form.content.errors %}
+                            <div class="error-message">{{ form.content.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Media & Settings</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.featured_image.id_for_label }}">Featured Image</label>
+                        {{ form.featured_image }}
+                        <small class="help-text">Upload an image to make your article stand out</small>
+                        {% if form.featured_image.errors %}
+                            <div class="error-message">{{ form.featured_image.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.is_featured.id_for_label }}">Featured Article</label>
+                        <div class="checkbox-wrapper">
+                            {{ form.is_featured }}
+                            <span class="checkbox-label">Mark as featured article</span>
+                        </div>
+                        <small class="help-text">Featured articles appear prominently on the homepage</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="submit-button">{% if article %}Update Article{% else %}Publish Article{% endif %}</button>
+                <a href="{% url 'news:article_list' %}" class="cancel-button">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Writing Tips -->
+    <div class="writing-tips">
+        <h3>📝 Writing Tips</h3>
+        <div class="tips-grid">
+            <div class="tip-card">
+                <h4>🎯 Clear Title</h4>
+                <p>Make your title descriptive and engaging. It should clearly indicate what the article is about.</p>
+            </div>
+            <div class="tip-card">
+                <h4>📖 Structure</h4>
+                <p>Use headings, bullet points, and paragraphs to make your content easy to read and scan.</p>
+            </div>
+            <div class="tip-card">
+                <h4>💡 Value</h4>
+                <p>Provide practical tips, insights, or information that readers can apply to their auction experience.</p>
+            </div>
+            <div class="tip-card">
+                <h4>🖼️ Images</h4>
+                <p>Include relevant images to make your article more visually appealing and engaging.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.article-form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form-header h1 {
+    color: #23284a;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.form-header p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.form-content {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.form-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.form-section h3 {
+    color: #23284a;
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-row:last-child {
+    margin-bottom: 0;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #23284a;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 0.8rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #10b981;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.form-group select[multiple] {
+    min-height: 100px;
+}
+
+.help-text {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.error-message {
+    color: #dc2626;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: #f0fff4;
+    border-radius: 6px;
+    border-left: 4px solid #dc2626;
+}
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.checkbox-label {
+    font-size: 0.9rem;
+    color: #23284a;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.submit-button {
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.submit-button:hover {
+    transform: translateY(-2px);
+}
+
+.cancel-button {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.cancel-button:hover {
+    transform: translateY(-2px);
+    color: white;
+}
+
+.writing-tips {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.writing-tips h3 {
+    color: #23284a;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.tip-card {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border-left: 4px solid #10b981;
+}
+
+.tip-card h4 {
+    color: #23284a;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.tip-card p {
+    color: #666;
+    line-height: 1.6;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .article-form-container {
+        padding: 1rem;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-header h1 {
+        font-size: 2rem;
+    }
+    
+    .tips-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %} 

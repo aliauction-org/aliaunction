@@ -1,0 +1,527 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ page_title }}</h1>
+    <p>{{ page_description }}</p>
+</div>
+
+<div class="help-center-section">
+    <div class="search-section">
+        <h2>🔍 How can we help you?</h2>
+        <div class="search-box">
+            <input type="text" id="helpSearch" placeholder="Search for help articles..." onkeyup="searchHelp()">
+            <button type="button">Search</button>
+        </div>
+    </div>
+
+    <div class="quick-links">
+        <h3>Quick Links</h3>
+        <div class="quick-links-grid">
+            <a href="#account" class="quick-link-card">
+                <div class="quick-link-icon">👤</div>
+                <h4>Account & Profile</h4>
+            </a>
+            <a href="#bidding" class="quick-link-card">
+                <div class="quick-link-icon">🏷️</div>
+                <h4>Bidding & Buying</h4>
+            </a>
+            <a href="#selling" class="quick-link-card">
+                <div class="quick-link-icon">💰</div>
+                <h4>Selling & Auctions</h4>
+            </a>
+            <a href="#payments" class="quick-link-card">
+                <div class="quick-link-icon">💳</div>
+                <h4>Payments & Shipping</h4>
+            </a>
+            <a href="#security" class="quick-link-card">
+                <div class="quick-link-icon">🔒</div>
+                <h4>Security & Safety</h4>
+            </a>
+            <a href="#technical" class="quick-link-card">
+                <div class="quick-link-icon">⚙️</div>
+                <h4>Technical Issues</h4>
+            </a>
+        </div>
+    </div>
+
+    <div class="faq-section">
+        <h3>Frequently Asked Questions</h3>
+        
+        <div id="account" class="faq-category">
+            <h4>Account & Profile</h4>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>How do I create an account?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Creating an account is easy! Click the "Sign Up" button in the top navigation, fill in your details, and verify your email address. You'll be ready to start bidding and selling in minutes.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>How do I update my profile information?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Go to your profile page and click "Edit Profile". You can update your personal information, contact details, and preferences at any time.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>I forgot my password. How do I reset it?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Click "Forgot Password" on the login page, enter your email address, and we'll send you a link to reset your password securely.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="bidding" class="faq-category">
+            <h4>Bidding & Buying</h4>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>How does bidding work?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Enter your maximum bid amount, and our system will automatically bid on your behalf up to that amount. You'll be notified if someone outbids you.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Can I cancel my bid?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Bids are binding and cannot be cancelled once placed. Please make sure you want to bid before placing your offer.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>What happens if I win an auction?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>You'll receive an email notification and can complete your purchase through our secure payment system. The seller will ship your item once payment is confirmed.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="selling" class="faq-category">
+            <h4>Selling & Auctions</h4>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>How do I create an auction?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Click "Create Auction" in the navigation, upload photos of your item, write a detailed description, set your starting price and duration, and publish your listing.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>What are the commission rates?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Commission rates vary from 2-5% depending on your seller level and item value. Check our "Sell with Us" page for detailed commission information.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>When do I receive payment?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Payment is processed automatically once the buyer completes their purchase. You'll receive your funds within 3-5 business days after shipping confirmation.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="payments" class="faq-category">
+            <h4>Payments & Shipping</h4>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>What payment methods do you accept?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>We accept all major credit cards, debit cards, UPI, net banking, and digital wallets. All payments are processed securely through our payment partners.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>How is shipping handled?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Sellers are responsible for shipping items to buyers. We provide shipping labels and tracking information to ensure smooth delivery.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>What if my item arrives damaged?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Contact our support team immediately with photos of the damage. We offer buyer protection and will help resolve the issue with the seller.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="security" class="faq-category">
+            <h4>Security & Safety</h4>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Is my personal information secure?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes, we use industry-standard encryption and security measures to protect your personal and financial information. We never share your data with third parties.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>What if I encounter a fraudulent seller?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Report suspicious activity immediately. We have a dedicated team that investigates fraud and takes appropriate action to protect our community.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="technical" class="faq-category">
+            <h4>Technical Issues</h4>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>The website is not loading properly</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Try clearing your browser cache and cookies, or try a different browser. If the issue persists, contact our technical support team.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>I'm not receiving email notifications</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Check your spam folder and ensure our email address is not blocked. You can also update your notification preferences in your account settings.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="contact-support-section">
+        <h3>Still Need Help?</h3>
+        <p>Our support team is here to help you 24/7</p>
+        <div class="support-options">
+            <div class="support-option">
+                <div class="support-icon">📧</div>
+                <h4>Email Support</h4>
+                <p>Get a response within 24 hours</p>
+                <a href="mailto:support@auctionvistas.com" class="support-link">Send Email</a>
+            </div>
+            <div class="support-option">
+                <div class="support-icon">💬</div>
+                <h4>Live Chat</h4>
+                <p>Chat with our support team</p>
+                <a href="#" class="support-link">Start Chat</a>
+            </div>
+            <div class="support-option">
+                <div class="support-icon">📞</div>
+                <h4>Phone Support</h4>
+                <p>Call us for immediate assistance</p>
+                <a href="tel:+91-1800-123-4567" class="support-link">Call Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem 0;
+    background: linear-gradient(135deg, #23284a 0%, #3a8dde 100%);
+    color: white;
+    border-radius: 12px;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: #10b981;
+}
+
+.page-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.help-center-section {
+    margin-bottom: 3rem;
+}
+
+.search-section {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.search-section h2 {
+    color: #23284a;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.search-box {
+    display: flex;
+    max-width: 500px;
+    margin: 0 auto;
+    gap: 1rem;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.search-box button {
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.quick-links {
+    margin-bottom: 3rem;
+}
+
+.quick-links h3 {
+    color: #23284a;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.quick-links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.quick-link-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.quick-link-card:hover {
+    transform: translateY(-5px);
+}
+
+.quick-link-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.quick-link-card h4 {
+    color: #23284a;
+    font-size: 1.1rem;
+}
+
+.faq-section {
+    margin-bottom: 3rem;
+}
+
+.faq-section h3 {
+    color: #23284a;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.faq-category {
+    margin-bottom: 2rem;
+}
+
+.faq-category h4 {
+    color: #10b981;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.faq-item {
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.faq-question {
+    padding: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8f9fa;
+    transition: background-color 0.3s ease;
+}
+
+.faq-question:hover {
+    background: #e9ecef;
+}
+
+.faq-question span:first-child {
+    color: #23284a;
+    font-weight: bold;
+}
+
+.faq-toggle {
+    color: #10b981;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.faq-answer {
+    padding: 0 1.5rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.faq-answer.active {
+    padding: 1.5rem;
+    max-height: 200px;
+}
+
+.faq-answer p {
+    color: #666;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.contact-support-section {
+    background: #f8f9fa;
+    padding: 3rem;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.contact-support-section h3 {
+    color: #23284a;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.contact-support-section p {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+.support-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.support-option {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.support-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.support-option h4 {
+    color: #23284a;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.support-option p {
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.support-link {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background: linear-gradient(135deg, #3a8dde 0%, #7ecbff 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+
+.support-link:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .search-box {
+        flex-direction: column;
+    }
+    
+    .support-options {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+function toggleFAQ(element) {
+    const answer = element.nextElementSibling;
+    const toggle = element.querySelector('.faq-toggle');
+    
+    if (answer.classList.contains('active')) {
+        answer.classList.remove('active');
+        toggle.textContent = '+';
+    } else {
+        answer.classList.add('active');
+        toggle.textContent = '-';
+    }
+}
+
+function searchHelp() {
+    const searchTerm = document.getElementById('helpSearch').value.toLowerCase();
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question span:first-child').textContent.toLowerCase();
+        const answer = item.querySelector('.faq-answer p').textContent.toLowerCase();
+        
+        if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+</script>
+{% endblock %} 

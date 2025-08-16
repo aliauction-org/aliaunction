@@ -1,0 +1,612 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="news-container">
+    <!-- Hero Section -->
+    <div class="news-hero">
+        <div class="hero-content">
+            <h1>Latest News & Insights</h1>
+            <p>Stay updated with the latest auction trends, tips, and success stories</p>
+        </div>
+    </div>
+
+    <div class="news-main">
+        <div class="news-content">
+            <!-- Search and Filter Section -->
+            <div class="search-filter-section">
+                <form method="get" class="search-form">
+                    <div class="search-row">
+                        <div class="search-field">
+                            {{ form.q }}
+                        </div>
+                        <div class="search-field">
+                            {{ form.category }}
+                        </div>
+                        <div class="search-field">
+                            {{ form.sort_by }}
+                        </div>
+                        <button type="submit" class="search-button">Search</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Featured Articles -->
+            {% if featured_articles %}
+            <div class="featured-section">
+                <h2>Featured Articles</h2>
+                <div class="featured-grid">
+                    {% for article in featured_articles %}
+                    <div class="featured-card">
+                        {% if article.featured_image %}
+                            <img src="{{ article.featured_image.url }}" alt="{{ article.title }}" class="featured-image">
+                        {% else %}
+                            <div class="featured-image-placeholder">📰</div>
+                        {% endif %}
+                        <div class="featured-content">
+                            <div class="article-meta">
+                                <span class="category-badge">{{ article.category.name }}</span>
+                                <span class="publish-date">{{ article.published_at|date:"M d, Y" }}</span>
+                            </div>
+                            <h3><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h3>
+                            <p>{{ article.excerpt }}</p>
+                            <div class="article-stats">
+                                <span>👁️ {{ article.views }} views</span>
+                                <span>💬 {{ article.comments.count }} comments</span>
+                                <span>⏱️ {{ article.reading_time }} min read</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Articles Grid -->
+            <div class="articles-section">
+                <h2>All Articles</h2>
+                {% if page_obj %}
+                <div class="articles-grid">
+                    {% for article in page_obj %}
+                    <div class="article-card">
+                        {% if article.featured_image %}
+                            <img src="{{ article.featured_image.url }}" alt="{{ article.title }}" class="article-image">
+                        {% else %}
+                            <div class="article-image-placeholder">📄</div>
+                        {% endif %}
+                        <div class="article-content">
+                            <div class="article-meta">
+                                <span class="category-badge">{{ article.category.name }}</span>
+                                <span class="publish-date">{{ article.published_at|date:"M d, Y" }}</span>
+                            </div>
+                            <h3><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h3>
+                            <p>{{ article.excerpt }}</p>
+                            <div class="article-footer">
+                                <div class="article-stats">
+                                    <span>👁️ {{ article.views }}</span>
+                                    <span>💬 {{ article.comments.count }}</span>
+                                    <span>⏱️ {{ article.reading_time }}m</span>
+                                </div>
+                                <div class="article-author">
+                                    <span>By {{ article.author.username }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Pagination -->
+                {% if page_obj.has_other_pages %}
+                <div class="pagination">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}" class="page-link">« First</a>
+                        <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}" class="page-link">‹ Previous</a>
+                    {% endif %}
+
+                    <span class="current-page">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}" class="page-link">Next ›</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}" class="page-link">Last »</a>
+                    {% endif %}
+                </div>
+                {% endif %}
+                {% else %}
+                <div class="no-articles">
+                    <div class="no-articles-icon">📰</div>
+                    <h3>No Articles Found</h3>
+                    <p>Try adjusting your search criteria or check back later for new content.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="news-sidebar">
+            <!-- Categories -->
+            <div class="sidebar-section">
+                <h3>Categories</h3>
+                <div class="category-list">
+                    {% for category in categories %}
+                    <a href="{{ category.get_absolute_url }}" class="category-item">
+                        <span class="category-name">{{ category.name }}</span>
+                        <span class="category-count">({{ category.article_count }})</span>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Popular Tags -->
+            <div class="sidebar-section">
+                <h3>Popular Tags</h3>
+                <div class="tag-cloud">
+                    {% for tag in popular_tags %}
+                    <a href="{{ tag.get_absolute_url }}" class="tag-item">
+                        {{ tag.name }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Write Article CTA -->
+            {% if user.is_authenticated %}
+            <div class="sidebar-section">
+                <div class="write-article-cta">
+                    <h3>Share Your Knowledge</h3>
+                    <p>Have auction tips or success stories? Write an article!</p>
+                    <a href="{% url 'news:article_create' %}" class="cta-button">Write Article</a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.news-container {
+    min-height: 100vh;
+    background: #f8fafc;
+}
+
+.news-hero {
+    background: linear-gradient(135deg, #23284a 0%, #3a8dde 100%);
+    color: white;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.news-main {
+    max-width: 2400px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 2rem;
+}
+
+.news-content {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.search-filter-section {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.search-form {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 12px;
+}
+
+.search-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 1rem;
+    align-items: end;
+}
+
+.search-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.search-field label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #23284a;
+}
+
+.search-field input,
+.search-field select {
+    padding: 0.8rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.search-field input:focus,
+.search-field select:focus {
+    outline: none;
+    border-color: #10b981;
+}
+
+.search-button {
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.search-button:hover {
+    transform: translateY(-2px);
+}
+
+.featured-section {
+    margin-bottom: 3rem;
+}
+
+.featured-section h2 {
+    color: #23284a;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}
+
+.featured-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.featured-card {
+    background: #f8fafc;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.featured-card:hover {
+    transform: translateY(-5px);
+}
+
+.featured-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.featured-image-placeholder {
+    width: 100%;
+    height: 200px;
+    background: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+}
+
+.featured-content {
+    padding: 1.5rem;
+}
+
+.article-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    align-items: center;
+}
+
+.category-badge {
+    background: #10b981;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.publish-date {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.featured-content h3 {
+    margin-bottom: 1rem;
+}
+
+.featured-content h3 a {
+    color: #23284a;
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.featured-content h3 a:hover {
+    color: #10b981;
+}
+
+.featured-content p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.article-stats {
+    display: flex;
+    gap: 1rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.articles-section h2 {
+    color: #23284a;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}
+
+.articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.article-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.article-card:hover {
+    transform: translateY(-5px);
+}
+
+.article-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.article-image-placeholder {
+    width: 100%;
+    height: 200px;
+    background: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+}
+
+.article-content {
+    padding: 1.5rem;
+}
+
+.article-content h3 {
+    margin-bottom: 1rem;
+}
+
+.article-content h3 a {
+    color: #23284a;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.article-content h3 a:hover {
+    color: #10b981;
+}
+
+.article-content p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.article-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.article-author {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.page-link {
+    background: #10b981;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.page-link:hover {
+    background: #059669;
+}
+
+.current-page {
+    color: #666;
+    font-weight: 500;
+}
+
+.no-articles {
+    text-align: center;
+    padding: 3rem;
+}
+
+.no-articles-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.no-articles h3 {
+    color: #23284a;
+    margin-bottom: 1rem;
+}
+
+.no-articles p {
+    color: #666;
+}
+
+.news-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.sidebar-section {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.sidebar-section h3 {
+    color: #23284a;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+.category-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.category-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.8rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #23284a;
+    transition: background 0.3s ease;
+}
+
+.category-item:hover {
+    background: #10b981;
+    color: white;
+}
+
+.category-count {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.category-item:hover .category-count {
+    color: rgba(255,255,255,0.8);
+}
+
+.tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tag-item {
+    background: #e2e8f0;
+    color: #23284a;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.tag-item:hover {
+    background: #10b981;
+    color: white;
+}
+
+.write-article-cta {
+    text-align: center;
+    padding: 1rem;
+}
+
+.write-article-cta h3 {
+    margin-bottom: 0.5rem;
+}
+
+.write-article-cta p {
+    color: #666;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.cta-button {
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.cta-button:hover {
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .news-main {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+    
+    .search-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .articles-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+}
+</style>
+{% endblock %} 

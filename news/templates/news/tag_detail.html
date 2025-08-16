@@ -1,0 +1,295 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="tag-detail-container">
+    <div class="tag-header">
+        <h1>#{{ tag.name }}</h1>
+        <p>Browse all articles tagged with "{{ tag.name }}"</p>
+        <div class="tag-stats">
+            <span>{{ page_obj.paginator.count }} articles</span>
+        </div>
+    </div>
+
+    <div class="articles-section">
+        {% if page_obj %}
+        <div class="articles-grid">
+            {% for article in page_obj %}
+            <div class="article-card">
+                {% if article.featured_image %}
+                    <img src="{{ article.featured_image.url }}" alt="{{ article.title }}" class="article-image">
+                {% else %}
+                    <div class="article-image-placeholder">📄</div>
+                {% endif %}
+                <div class="article-content">
+                    <div class="article-meta">
+                        <span class="category-badge">{{ article.category.name }}</span>
+                        <span class="publish-date">{{ article.published_at|date:"M d, Y" }}</span>
+                    </div>
+                    <h3><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h3>
+                    <p>{{ article.excerpt }}</p>
+                    <div class="article-footer">
+                        <div class="article-stats">
+                            <span>👁️ {{ article.views }}</span>
+                            <span>💬 {{ article.comments.count }}</span>
+                            <span>⏱️ {{ article.reading_time }}m</span>
+                        </div>
+                        <div class="article-author">
+                            <span>By {{ article.author.username }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page=1" class="page-link">« First</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="page-link">‹ Previous</a>
+            {% endif %}
+
+            <span class="current-page">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="page-link">Next ›</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link">Last »</a>
+            {% endif %}
+        </div>
+        {% endif %}
+        {% else %}
+        <div class="no-articles">
+            <div class="no-articles-icon">🏷️</div>
+            <h3>No Articles Found</h3>
+            <p>No articles have been tagged with "{{ tag.name }}" yet.</p>
+            <a href="{% url 'news:article_list' %}" class="back-link">← Back to All Articles</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.tag-detail-container {
+    max-width: 2400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.tag-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    color: white;
+    border-radius: 12px;
+}
+
+.tag-header h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+.tag-header p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 1rem;
+}
+
+.tag-stats {
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
+.articles-section {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.article-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.article-card:hover {
+    transform: translateY(-5px);
+}
+
+.article-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.article-image-placeholder {
+    width: 100%;
+    height: 200px;
+    background: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+}
+
+.article-content {
+    padding: 1.5rem;
+}
+
+.article-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    align-items: center;
+}
+
+.category-badge {
+    background: #10b981;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.publish-date {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.article-content h3 {
+    margin-bottom: 1rem;
+}
+
+.article-content h3 a {
+    color: #23284a;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.article-content h3 a:hover {
+    color: #10b981;
+}
+
+.article-content p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.article-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.article-stats {
+    display: flex;
+    gap: 1rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.article-author {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.page-link {
+    background: #10b981;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.page-link:hover {
+    background: #059669;
+}
+
+.current-page {
+    color: #666;
+    font-weight: 500;
+}
+
+.no-articles {
+    text-align: center;
+    padding: 3rem;
+}
+
+.no-articles-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.no-articles h3 {
+    color: #23284a;
+    margin-bottom: 1rem;
+}
+
+.no-articles p {
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+.back-link {
+    background: #10b981;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.3s ease;
+}
+
+.back-link:hover {
+    transform: translateY(-2px);
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .tag-detail-container {
+        padding: 1rem;
+    }
+    
+    .tag-header {
+        padding: 2rem 1rem;
+    }
+    
+    .tag-header h1 {
+        font-size: 2rem;
+    }
+    
+    .articles-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %} 

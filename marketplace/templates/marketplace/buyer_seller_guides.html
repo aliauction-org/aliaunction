@@ -1,0 +1,462 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ page_title }}</h1>
+    <p>{{ page_description }}</p>
+</div>
+
+<div class="guides-section">
+    <div class="guides-tabs">
+        <div class="tab-buttons">
+            <button class="tab-button active" onclick="showGuideTab('buyer')">Buyer Guide</button>
+            <button class="tab-button" onclick="showGuideTab('seller')">Seller Guide</button>
+        </div>
+
+        <div id="buyer" class="guide-content active">
+            <div class="guide-intro">
+                <h2>🎯 Complete Buyer's Guide</h2>
+                <p>Learn everything you need to know to become a successful bidder on AuctionVistas</p>
+            </div>
+
+            <div class="guide-sections">
+                <div class="guide-section">
+                    <h3>1. Getting Started</h3>
+                    <div class="guide-card">
+                        <h4>Create Your Account</h4>
+                        <ul>
+                            <li>Sign up with your email address</li>
+                            <li>Complete your profile with accurate information</li>
+                            <li>Verify your email address</li>
+                            <li>Set up your payment preferences</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="guide-section">
+                    <h3>2. Finding Items</h3>
+                    <div class="guide-card">
+                        <h4>Browse and Search</h4>
+                        <ul>
+                            <li>Use the search bar to find specific items</li>
+                            <li>Browse by category to discover new items</li>
+                            <li>Set up alerts for items you're interested in</li>
+                            <li>Follow your favorite sellers</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="guide-section">
+                    <h3>3. Researching Items</h3>
+                    <div class="guide-card">
+                        <h4>Before You Bid</h4>
+                        <ul>
+                            <li>Read the complete item description</li>
+                            <li>Examine all photos carefully</li>
+                            <li>Check the seller's rating and reviews</li>
+                            <li>Research similar items' selling prices</li>
+                            <li>Ask questions if you need more information</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="guide-section">
+                    <h3>4. Bidding Strategies</h3>
+                    <div class="guide-card">
+                        <h4>Smart Bidding Tips</h4>
+                        <ul>
+                            <li>Set a maximum budget before bidding</li>
+                            <li>Don't get caught up in bidding wars</li>
+                            <li>Consider using auto-bidding for convenience</li>
+                            <li>Place your final bid close to the end time</li>
+                            <li>Monitor auction activity regularly</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="guide-section">
+                    <h3>5. Winning and Payment</h3>
+                    <div class="guide-card">
+                        <h4>After You Win</h4>
+                        <ul>
+                            <li>Complete payment within the required timeframe</li>
+                            <li>Choose your preferred payment method</li>
+                            <li>Provide accurate shipping information</li>
+                            <li>Track your shipment</li>
+                            <li>Leave feedback after receiving your item</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="seller" class="guide-content">
+            <div class="guide-intro">
+                <h2>💰 Complete Seller's Guide</h2>
+                <p>Master the art of selling on AuctionVistas and maximize your profits</p>
+            </div>
+
+            <div class="guide-sections">
+                <div class="guide-section">
+                    <h3>1. Setting Up Your Seller Account</h3>
+                    <div class="guide-card">
+                        <h4>Account Preparation</h4>
+                        <ul>
+                            <li>Complete your seller profile with detailed information</li>
+                            <li>Add your business details and contact information</li>
+                            <li>Set up your payment and shipping preferences</li>
+                            <li>Verify your identity for buyer trust</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="guide-section">
+                    <h3>2. Creating Compelling Listings</h3>
+                    <div class="guide-card">
+                        <h4>Listing Best Practices</h4>
+                        <ul>
+                            <li>Take high-quality, well-lit photos from multiple angles</li>
+                            <li>Write detailed, accurate descriptions</li>
+                            <li>Include all relevant specifications and measurements</li>
+                            <li>Set competitive starting prices</li>
+                            <li>Choose appropriate auction duration</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="guide-section">
+                    <h3>3. Pricing Strategies</h3>
+                    <div class="guide-card">
+                        <h4>Maximizing Your Profits</h4>
+                        <ul>
+                            <li>Research similar items' selling prices</li>
+                            <li>Set realistic starting prices to attract bidders</li>
+                            <li>Consider your costs (commission, shipping, etc.)</li>
+                            <li>Use reserve prices for high-value items</li>
+                            <li>Offer free shipping when possible</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="guide-section">
+                    <h3>4. Promoting Your Auctions</h3>
+                    <div class="guide-card">
+                        <h4>Marketing Your Items</h4>
+                        <ul>
+                            <li>Share your auctions on social media</li>
+                            <li>Use relevant keywords in your titles</li>
+                            <li>Respond quickly to buyer questions</li>
+                            <li>Offer excellent customer service</li>
+                            <li>Build a positive reputation</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="guide-section">
+                    <h3>5. Managing Sales</h3>
+                    <div class="guide-card">
+                        <h4>After the Auction Ends</h4>
+                        <ul>
+                            <li>Contact the winner promptly</li>
+                            <li>Process payments securely</li>
+                            <li>Ship items quickly and safely</li>
+                            <li>Provide tracking information</li>
+                            <li>Follow up to ensure satisfaction</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="tips-section">
+    <h3>💡 Pro Tips for Success</h3>
+    <div class="tips-grid">
+        <div class="tip-card">
+            <div class="tip-icon">🎯</div>
+            <h4>For Buyers</h4>
+            <ul>
+                <li>Always read the fine print</li>
+                <li>Set realistic budgets</li>
+                <li>Don't bid emotionally</li>
+                <li>Check seller feedback</li>
+                <li>Ask questions before bidding</li>
+            </ul>
+        </div>
+        <div class="tip-card">
+            <div class="tip-icon">💰</div>
+            <h4>For Sellers</h4>
+            <ul>
+                <li>Take excellent photos</li>
+                <li>Write compelling descriptions</li>
+                <li>Price competitively</li>
+                <li>Ship quickly</li>
+                <li>Provide great service</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="resources-section">
+    <h3>📚 Additional Resources</h3>
+    <div class="resources-grid">
+        <a href="{% url 'marketplace:safe_bidding_tips' %}" class="resource-card">
+            <div class="resource-icon">🛡️</div>
+            <h4>Safe Bidding Tips</h4>
+            <p>Learn how to bid safely and avoid common pitfalls</p>
+        </a>
+        <a href="{% url 'marketplace:help_center' %}" class="resource-card">
+            <div class="resource-icon">❓</div>
+            <h4>Help Center</h4>
+            <p>Find answers to common questions and get support</p>
+        </a>
+        <a href="{% url 'marketplace:contact_support' %}" class="resource-card">
+            <div class="resource-icon">📞</div>
+            <h4>Contact Support</h4>
+            <p>Get in touch with our support team</p>
+        </a>
+    </div>
+</div>
+
+<style>
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem 0;
+    background: linear-gradient(135deg, #23284a 0%, #3a8dde 100%);
+    color: white;
+    border-radius: 12px;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: #10b981;
+}
+
+.page-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.guides-section {
+    margin-bottom: 3rem;
+}
+
+.guides-tabs {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.tab-buttons {
+    display: flex;
+    background: #f8f9fa;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 1rem 2rem;
+    border: none;
+    background: transparent;
+    color: #666;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-button.active {
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    color: white;
+}
+
+.guide-content {
+    display: none;
+    padding: 2rem;
+}
+
+.guide-content.active {
+    display: block;
+}
+
+.guide-intro {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.guide-intro h2 {
+    color: #10b981;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.guide-intro p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.guide-sections {
+    display: grid;
+    gap: 2rem;
+}
+
+.guide-section h3 {
+    color: #23284a;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.guide-card {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #10b981;
+}
+
+.guide-card h4 {
+    color: #23284a;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.guide-card ul {
+    color: #666;
+    line-height: 1.8;
+}
+
+.guide-card li {
+    margin-bottom: 0.5rem;
+}
+
+.tips-section {
+    margin-bottom: 3rem;
+}
+
+.tips-section h3 {
+    text-align: center;
+    color: #23284a;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.tip-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.tip-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.tip-card h4 {
+    color: #10b981;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+
+.tip-card ul {
+    color: #666;
+    line-height: 1.8;
+    text-align: left;
+}
+
+.tip-card li {
+    margin-bottom: 0.5rem;
+}
+
+.resources-section {
+    margin-bottom: 3rem;
+}
+
+.resources-section h3 {
+    text-align: center;
+    color: #23284a;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.resource-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.resource-card:hover {
+    transform: translateY(-5px);
+}
+
+.resource-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.resource-card h4 {
+    color: #23284a;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.resource-card p {
+    color: #666;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .tab-buttons {
+        flex-direction: column;
+    }
+    
+    .tips-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+function showGuideTab(tabName) {
+    // Hide all guide contents
+    const guideContents = document.querySelectorAll('.guide-content');
+    guideContents.forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    // Remove active class from all buttons
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(button => {
+        button.classList.remove('active');
+    });
+    
+    // Show selected guide content
+    document.getElementById(tabName).classList.add('active');
+    
+    // Add active class to clicked button
+    event.target.classList.add('active');
+}
+</script>
+{% endblock %} 

@@ -1,0 +1,413 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+.upcoming-items-container {
+    max-width: 2400px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+.page-header {
+    background: linear-gradient(135deg, #23284a 0%, #3a8dde 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.page-header-content {
+    text-align: left;
+    flex: 1;
+    min-width: 300px;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: #10b981;
+}
+
+.page-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin: 0;
+}
+
+.page-header-stats {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    min-width: 120px;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #10b981;
+    display: block;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.upcoming-items-section {
+    margin-bottom: 3rem;
+}
+
+.section-intro {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.section-intro h2 {
+    color: #10b981;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.upcoming-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.upcoming-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: left;
+}
+
+.upcoming-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.upcoming-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.upcoming-image-placeholder {
+    width: 100%;
+    height: 250px;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.upcoming-details {
+    padding: 1.5rem;
+}
+
+.upcoming-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #3a8dde 0%, #7ecbff 100%);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.upcoming-details h3 {
+    color: #23284a;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.upcoming-description {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.upcoming-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.starting-price {
+    color: #10b981;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.category {
+    color: #3a8dde;
+    font-size: 0.9rem;
+    background: #f8f9fa;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    border: 1px solid #e9ecef;
+}
+
+.start-time {
+    margin-bottom: 1rem;
+}
+
+.starts-at {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.preview-button {
+    display: block;
+    width: 100%;
+    padding: 0.8rem;
+    background: linear-gradient(135deg, #3a8dde 0%, #7ecbff 100%);
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+
+.preview-button:hover {
+    transform: scale(1.02);
+}
+
+.no-upcoming {
+    text-align: center;
+    padding: 3rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.no-upcoming h3 {
+    color: #23284a;
+    margin-bottom: 1rem;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #3a8dde 0%, #7ecbff 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    margin-top: 1rem;
+    transition: transform 0.2s ease;
+}
+
+.cta-button:hover {
+    transform: scale(1.05);
+}
+
+.reminder-section {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-top: 3rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.reminder-section h3 {
+    text-align: center;
+    color: #23284a;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+}
+
+.reminder-content {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.reminder-text {
+    flex: 1;
+    min-width: 300px;
+}
+
+.reminder-text h4 {
+    color: #10b981;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.reminder-text p {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.reminder-text ul {
+    list-style: none;
+    padding: 0;
+}
+
+.reminder-text li {
+    color: #666;
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.reminder-text li:before {
+    content: "✓";
+    color: #10b981;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.reminder-cta {
+    flex-shrink: 0;
+}
+
+.notification-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+
+.notification-button:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .page-header-content {
+        text-align: center;
+    }
+    
+    .page-header-stats {
+        justify-content: center;
+    }
+    
+    .upcoming-cards-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .reminder-content {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+</style>
+
+<div class="upcoming-items-container">
+    <div class="page-header">
+        <div class="page-header-content">
+            <h1>{{ page_title }}</h1>
+            <p>{{ page_description }}</p>
+        </div>
+        <div class="page-header-stats">
+            <div class="stat-item">
+                <span class="stat-number">{{ upcoming_auctions.count }}</span>
+                <span class="stat-label">Upcoming Items</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">{{ total_items|default:"0" }}</span>
+                <span class="stat-label">Total Items</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="upcoming-items-section">
+        {% if upcoming_auctions %}
+            <div class="upcoming-cards-grid">
+                {% for auction in upcoming_auctions %}
+                <div class="upcoming-card">
+                    {% if auction.image %}
+                        <img src="{{ auction.image.url }}" alt="{{ auction.title }}" class="upcoming-image">
+                    {% else %}
+                        <div class="upcoming-image-placeholder">No Image</div>
+                    {% endif %}
+                    <div class="upcoming-details">
+                        <div class="upcoming-badge">Coming Soon</div>
+                        <h3>{{ auction.title }}</h3>
+                        <p class="upcoming-description">{{ auction.description|truncatewords:15 }}</p>
+                        <div class="upcoming-meta">
+                            <span class="starting-price">Starting Bid: ₹{{ auction.starting_price }}</span>
+                            <span class="category">General</span>
+                        </div>
+                        <div class="start-time">
+                            {% if auction.end_time|date:'U' < now|date:'U' %}
+                                <span class="starts-at" style="color: #e53e3e; font-weight: bold;">Ended</span>
+                            {% else %}
+                                <span class="starts-at">Ends: {{ auction.end_time|date:"M d, Y H:i" }}</span>
+                            {% endif %}
+                        </div>
+                        <a href="{% url 'auction_detail' auction.id %}" class="preview-button">Preview Item</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-upcoming">
+                <h3>No Upcoming Items Currently</h3>
+                <p>Check back soon for new items or browse our live auctions!</p>
+                <a href="{% url 'marketplace:live_auctions' %}" class="cta-button">View Live Auctions</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="reminder-section">
+        <h3>🔔 Never Miss an Auction</h3>
+        <div class="reminder-content">
+            <div class="reminder-text">
+                <h4>Set Up Notifications</h4>
+                <p>Get notified when your favorite items go live. Never miss the chance to bid on that perfect item!</p>
+                <ul>
+                    <li>Email notifications for upcoming items</li>
+                    <li>Push notifications for auction start times</li>
+                    <li>Price drop alerts</li>
+                    <li>Ending soon reminders</li>
+                </ul>
+            </div>
+            <div class="reminder-cta">
+                <a href="{% url 'newsletter_signup' %}" class="notification-button">Enable Notifications</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

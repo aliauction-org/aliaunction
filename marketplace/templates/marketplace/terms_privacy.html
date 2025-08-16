@@ -1,0 +1,401 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ page_title }}</h1>
+    <p>{{ page_description }}</p>
+</div>
+
+<div class="terms-privacy-section">
+    <div class="tabs">
+        <div class="tab-buttons">
+            <button class="tab-button active" onclick="showTab('terms')">Terms of Service</button>
+            <button class="tab-button" onclick="showTab('privacy')">Privacy Policy</button>
+        </div>
+
+        <div id="terms" class="tab-content active">
+            <div class="content-section">
+                <h2>Terms of Service</h2>
+                <p class="last-updated">Last updated: August 16, 2025</p>
+                
+                <div class="section">
+                    <h3>1. Acceptance of Terms</h3>
+                    <p>By accessing and using AuctionVistas, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.</p>
+                </div>
+
+                <div class="section">
+                    <h3>2. Description of Service</h3>
+                    <p>AuctionVistas is an online auction platform that allows users to buy and sell items through a bidding system. Our service includes:</p>
+                    <ul>
+                        <li>Creating and managing auction listings</li>
+                        <li>Bidding on items</li>
+                        <li>Payment processing</li>
+                        <li>Communication between buyers and sellers</li>
+                        <li>Dispute resolution services</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>3. User Accounts</h3>
+                    <p>To use our services, you must create an account. You are responsible for:</p>
+                    <ul>
+                        <li>Providing accurate and complete information</li>
+                        <li>Maintaining the security of your account</li>
+                        <li>All activities that occur under your account</li>
+                        <li>Notifying us immediately of any unauthorized use</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>4. Prohibited Activities</h3>
+                    <p>You agree not to:</p>
+                    <ul>
+                        <li>Violate any applicable laws or regulations</li>
+                        <li>Infringe on intellectual property rights</li>
+                        <li>List counterfeit or illegal items</li>
+                        <li>Engage in fraudulent bidding practices</li>
+                        <li>Harass or abuse other users</li>
+                        <li>Attempt to manipulate auction outcomes</li>
+                        <li>Use automated tools to bid or list items</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>5. Fees and Payments</h3>
+                    <p>We charge commission fees on successful sales. Fees are calculated as follows:</p>
+                    <ul>
+                        <li>Standard commission: 5% for items under ₹10,000</li>
+                        <li>Premium commission: 3% for items ₹10,000+</li>
+                        <li>VIP commission: 2% for verified sellers with 50+ sales</li>
+                    </ul>
+                    <p>All fees are clearly displayed before you list an item. Payment processing fees may apply.</p>
+                </div>
+
+                <div class="section">
+                    <h3>6. Dispute Resolution</h3>
+                    <p>In case of disputes between buyers and sellers:</p>
+                    <ul>
+                        <li>We provide mediation services</li>
+                        <li>Both parties must provide evidence</li>
+                        <li>Our decision is final and binding</li>
+                        <li>We may withhold funds until resolution</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>7. Limitation of Liability</h3>
+                    <p>AuctionVistas is not liable for:</p>
+                    <ul>
+                        <li>Direct, indirect, or consequential damages</li>
+                        <li>Loss of profits or data</li>
+                        <li>Disputes between users</li>
+                        <li>Third-party actions or content</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>8. Termination</h3>
+                    <p>We may terminate or suspend your account at any time for violations of these terms. You may also terminate your account by contacting our support team.</p>
+                </div>
+
+                <div class="section">
+                    <h3>9. Changes to Terms</h3>
+                    <p>We reserve the right to modify these terms at any time. Changes will be effective immediately upon posting. Continued use of the service constitutes acceptance of new terms.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="privacy" class="tab-content">
+            <div class="content-section">
+                <h2>Privacy Policy</h2>
+                <p class="last-updated">Last updated: August 16, 2025</p>
+                
+                <div class="section">
+                    <h3>1. Information We Collect</h3>
+                    <p>We collect the following types of information:</p>
+                    <h4>Personal Information:</h4>
+                    <ul>
+                        <li>Name, email address, and phone number</li>
+                        <li>Billing and shipping addresses</li>
+                        <li>Payment information (processed securely)</li>
+                        <li>Profile information and preferences</li>
+                    </ul>
+                    <h4>Usage Information:</h4>
+                    <ul>
+                        <li>Browsing and search history</li>
+                        <li>Bidding and purchasing activity</li>
+                        <li>Device and browser information</li>
+                        <li>IP address and location data</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>2. How We Use Your Information</h3>
+                    <p>We use your information to:</p>
+                    <ul>
+                        <li>Provide and improve our services</li>
+                        <li>Process transactions and payments</li>
+                        <li>Send notifications and updates</li>
+                        <li>Prevent fraud and ensure security</li>
+                        <li>Comply with legal obligations</li>
+                        <li>Personalize your experience</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>3. Information Sharing</h3>
+                    <p>We do not sell your personal information. We may share information with:</p>
+                    <ul>
+                        <li>Payment processors for transaction processing</li>
+                        <li>Shipping partners for delivery</li>
+                        <li>Law enforcement when required by law</li>
+                        <li>Other users (limited profile information)</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>4. Data Security</h3>
+                    <p>We implement industry-standard security measures to protect your information:</p>
+                    <ul>
+                        <li>Encryption of sensitive data</li>
+                        <li>Secure payment processing</li>
+                        <li>Regular security audits</li>
+                        <li>Access controls and monitoring</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>5. Cookies and Tracking</h3>
+                    <p>We use cookies and similar technologies to:</p>
+                    <ul>
+                        <li>Remember your preferences</li>
+                        <li>Analyze website usage</li>
+                        <li>Provide personalized content</li>
+                        <li>Improve our services</li>
+                    </ul>
+                    <p>You can control cookie settings in your browser preferences.</p>
+                </div>
+
+                <div class="section">
+                    <h3>6. Your Rights</h3>
+                    <p>You have the right to:</p>
+                    <ul>
+                        <li>Access your personal information</li>
+                        <li>Correct inaccurate information</li>
+                        <li>Request deletion of your data</li>
+                        <li>Opt out of marketing communications</li>
+                        <li>Export your data</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>7. Data Retention</h3>
+                    <p>We retain your information for as long as necessary to:</p>
+                    <ul>
+                        <li>Provide our services</li>
+                        <li>Comply with legal obligations</li>
+                        <li>Resolve disputes</li>
+                        <li>Enforce our agreements</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>8. Children's Privacy</h3>
+                    <p>Our service is not intended for children under 13. We do not knowingly collect personal information from children under 13.</p>
+                </div>
+
+                <div class="section">
+                    <h3>9. International Transfers</h3>
+                    <p>Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place.</p>
+                </div>
+
+                <div class="section">
+                    <h3>10. Contact Us</h3>
+                    <p>If you have questions about this privacy policy, please contact us at:</p>
+                    <p><strong>Email:</strong> privacy@auctionvistas.com<br>
+                    <strong>Address:</strong> AuctionVistas Privacy Team, 123 Auction Street, Mumbai, India</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="contact-section">
+    <h3>Questions About Our Terms or Privacy Policy?</h3>
+    <p>If you have any questions or concerns, our legal team is here to help.</p>
+    <a href="{% url 'marketplace:contact_support' %}" class="contact-button">Contact Legal Team</a>
+</div>
+
+<style>
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem 0;
+    background: linear-gradient(135deg, #23284a 0%, #3a8dde 100%);
+    color: white;
+    border-radius: 12px;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: #10b981;
+}
+
+.page-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.terms-privacy-section {
+    margin-bottom: 3rem;
+}
+
+.tabs {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.tab-buttons {
+    display: flex;
+    background: #f8f9fa;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 1rem 2rem;
+    border: none;
+    background: transparent;
+    color: #666;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-button.active {
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    color: white;
+}
+
+.tab-content {
+    display: none;
+    padding: 2rem;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.content-section h2 {
+    color: #23284a;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.last-updated {
+    color: #666;
+    font-style: italic;
+    margin-bottom: 2rem;
+}
+
+.section {
+    margin-bottom: 2rem;
+}
+
+.section h3 {
+    color: #10b981;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+
+.section h4 {
+    color: #23284a;
+    font-size: 1.1rem;
+    margin: 1rem 0 0.5rem 0;
+}
+
+.section p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.section ul {
+    color: #666;
+    line-height: 1.8;
+    margin-left: 1.5rem;
+}
+
+.section li {
+    margin-bottom: 0.5rem;
+}
+
+.contact-section {
+    text-align: center;
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 12px;
+}
+
+.contact-section h3 {
+    color: #23284a;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.contact-section p {
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.contact-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #3a8dde 0%, #7ecbff 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+
+.contact-button:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .tab-buttons {
+        flex-direction: column;
+    }
+    
+    .tab-content {
+        padding: 1rem;
+    }
+}
+</style>
+
+<script>
+function showTab(tabName) {
+    // Hide all tab contents
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabContents.forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    // Remove active class from all buttons
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(button => {
+        button.classList.remove('active');
+    });
+    
+    // Show selected tab content
+    document.getElementById(tabName).classList.add('active');
+    
+    // Add active class to clicked button
+    event.target.classList.add('active');
+}
+</script>
+{% endblock %} 

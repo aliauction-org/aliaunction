@@ -2,22 +2,34 @@
 {% load indian_format %}
 {% block content %}
   {% if user.is_authenticated %}
-    <a href="{% url 'create_auction' %}" class="card-btn" style="margin-bottom:2rem;display:inline-block;">Create New Auction</a>
+    <div style="display:flex;justify-content:center;margin-bottom:2.5rem;">
+      <a href="{% url 'create_auction' %}" class="card-btn" style="display:flex;align-items:center;gap:0.7rem;font-size:1.35rem;padding:1rem 2.2rem;background:linear-gradient(90deg,#3a8dde,#7ecbff);color:#fff;border-radius:2rem;font-weight:700;box-shadow:0 2px 8px 0 rgba(49,130,206,0.10);text-decoration:none;transition:background 0.2s,box-shadow 0.2s;">
+        <span style="font-size:2.1rem;line-height:1;">+</span> Create New Auction
+      </a>
+    </div>
   {% endif %}
   {% if auctions %}
-    {% for auction in auctions %}
-      <div class="card">
-        {% if auction.image %}
-          <img src="{{ auction.image.url }}" alt="{{ auction.title }}" />
-        {% else %}
-          <img src="https://via.placeholder.com/180x180/3a8dde/ffffff?text=No+Image" alt="No Image" />
-        {% endif %}
-        <div class="title">{{ auction.title }}</div>
-        <div class="current-bid">INR {{ auction.current_price|indian_currency }}</div>
-        <div class="timer">Ends: {{ auction.end_time|date:'M d, Y, h:i a' }}</div>
-        <a href="{% url 'auction_detail' auction.id %}" class="card-btn" style="margin-top:1rem;">View Details</a>
-      </div>
-    {% endfor %}
+    <div class="auction-cards-grid" style="width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;justify-items:center;justify-content:center;margin:0 auto;max-width:1200px;">
+      {% for auction in auctions %}
+        <div class="card" style="width:100%;max-width:350px;">
+          {% if auction.image %}
+            <img src="{{ auction.image.url }}" alt="{{ auction.title }}" />
+          {% else %}
+            <img src="https://via.placeholder.com/180x180/3a8dde/ffffff?text=No+Image" alt="No Image" />
+          {% endif %}
+          <div class="title">{{ auction.title }}</div>
+          <div class="current-bid">INR {{ auction.current_price|indian_currency }}</div>
+          <div class="timer">
+            {% if auction.end_time|date:'U' < now|date:'U' %}
+              <span style="color: #e53e3e; font-weight: bold;">Ended</span>
+            {% else %}
+              Ends: {{ auction.end_time|date:'M d, Y, h:i a' }}
+            {% endif %}
+          </div>
+          <a href="{% url 'auction_detail' auction.id %}" class="card-btn" style="margin:1.2rem auto 0 auto;display:block;max-width:220px;background:linear-gradient(90deg,#3a8dde,#7ecbff);color:#fff;font-weight:700;font-size:1.1rem;border-radius:1.2rem;padding:0.7rem 0;text-align:center;box-shadow:0 2px 8px 0 rgba(49,130,206,0.10);text-decoration:none;transition:background 0.2s,box-shadow 0.2s;">View Details</a>
+        </div>
+      {% endfor %}
+    </div>
   {% else %}
     <div class="card">No active auctions.</div>
   {% endif %}

@@ -1,28 +1,331 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="card" style="max-width:600px;margin:2rem auto;padding:2.5rem 2rem;">
-  <h2 style="text-align:center;margin-bottom:2rem;">Profile</h2>
-  <div style="display:flex;flex-wrap:wrap;gap:2rem;align-items:flex-start;justify-content:space-between;">
-    <div style="flex:1;min-width:220px;">
-      <div style="font-size:1.1rem;margin-bottom:1.2rem;"><strong>Username:</strong> {{ user.username }}</div>
-      <div style="font-size:1.1rem;margin-bottom:1.2rem;"><strong>Email:</strong> {{ user.email }}</div>
-      <div style="margin-bottom:1.5rem;">
-        <a href="{% url 'password_reset' %}" style="color:#3a8dde;font-weight:600;text-decoration:none;">Change Password</a>
-      </div>
-      <form method="post" action="{% url 'logout' %}">{% csrf_token %}
-        <button type="submit" style="background:linear-gradient(90deg,#3a8dde,#7ecbff);color:#fff;font-weight:600;font-size:1.05rem;border-radius:2rem;padding:0.6rem 2.2rem;box-shadow:0 2px 8px 0 rgba(49,130,206,0.10);border:none;cursor:pointer;">Logout</button>
-      </form>
+<div class="profile-container">
+    <div class="profile-card">
+        <div class="profile-header">
+            <div class="profile-avatar">👤</div>
+            <h1>User Profile</h1>
+            <p>Welcome back, {{ user.username }}!</p>
+        </div>
+
+        <div class="profile-content">
+            <div class="profile-section">
+                <h3>Account Information</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Username</div>
+                        <div class="info-value">{{ user.username }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Email Address</div>
+                        <div class="info-value">{{ user.email }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Member Since</div>
+                        <div class="info-value">{{ user.date_joined|date:"M d, Y" }}</div>
+                    </div>
+                </div>
+                
+                <div class="profile-actions">
+                    <a href="{% url 'password_reset' %}" class="profile-button secondary">Change Password</a>
+                    <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="profile-button danger">Logout</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h3>Bid History</h3>
+                <div class="bid-history">
+                    {% for bid in bids %}
+                        <div class="bid-item">
+                            <div class="bid-info">
+                                <div class="bid-title">{{ bid.auction.title }}</div>
+                                <div class="bid-details">
+                                    <span class="bid-amount">₹{{ bid.amount }}</span>
+                                    <span class="bid-time">{{ bid.timestamp|date:"M d, Y H:i" }}</span>
+                                </div>
+                            </div>
+                            <div class="bid-status">
+                                <span class="status-badge">Placed</span>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="empty-state">
+                            <div class="empty-icon">🎯</div>
+                            <h4>No Bids Yet</h4>
+                            <p>Start bidding on auctions to see your history here</p>
+                            <a href="{% url 'auction_list' %}" class="cta-button">Browse Auctions</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
-    <div style="flex:2;min-width:220px;">
-      <h3 style="margin-bottom:1rem;">Bid History</h3>
-      <ul style="padding-left:1.2rem;">
-        {% for bid in bids %}
-          <li style="margin-bottom:0.7rem;"><span style="font-weight:500;color:#7ecbff;">{{ bid.auction.title }}</span>: ₹{{ bid.amount }} <span style="color:#b0b6d6;font-size:0.97rem;">at {{ bid.timestamp }}</span></li>
-        {% empty %}
-          <li style="color:#b0b6d6;">No bids yet.</li>
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
 </div>
+
+<style>
+.profile-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #23284a 0%, #3a8dde 100%);
+    padding: 2rem;
+}
+
+.profile-card {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.profile-header {
+    background: linear-gradient(135deg, #23284a 0%, #3a8dde 100%);
+    color: white;
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.profile-avatar {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.profile-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.profile-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.profile-content {
+    padding: 2rem;
+}
+
+.profile-section {
+    margin-bottom: 3rem;
+}
+
+.profile-section:last-child {
+    margin-bottom: 0;
+}
+
+.profile-section h3 {
+    color: #23284a;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}
+
+.info-grid {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border-left: 4px solid #3a8dde;
+}
+
+.info-label {
+    color: #666;
+    font-weight: 500;
+}
+
+.info-value {
+    color: #23284a;
+    font-weight: 600;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.profile-button {
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.profile-button.secondary {
+    background: transparent;
+    color: #3a8dde;
+    border: 2px solid #3a8dde;
+}
+
+.profile-button.secondary:hover {
+    background: #3a8dde;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.profile-button.danger {
+    background: #10b981;
+    color: white;
+}
+
+.profile-button.danger:hover {
+    background: #059669;
+    transform: translateY(-2px);
+}
+
+.bid-history {
+    display: grid;
+    gap: 1rem;
+}
+
+.bid-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+}
+
+.bid-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.bid-info {
+    flex: 1;
+}
+
+.bid-title {
+    color: #23284a;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.bid-details {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.bid-amount {
+    color: #10b981;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.bid-time {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.bid-status {
+    margin-left: 1rem;
+}
+
+.status-badge {
+    background: #10b981;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 2px dashed #e2e8f0;
+}
+
+.empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.empty-state h4 {
+    color: #23284a;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.cta-button {
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+}
+
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 1rem;
+    }
+    
+    .profile-header {
+        padding: 2rem 1rem;
+    }
+    
+    .profile-header h1 {
+        font-size: 2rem;
+    }
+    
+    .profile-content {
+        padding: 1.5rem;
+    }
+    
+    .info-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .profile-actions {
+        flex-direction: column;
+    }
+    
+    .bid-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .bid-details {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+</style>
 {% endblock %} 
