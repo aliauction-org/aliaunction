@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.conf import settings
 from notifications.models import Notification
+from django.utils import timezone
 
 
 # Create your views here.
@@ -14,7 +15,10 @@ from notifications.models import Notification
 
 def auction_list(request):
     auctions = Auction.objects.filter(is_active=True).order_by('-created_at')
-    return render(request, 'auctions/auction_list.html', {'auctions': auctions})
+    return render(request, 'auctions/auction_list.html', {
+        'auctions': auctions,
+        'now': timezone.now()
+    })
 
 
 def send_outbid_email(outbid_user, auction):
@@ -85,7 +89,8 @@ def auction_detail(request, auction_id):
         'has_bid': has_bid, 
         'already_reviewed': already_reviewed,
         'is_winner': is_winner,
-        'has_payment_proof': has_payment_proof
+        'has_payment_proof': has_payment_proof,
+        'now': timezone.now()
     })
 
 

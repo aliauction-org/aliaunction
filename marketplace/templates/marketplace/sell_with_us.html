@@ -1,0 +1,518 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ page_title }}</h1>
+    <p>{{ page_description }}</p>
+</div>
+
+<div class="sell-with-us-section">
+    <div class="hero-section">
+        <div class="hero-content">
+            <h2>💰 Turn Your Items Into Cash</h2>
+            <p>Join thousands of successful sellers on AuctionVistas. Our platform makes it easy to reach millions of potential buyers and get the best price for your items.</p>
+            {% if user.is_authenticated %}
+                <a href="{% url 'create_auction' %}" class="cta-button">Start Selling Now</a>
+            {% else %}
+                <a href="{% url 'register' %}" class="cta-button">Sign Up to Sell</a>
+            {% endif %}
+        </div>
+        <div class="hero-stats">
+            <div class="stat-card">
+                <h3>10,000+</h3>
+                <p>Active Sellers</p>
+            </div>
+            <div class="stat-card">
+                <h3>₹50M+</h3>
+                <p>Total Sales</p>
+            </div>
+            <div class="stat-card">
+                <h3>95%</h3>
+                <p>Success Rate</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="benefits-section">
+        <h3>Why Sell with AuctionVistas?</h3>
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">🚀</div>
+                <h4>Easy Setup</h4>
+                <p>Create your auction in minutes with our simple, step-by-step process. Upload photos, set your starting price, and you're ready to go!</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">🌍</div>
+                <h4>Global Reach</h4>
+                <p>Access millions of potential buyers from around the world. Our platform connects you with serious bidders who are ready to pay top dollar.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">🔒</div>
+                <h4>Secure Payments</h4>
+                <p>Get paid quickly and securely. We handle all payment processing and ensure you receive your funds safely after each successful sale.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">📊</div>
+                <h4>Real-time Analytics</h4>
+                <p>Track your auction performance with detailed analytics. Monitor bids, views, and engagement to optimize your listings.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">🎯</div>
+                <h4>Competitive Pricing</h4>
+                <p>Our low commission rates mean you keep more of your profits. We only succeed when you succeed!</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">📱</div>
+                <h4>Mobile Friendly</h4>
+                <p>Manage your auctions from anywhere. Our mobile-optimized platform works perfectly on all devices.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="how-to-sell-section">
+        <h3>How to Sell in 4 Simple Steps</h3>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h4>Create Account</h4>
+                <p>Sign up for free and complete your seller profile. Verification takes just a few minutes.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h4>List Your Item</h4>
+                <p>Upload high-quality photos, write compelling descriptions, and set your starting price.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h4>Promote & Monitor</h4>
+                <p>Share your auction and monitor bidding activity. Our tools help you reach more buyers.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h4>Get Paid</h4>
+                <p>Once your auction ends, we handle payment processing and you receive your funds quickly.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="commission-section">
+        <h3>Transparent Commission Structure</h3>
+        <div class="commission-cards">
+            <div class="commission-card">
+                <h4>Standard Commission</h4>
+                <div class="commission-rate">5%</div>
+                <p>For items under ₹10,000</p>
+            </div>
+            <div class="commission-card featured">
+                <h4>Premium Commission</h4>
+                <div class="commission-rate">3%</div>
+                <p>For items ₹10,000+</p>
+                <div class="featured-badge">Most Popular</div>
+            </div>
+            <div class="commission-card">
+                <h4>VIP Commission</h4>
+                <div class="commission-rate">2%</div>
+                <p>For verified sellers with 50+ sales</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="seller-testimonials">
+        <h3>What Our Sellers Say</h3>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    <p>"I've been selling on AuctionVistas for 2 years and it's been amazing. The platform is easy to use and I've made great profits!"</p>
+                </div>
+                <div class="testimonial-author">
+                    <strong>Priya Sharma</strong>
+                    <span>Antique Seller</span>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    <p>"The customer support is excellent and payments are always on time. Highly recommend for anyone looking to sell online."</p>
+                </div>
+                <div class="testimonial-author">
+                    <strong>Rajesh Kumar</strong>
+                    <span>Electronics Seller</span>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    <p>"I started with just one item and now I'm running a full-time business. AuctionVistas changed my life!"</p>
+                </div>
+                <div class="testimonial-author">
+                    <strong>Meera Patel</strong>
+                    <span>Art Collector</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="get-started-section">
+        <h3>Ready to Start Selling?</h3>
+        <p>Join our community of successful sellers today and start earning more for your items.</p>
+        <div class="get-started-buttons">
+            {% if user.is_authenticated %}
+                <a href="{% url 'create_auction' %}" class="primary-button">Create Your First Auction</a>
+            {% else %}
+                <a href="{% url 'register' %}" class="primary-button">Sign Up Now</a>
+                <a href="{% url 'login' %}" class="secondary-button">Already Have Account? Login</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem 0;
+    background: linear-gradient(135deg, #23284a 0%, #3a8dde 100%);
+    color: white;
+    border-radius: 12px;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: #10b981;
+}
+
+.page-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.hero-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 3rem;
+    margin-bottom: 4rem;
+    align-items: center;
+}
+
+.hero-content h2 {
+    color: #10b981;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.hero-content p {
+    color: #666;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: transform 0.2s ease;
+}
+
+.cta-button:hover {
+    transform: scale(1.05);
+}
+
+.hero-stats {
+    display: grid;
+    gap: 1rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.stat-card h3 {
+    color: #10b981;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-card p {
+    color: #666;
+    font-weight: bold;
+}
+
+.benefits-section {
+    margin-bottom: 4rem;
+}
+
+.benefits-section h3 {
+    text-align: center;
+    color: #23284a;
+    font-size: 2rem;
+    margin-bottom: 3rem;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.benefit-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.benefit-card:hover {
+    transform: translateY(-5px);
+}
+
+.benefit-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.benefit-card h4 {
+    color: #23284a;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+
+.benefit-card p {
+    color: #666;
+    line-height: 1.6;
+}
+
+.how-to-sell-section {
+    margin-bottom: 4rem;
+}
+
+.how-to-sell-section h3 {
+    text-align: center;
+    color: #23284a;
+    font-size: 2rem;
+    margin-bottom: 3rem;
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.step-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+.step-number {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 auto 1rem;
+}
+
+.step-card h4 {
+    color: #23284a;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.step-card p {
+    color: #666;
+    line-height: 1.6;
+}
+
+.commission-section {
+    margin-bottom: 4rem;
+}
+
+.commission-section h3 {
+    text-align: center;
+    color: #23284a;
+    font-size: 2rem;
+    margin-bottom: 3rem;
+}
+
+.commission-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.commission-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+.commission-card.featured {
+    border: 3px solid #10b981;
+    transform: scale(1.05);
+}
+
+.featured-badge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #10b981;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.commission-card h4 {
+    color: #23284a;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.commission-rate {
+    color: #10b981;
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.commission-card p {
+    color: #666;
+}
+
+.seller-testimonials {
+    margin-bottom: 4rem;
+}
+
+.seller-testimonials h3 {
+    text-align: center;
+    color: #23284a;
+    font-size: 2rem;
+    margin-bottom: 3rem;
+}
+
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.testimonial-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.testimonial-content p {
+    color: #666;
+    font-style: italic;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.testimonial-author strong {
+    color: #23284a;
+    display: block;
+}
+
+.testimonial-author span {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.get-started-section {
+    text-align: center;
+    background: #f8f9fa;
+    padding: 3rem;
+    border-radius: 12px;
+}
+
+.get-started-section h3 {
+    color: #23284a;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.get-started-section p {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+.get-started-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.primary-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+
+.primary-button:hover {
+    transform: scale(1.05);
+}
+
+.secondary-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: transparent;
+    color: #3a8dde;
+    text-decoration: none;
+    border: 2px solid #3a8dde;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.secondary-button:hover {
+    background: #3a8dde;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .get-started-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+</style>
+{% endblock %} 

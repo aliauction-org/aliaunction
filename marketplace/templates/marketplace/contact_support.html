@@ -1,0 +1,480 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ page_title }}</h1>
+    <p>{{ page_description }}</p>
+</div>
+
+<div class="contact-support-section">
+    <div class="support-options">
+        <h2>📞 How Can We Help You?</h2>
+        <p>Choose the best way to get in touch with our support team</p>
+        
+        <div class="support-cards">
+            <div class="support-card">
+                <div class="support-icon">📧</div>
+                <h3>Email Support</h3>
+                <p>Get a detailed response within 24 hours</p>
+                <ul>
+                    <li>Best for complex issues</li>
+                    <li>Detailed documentation</li>
+                    <li>File attachments allowed</li>
+                </ul>
+                <a href="mailto:support@auctionvistas.com" class="support-link">Send Email</a>
+            </div>
+            
+            <div class="support-card featured">
+                <div class="support-icon">💬</div>
+                <h3>Live Chat</h3>
+                <p>Chat with our support team in real-time</p>
+                <ul>
+                    <li>Instant responses</li>
+                    <li>Available 24/7</li>
+                    <li>Best for urgent issues</li>
+                </ul>
+                <a href="#" class="support-link primary">Start Chat</a>
+            </div>
+            
+            <div class="support-card">
+                <div class="support-icon">📞</div>
+                <h3>Phone Support</h3>
+                <p>Speak directly with our support team</p>
+                <ul>
+                    <li>Immediate assistance</li>
+                    <li>Personal touch</li>
+                    <li>Available during business hours</li>
+                </ul>
+                <a href="tel:+91-1800-123-4567" class="support-link">Call Now</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="contact-form-section">
+        <h2>📝 Send Us a Message</h2>
+        <p>Fill out the form below and we'll get back to you as soon as possible</p>
+        
+        <form class="contact-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject *</label>
+                    <select id="subject" name="subject" required>
+                        <option value="">Select a topic</option>
+                        <option value="account">Account Issues</option>
+                        <option value="bidding">Bidding Problems</option>
+                        <option value="payment">Payment Issues</option>
+                        <option value="shipping">Shipping & Delivery</option>
+                        <option value="technical">Technical Problems</option>
+                        <option value="fraud">Report Fraud</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="message">Message *</label>
+                <textarea id="message" name="message" rows="6" placeholder="Please describe your issue in detail..." required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="urgent" id="urgent">
+                    <span class="checkmark"></span>
+                    This is an urgent issue that requires immediate attention
+                </label>
+            </div>
+            
+            <button type="submit" class="submit-button">Send Message</button>
+        </form>
+    </div>
+
+    <div class="faq-preview">
+        <h2>❓ Quick Answers</h2>
+        <p>Check our frequently asked questions before contacting support</p>
+        
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h4>How do I reset my password?</h4>
+                <p>Click "Forgot Password" on the login page and follow the instructions sent to your email.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Can I cancel my bid?</h4>
+                <p>Bids are binding and cannot be cancelled once placed. Please bid carefully.</p>
+            </div>
+            <div class="faq-item">
+                <h4>When will I receive my payment?</h4>
+                <p>Sellers receive payment within 3-5 business days after shipping confirmation.</p>
+            </div>
+            <div class="faq-item">
+                <h4>What if my item arrives damaged?</h4>
+                <p>Contact us immediately with photos. We offer buyer protection for damaged items.</p>
+            </div>
+        </div>
+        
+        <div class="faq-cta">
+            <a href="{% url 'marketplace:help_center' %}" class="faq-link">View All FAQs</a>
+        </div>
+    </div>
+
+    <div class="support-info">
+        <h2>ℹ️ Support Information</h2>
+        <div class="info-grid">
+            <div class="info-card">
+                <h4>Business Hours</h4>
+                <p>Monday - Friday: 9:00 AM - 6:00 PM IST<br>
+                Saturday: 10:00 AM - 4:00 PM IST<br>
+                Sunday: Closed</p>
+            </div>
+            <div class="info-card">
+                <h4>Response Times</h4>
+                <p>Email: Within 24 hours<br>
+                Live Chat: Instant<br>
+                Phone: During business hours</p>
+            </div>
+            <div class="info-card">
+                <h4>Emergency Contact</h4>
+                <p>For urgent security issues:<br>
+                <strong>+91-1800-123-4567</strong><br>
+                Available 24/7</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem 0;
+    background: linear-gradient(135deg, #23284a 0%, #3a8dde 100%);
+    color: white;
+    border-radius: 12px;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: #10b981;
+}
+
+.page-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.contact-support-section {
+    margin-bottom: 3rem;
+}
+
+.support-options {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.support-options h2 {
+    color: #23284a;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.support-options p {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+.support-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.support-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.support-card.featured {
+    border: 3px solid #10b981;
+    transform: scale(1.05);
+}
+
+.support-card:hover {
+    transform: translateY(-5px);
+}
+
+.support-card.featured:hover {
+    transform: scale(1.05) translateY(-5px);
+}
+
+.support-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.support-card h3 {
+    color: #23284a;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+
+.support-card p {
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.support-card ul {
+    color: #666;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.support-card li {
+    margin-bottom: 0.5rem;
+}
+
+.support-link {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background: linear-gradient(135deg, #3a8dde 0%, #7ecbff 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+
+.support-link.primary {
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+}
+
+.support-link:hover {
+    transform: scale(1.05);
+}
+
+.contact-form-section {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 3rem;
+}
+
+.contact-form-section h2 {
+    color: #23284a;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.contact-form-section p {
+    color: #666;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.contact-form {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    color: #23284a;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #3a8dde;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: #666;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: auto;
+    margin-right: 0.5rem;
+}
+
+.submit-button {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.submit-button:hover {
+    transform: scale(1.02);
+}
+
+.faq-preview {
+    margin-bottom: 3rem;
+}
+
+.faq-preview h2 {
+    color: #23284a;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.faq-preview p {
+    color: #666;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.faq-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.faq-item {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.faq-item h4 {
+    color: #10b981;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.faq-item p {
+    color: #666;
+    line-height: 1.6;
+    text-align: left;
+}
+
+.faq-cta {
+    text-align: center;
+}
+
+.faq-link {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #3a8dde 0%, #7ecbff 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+
+.faq-link:hover {
+    transform: scale(1.05);
+}
+
+.support-info {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.support-info h2 {
+    color: #23284a;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.info-card {
+    text-align: center;
+}
+
+.info-card h4 {
+    color: #10b981;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.info-card p {
+    color: #666;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .support-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .support-card.featured {
+        transform: none;
+    }
+    
+    .support-card.featured:hover {
+        transform: translateY(-5px);
+    }
+}
+</style>
+{% endblock %} 

@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 from auctions.models import Auction
 from django.db.models import Count
 from django.db.models import Q
+from django.utils import timezone
 
 def homepage(request):
     query = request.GET.get('search', '').strip()
@@ -30,7 +31,12 @@ def homepage(request):
         auctions = auctions.filter(Q(title__icontains=query) | Q(description__icontains=query))
     auctions = auctions.order_by('-created_at')
     categories = Auction.objects.values('id', 'title').annotate(count=Count('id'))[:5]  # Placeholder for categories
-    return render(request, 'home.html', {'auctions': auctions, 'categories': categories, 'search_query': query})
+    return render(request, 'home.html', {
+        'auctions': auctions, 
+        'categories': categories, 
+        'search_query': query,
+        'now': timezone.now()
+    })
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -41,6 +47,8 @@ urlpatterns = [
     path('notifications/', include('notifications.urls')),
     path('payments/', include('payments.urls')),
     path('newsletter-signup/', include('newsletter.urls')),
+    path('marketplace/', include('marketplace.urls')),
+    path('news/', include('news.urls')),
     path('', homepage, name='home'),
 ]
 
