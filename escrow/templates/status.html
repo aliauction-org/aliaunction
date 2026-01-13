@@ -13,6 +13,19 @@
   <a href="{% url 'mark_delivered' escrow.id %}">Confirm Delivery</a>
 {% endif %}
 
+{% if user == escrow.buyer and escrow.status == "PAID" %}
+  <a href="{% url 'add_shipping' escrow.id %}">
+    Add / Update Shipping Address
+  </a>
+{% endif %}
+
+{% if escrow.shipping %}
+  <h3>Shipping Address</h3>
+  <p>{{ escrow.shipping.full_name }}</p>
+  <p>{{ escrow.shipping.address_line1 }}, {{ escrow.shipping.city }}</p>
+  <p>{{ escrow.shipping.state }} - {{ escrow.shipping.postal_code }}</p>
+{% endif %}
+
 {% if escrow.status == "DELIVERED" %}
   <p>Awaiting completion…</p>
 {% endif %}
