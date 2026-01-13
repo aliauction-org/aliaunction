@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'news',
     'auction_status',
     'bid_protection',
+    'reserve_price',
 ]
 
 MIDDLEWARE = [
