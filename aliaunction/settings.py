@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bid_protection.apps.BidProtectionConfig',
+    'reserve_price.context_processors.reserve_context',
     'users',
     'auctions',
     'payments',
