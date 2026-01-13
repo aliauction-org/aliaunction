@@ -41,3 +41,7 @@ class PaymentProofAdmin(admin.ModelAdmin):
     list_filter = ('status', 'direction', 'auction')
     search_fields = ('auction__title', 'payer__username', 'payee__username')
     actions = [verify_payment, reject_payment]
+
+@admin.register(Invoice)
+class InvoiceAdmin(admin.ModelAdmin):
+    list_display = ("id", "auction", "buyer", "seller", "amount", "is_paid")
