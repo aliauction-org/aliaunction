@@ -182,8 +182,8 @@ Aliauction_website_2026/
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/Dimanjan/Aliauction_website_2026.git
-cd Aliauction_website_2026
+git clone https://github.com/Dimanjan/aliaunction.git
+cd aliaunction-main_updated_TY
 ```
 
 ### 2. Create and Activate a Virtual Environment
