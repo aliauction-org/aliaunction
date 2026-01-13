@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>My Watchlist</h2>
+
+{% if items %}
+  <ul>
+    {% for item in items %}
+      <li>
+        <a href="{% url 'auction_detail' item.auction.id %}">
+          {{ item.auction.title }}
+        </a>
+        (Ends: {{ item.auction.end_time }})
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>You are not watching any auctions.</p>
+{% endif %}
+{% endblock %}
