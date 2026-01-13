@@ -945,6 +945,12 @@
         {% endif %}
       </div>
 
+      {% if user == auction.owner or user.is_staff %}
+     {% with reserve_status=get_reserve_status(auction) %}
+    {% include "reserve_price/badge.html" with reserve_status=reserve_status %}
+    {% endwith %}
+  {% endif %}
+      
       <!-- Bid Trend -->
       {% if bids.count > 1 %}
       <div class="bid-trend">
