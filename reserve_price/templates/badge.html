@@ -1,0 +1,7 @@
+{% if reserve_status %}
+  {% if reserve_status == "MET" %}
+    <span class="badge badge-live">Reserve Met</span>
+  {% else %}
+    <span class="badge badge-ended">Reserve Not Met</span>
+  {% endif %}
+{% endif %}
