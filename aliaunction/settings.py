@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'bid_protection',
     'reserve_price',
     'auction_close',
+    'watchlist',
 ]
 
 MIDDLEWARE = [
