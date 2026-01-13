@@ -25,6 +25,16 @@
             {% else %}
               Ends: {{ auction.end_time|date:'M d, Y, h:i a' }}
             {% endif %}
+              {% if auction.workflow.status == "DRAFT" %}
+      <form method="post" action="{% url 'submit_auction' auction.id %}">
+        {% csrf_token %}
+    <button type="submit">Submit for Approval</button>
+  </form>
+{% elif auction.workflow.status == "PENDING" %}
+  <p>Awaiting admin approval</p>
+{% elif auction.workflow.status == "REJECTED" %}
+  <p>Rejected: {{ auction.workflow.rejection_reason }}</p>
+{% endif %}
           </div>
           <a href="{% url 'auction_detail' auction.id %}" class="card-btn" style="margin:1.2rem auto 0 auto;display:block;max-width:220px;background:linear-gradient(90deg,#3a8dde,#7ecbff);color:#fff;font-weight:700;font-size:1.1rem;border-radius:1.2rem;padding:0.7rem 0;text-align:center;box-shadow:0 2px 8px 0 rgba(49,130,206,0.10);text-decoration:none;transition:background 0.2s,box-shadow 0.2s;">View Details</a>
         </div>
