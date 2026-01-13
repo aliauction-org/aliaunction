@@ -9,6 +9,12 @@
 
 <h3>Total: ₹{{ invoice.total_payable }}</h3>
 
+<hr>
+<p><strong>Commission Details</strong></p>
+<p>Seller Commission (10%): ₹{{ invoice.seller_fee }}</p>
+<p>Buyer Commission (3%): ₹{{ invoice.buyer_fee }}</p>
+<p>{{ invoice.transport_charge }} Transport charges paid by Buyer to Seller</p><hr>
+
 {% if invoice.status == "PENDING" %}
   <a href="{% url 'pay_invoice' invoice.id %}">Pay Now</a>
 {% else %}
