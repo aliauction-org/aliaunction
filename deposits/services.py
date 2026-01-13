@@ -25,3 +25,12 @@ def create_seller_deposit(user, auction):
         deposit_type="SELLER",
         amount=get_seller_deposit()
     )
+
+def refund_deposit(deposit):
+    deposit.status = "REFUNDED"
+    deposit.save()
+
+
+def forfeit_deposit(deposit):
+    deposit.status = "FORFEITED"
+    deposit.save()
