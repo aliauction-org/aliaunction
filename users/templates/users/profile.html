@@ -7,7 +7,9 @@
             <h1>User Profile</h1>
             <p>Welcome back, {{ user.username }}!</p>
         </div>
-
+        {% if user.is_authenticated and user != profile_user %}
+          <a href="{% url 'report_user' profile_user.id %}">🚩 Report User</a>
+        {% endif %}
         <div class="profile-content">
             <div class="profile-section">
                 <h3>Account Information</h3>
