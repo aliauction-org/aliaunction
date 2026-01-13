@@ -69,3 +69,69 @@ class UserPaymentProfile(models.Model):
     additional_instructions = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Invoice(models.Model):
+    auction = models.OneToOneField(
+        Auction,
+        on_delete=models.CASCADE,
+        related_name="invoice"
+    )
+    buyer = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="invoices"
+    )
+    seller = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="sales"
+    )
+
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    buyer_fee = models.DecimalField(max_digits=10, decimal_places=2)
+    seller_fee = models.DecimalField(max_digits=10, decimal_places=2)
+    transport_charge = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    STATUS_CHOICES = [
+        ("PENDING", "Pending"),
+        ("PAID", "Paid"),
+        ("FAILED", "Failed"),
+    ]
+
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default="PENDING"
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def total_payable(self):
+        return self.amount + self.buyer_fee + self.transport_charge
+
+    def _str_(self):
+        return f"Invoice for {self.auction.title}"
+
+
+class Payment(models.Model):
+    invoice = models.ForeignKey(
+        Invoice,
+        on_delete=models.CASCADE,
+        related_name="payments"
+    )
+
+    METHOD_CHOICES = [
+        ("UPI", "UPI"),
+        ("PAYPAL", "PayPal"),
+        ("BANK", "Bank Transfer"),
+        ("COD", "Cash on Delivery"),
+    ]
+
+    method = models.CharField(max_length=20, choices=METHOD_CHOICES)
+    reference_id = models.CharField(max_length=100, blank=True)
+    status = models.CharField(
+        max_length=10,
+        choices=[("INITIATED", "Initiated"), ("SUCCESS", "Success"), ("FAILED", "Failed")],
+        default="INITIATED"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
