@@ -1,0 +1,208 @@
+/* ============================
+   AUCTION STATUS BADGES
+============================ */
+
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: 12px;features.c
+    border-radius: 6px;
+    font-weight: 600;
+    margin-left: 6px;
+}
+
+.badge-upcoming {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.badge-live {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.badge-ended {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+/* ============================
+   VERIFIED SELLER
+============================ */
+
+.verified-seller {
+    color: #28a745;
+    font-weight: 600;
+    margin-left: 6px;
+}
+
+/* ============================
+   COUNTDOWN TIMER
+============================ */
+
+.countdown {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ff9800;
+    margin-top: 6px;
+}
+
+/* ============================
+   BID SECTION
+============================ */
+
+.bid-box {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 10px;
+    background: #fafafa;
+    margin-top: 20px;
+}
+
+.bid-input {
+    width: 100%;
+    padding: 8px;
+    font-size: 15px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.bid-btn {
+    margin-top: 10px;
+    width: 100%;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    font-size: 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.bid-btn:hover {
+    background-color: #0056b3;
+}
+
+/* ============================
+   BID HISTORY
+============================ */
+
+.bid-history {
+    margin-top: 20px;
+}
+
+.bid-history table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.bid-history th,
+.bid-history td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.bid-history th {
+    background-color: #f1f1f1;
+}
+
+/* ============================
+   ESCROW STATUS FLOW
+============================ */
+
+.escrow-status {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.escrow-step {
+    padding: 8px 12px;
+    border-radius: 20px;
+    background: #e0e0e0;
+    font-size: 13px;
+}
+
+.escrow-step.active {
+    background-color: #28a745;
+    color: #fff;
+}
+
+/* ============================
+   ACTION BUTTONS
+============================ */
+
+.action-btn {
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.action-primary {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.action-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+/* ============================
+   INVOICE & PAYMENT
+============================ */
+
+.invoice-box {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+.pay-btn {
+    background-color: #28a745;
+    color: #fff;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+}
+
+.pay-btn:hover {
+    background-color: #1e7e34;
+}
+
+/* ============================
+   RATING STARS
+============================ */
+
+.rating-stars {
+    display: flex;
+    gap: 5px;
+}
+
+.star {
+    font-size: 20px;
+    color: #ccc;
+    cursor: pointer;
+}
+
+.star.active {
+    color: #f5b301;
+}
+
+/* ============================
+   DISPUTE BOX
+============================ */
+
+.dispute-box {
+    border: 1px solid #ffc107;
+    background: #fff8e1;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
