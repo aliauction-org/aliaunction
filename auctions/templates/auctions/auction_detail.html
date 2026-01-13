@@ -1,4 +1,3 @@
-
 {% extends 'base.html' %}
 {% load indian_format %}
 {% block content %}
@@ -1058,6 +1057,9 @@
 
   <!-- Reviews Section -->
   <div class="reviews-section">
+    <p>Seller Rating:
+  {{ auction.seller|get_reputation|floatformat:1 }} ★
+</p>
     <h3 class="section-title">
       <span class="section-icon">⭐</span>
       Reviews
