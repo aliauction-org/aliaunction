@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Invoice</h2>
+
+<p>Auction: {{ invoice.auction.title }}</p>
+<p>Winning Price: ₹{{ invoice.amount }}</p>
+<p>Buyer Fee (3%): ₹{{ invoice.buyer_fee }}</p>
+<p>Transport: ₹{{ invoice.transport_charge }}</p>
+
+<h3>Total: ₹{{ invoice.total_payable }}</h3>
+
+{% if invoice.status == "PENDING" %}
+  <a href="{% url 'pay_invoice' invoice.id %}">Pay Now</a>
+{% else %}
+  <p>Status: {{ invoice.status }}</p>
+{% endif %}
+{% endblock %}
