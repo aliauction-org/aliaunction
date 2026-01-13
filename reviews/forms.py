@@ -1,6 +1,11 @@
 from django import forms
-from .models import Review, Rating
+from .models import Reviews
 
-class ReviewRatingForm(forms.Form):
-    score = forms.IntegerField(min_value=1, max_value=5, label='Rating (1-5)')
-    content = forms.CharField(widget=forms.Textarea, label='Review') 
+class RatingForm(forms.ModelForm):
+    class Meta:
+        model = Reviews
+        fields = ["stars", "review"]
+        widgets = {
+            "stars": forms.NumberInput(attrs={"min": 1, "max": 5}),
+            "review": forms.Textarea(attrs={"rows": 3}),
+        }
