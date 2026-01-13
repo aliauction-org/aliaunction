@@ -3,6 +3,8 @@ def mark_paid(escrow):
     escrow.save()
 
 def mark_shipped(escrow):
+    if not hasattr(escrow, "shipping"):
+        raise ValueError("Shipping address not provided")
     escrow.status = "SHIPPED"
     escrow.save()
 
