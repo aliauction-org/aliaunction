@@ -1,2 +1,7 @@
 Django>=5.2.4
 Pillow>=11.3.0 
+channels
+channels-redis
+django-crispy-forms
+crispy-bootstrap5
+reportlab
