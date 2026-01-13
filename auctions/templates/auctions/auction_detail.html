@@ -855,6 +855,10 @@
   <a href="{% url 'report_auction' auction.id %}">🚩 Report Auction</a>
 {% endif %}
 
+{% if auction.seller.seller_verification.is_verified %}
+  <span class="badge badge-live">✔ Verified Seller</span>
+{% endif %}
+
 <div class="auction-container">
   <!-- Auction Header -->
   <div class="auction-header">
