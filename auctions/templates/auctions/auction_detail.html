@@ -876,6 +876,7 @@
       {% endif %}
     </div>
   </div>
+  
 {% with status=get_auction_status(auction) %}
   {% include "auction_status/badge.html" with status=status %}
   {% include "auction_status/countdown.html" with seconds=get_countdown_seconds(auction) %}
@@ -1065,6 +1066,10 @@
 
   <!-- Winner Section -->
   {% if is_winner and not auction.is_active %}
+  {% if user == auction.winner %}
+  <a href="{% url 'invoice_view' auction.id %}">View Invoice / Pay</a>
+{% endif %}
+  
     <div class="winner-section">
       <h3 class="winner-title">🎉 Congratulations! You won this auction!</h3>
       <p><strong>Amount to Pay:</strong> INR {{ auction.current_price|indian_currency }}</p>
