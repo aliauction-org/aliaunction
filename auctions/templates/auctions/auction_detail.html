@@ -1083,6 +1083,20 @@
   {% endif %}
 </div>
 
+{% if user.is_authenticated %}
+  <form method="post" action="{% url 'toggle_watchlist' auction.id %}">
+    {% csrf_token %}
+    <button type="submit">
+      {% if auction.watchers.filter(user=user).exists %}
+        ★ Remove from Watchlist
+      {% else %}
+        ☆ Add to Watchlist
+      {% endif %}
+    </button>
+  </form>
+{% endif %}
+<p>{{ auction.watchers.count }} people watching this auction</p>
+
 <script>
   function formatIndianNumber(x) {
     x = x.toString().split('.');
