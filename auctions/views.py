@@ -14,7 +14,7 @@ from auction_ws.utils import broadcast_auction_update
 
 
 def auction_list(request):
-    auctions = Auction.objects.filter(is_active=True).order_by('-created_at')
+    auctions =Auction.objects.filter(workflow__status="LIVE").order_by('-created_at')
     return render(request, 'auctions/auction_list.html', {
         'auctions': auctions,
         'now': timezone.now()
