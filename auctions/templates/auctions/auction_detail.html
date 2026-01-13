@@ -851,6 +851,18 @@
   }
 </style>
 
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Report: {{ target }}</h2>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Submit Report</button>
+</form>
+
+{% endblock %}
 <div class="auction-container">
   <!-- Auction Header -->
   <div class="auction-header">
