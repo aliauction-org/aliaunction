@@ -1,0 +1,15 @@
+def mark_paid(escrow):
+    escrow.status = "PAID"
+    escrow.save()
+
+def mark_shipped(escrow):
+    escrow.status = "SHIPPED"
+    escrow.save()
+
+def mark_delivered(escrow):
+    escrow.status = "DELIVERED"
+    escrow.save()
+
+def mark_completed(escrow):
+    escrow.status = "COMPLETED"
+    escrow.save()
