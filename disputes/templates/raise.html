@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Raise Dispute for "{{ auction.title }}"</h2>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Submit Dispute</button>
+</form>
+{% endblock %}
