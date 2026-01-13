@@ -872,6 +872,11 @@
   {% include "auction_status/badge.html" with status=status %}
   {% include "auction_status/countdown.html" with seconds=get_countdown_seconds(auction) %}
 {% endwith %}
+
+  {% if auction.close_mode %}
+  {% include "auction_close/badge.html" %}
+{% endif %}
+  
   <!-- Main Auction Grid -->
   <div class="auction-grid">
     <!-- Info Section -->
