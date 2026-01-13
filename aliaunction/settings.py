@@ -54,6 +54,17 @@ INSTALLED_APPS = [
     'reserve_price',
     'auction_close',
     'watchlist',
+    'auction_discovery',
+    'reports',
+    'seller_verification',
+    'channels',
+    'payments',
+    'deposits',
+    'commission',
+    'auction_workflow',
+    'disputes',
+    'escrow',
+    'shipping',
 ]
 
 MIDDLEWARE = [
