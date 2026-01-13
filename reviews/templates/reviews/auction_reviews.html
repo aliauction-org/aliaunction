@@ -1,14 +1,10 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block content %}
-  <h2>Reviews for {{ auction.title }}</h2>
-  {% if avg_rating %}
-    <p>Average Rating: {{ avg_rating|floatformat:1 }}/5</p>
-  {% endif %}
-  <ul>
-    {% for review in reviews %}
-      <li><strong>{{ review.user.username }}</strong>: {{ review.content }}</li>
-    {% empty %}
-      <li>No reviews yet.</li>
-    {% endfor %}
-  </ul>
-{% endblock %} 
+<h2>Rate {{ target.username }}</h2>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Submit Rating</button>
+</form>
+{% endblock %}
