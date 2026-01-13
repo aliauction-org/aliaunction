@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'reports',
     'seller_verification',
     'channels',
+    'auction_ws',
     'payments',
     'deposits',
     'commission',
