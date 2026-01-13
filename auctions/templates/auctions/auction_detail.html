@@ -1161,5 +1161,17 @@
       input.classList.add('form-input');
     });
   });
+  <script>
+const socket = new WebSocket(
+  "ws://" + window.location.host + "/ws/auction/{{ auction.id }}/"
+);
+
+socket.onmessage = function(event) {
+  const data = JSON.parse(event.data);
+  console.log("Auction update:", data);
+};
+
+// ❌ DO NOT SEND ANYTHING
+</script>
 </script>
 {% endblock %} 
