@@ -82,6 +82,11 @@ def pay_invoice(request, invoice_id):
             method=method,
             status="SUCCESS"  # simulate success
         )
+        
+        if hasattr(invoice.auction, "escrow") and hasattr(invoice.auction.escrow, "shipping"):
+    invoice.transport_charge = invoice.auction.escrow.shipping.delivery_charge
+    invoice.save(update_fields=["transport_charge"])
+    
         invoice.status = "PAID"
         invoice.save()
         return redirect("invoice_view", auction_id=invoice.auction.id)
