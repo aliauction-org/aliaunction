@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'marketplace',
     'news',
     'auction_status',
+    'bid_protection',
 ]
 
 MIDDLEWARE = [
