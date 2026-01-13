@@ -29,4 +29,15 @@
 {% if escrow.status == "DELIVERED" %}
   <p>Awaiting completion…</p>
 {% endif %}
+{% if escrow.status == "COMPLETED" %}
+  {% if user == escrow.buyer %}
+    <a href="{% url 'leave_rating' escrow.id %}">
+      Rate Seller
+    </a>
+  {% elif user == escrow.seller %}
+    <a href="{% url 'leave_rating' escrow.id %}">
+      Rate Buyer
+    </a>
+  {% endif %}
+{% endif %}
 {% endblock %}
