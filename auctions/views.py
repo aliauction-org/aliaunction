@@ -8,7 +8,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from notifications.models import Notification
 from django.utils import timezone
-
+from auction_ws.utils import broadcast_auction_update
 
 # Create your views here.
 
@@ -71,6 +71,13 @@ def auction_detail(request, auction_id):
                 Bid.objects.create(auction=auction, user=request.user, amount=amount)
                 auction.current_price = amount
                 auction.save()
+                broadcast_auction_update(
+                auction.id,
+                {
+                "current_price": str(auction.current_price),
+                "highest_bidder": auction.highest_bid.user.username,
+                }
+            )
                 # Send outbid email
                 if previous_highest_bid and previous_highest_bid.user != request.user:
                     send_outbid_email(previous_highest_bid.user, auction)
