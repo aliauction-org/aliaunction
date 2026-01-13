@@ -107,7 +107,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-ASGI_APPLICATION = "project_name.asgi.application"
+ASGI_APPLICATION = "aliaunction.asgi.application"
 
 CHANNEL_LAYERS = {
     "default": {
