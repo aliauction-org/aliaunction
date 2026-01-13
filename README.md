@@ -4,6 +4,106 @@
 AuctionVistas is a full-featured online auction platform built with Django, designed for real-time, secure, and user-friendly bidding, payments, and management. It supports manual payment flows, in-app and email notifications, reviews, and a robust admin dashboard. The platform features a modern, responsive design with comprehensive marketplace functionality and news/blog system.
 
 ---
+## 🗂 COMPLETE PROJECT STRUCTURE
+
+```text
+Aliauction_website_2026/
+│
+├── manage.py
+├── db.sqlite3
+├── README.md
+├── requirements.txt
+│
+├── aliauction/                  # Main project configuration
+│   ├── _init_.py
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+│
+├── auctions/                    # Core auction system
+│   ├── admin.py
+│   ├── apps.py
+│   ├── forms.py
+│   ├── models.py
+│   ├── urls.py
+│   ├── views.py
+│   ├── migrations/
+│   └── templates/
+│       └── auctions/
+│           ├── auction_detail.html
+│           ├── create_auction.html
+│           └── auction_list.html
+│
+├── users/                       # User accounts & profiles
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── forms.py
+│   ├── views.py
+│   ├── urls.py
+│   └── migrations/
+│
+├── payments/                    # Payments & invoices
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   └── templates/
+│       └── payments/
+│           ├── invoice_detail.html
+│           └── invoice_pdf.html
+│
+├── escrow/                      # Escrow & transaction tracking
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   └── migrations/
+│
+├── shipping/                    # Shipping & delivery
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── forms.py
+│   ├── views.py
+│   ├── urls.py
+│   └── migrations/
+│
+├── disputes/                    # Dispute management
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── forms.py
+│   ├── views.py
+│   ├── urls.py
+│   └── migrations/
+│
+├── ratings/                     # Buyer & seller ratings
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── forms.py
+│   ├── views.py
+│   ├── urls.py
+│   └── migrations/
+│
+├── templates/                   # Global templates
+│   ├── base.html
+│   ├── navbar.html
+│   └── footer.html
+│
+├── static/                      # Static assets
+│   ├── css/
+│   │   └── style.css
+│   ├── js/
+│   │   └── countdown.js
+│   └── images/
+│
+└── media/                       # Uploaded files
+    └── auctions/
 
 ## 🚀 Features Implemented
 
@@ -82,8 +182,8 @@ AuctionVistas is a full-featured online auction platform built with Django, desi
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/Dimanjan/aliaunction.git
-cd aliaunction
+git clone https://github.com/Dimanjan/Aliauction_website_2026.git
+cd Aliauction_website_2026
 ```
 
 ### 2. Create and Activate a Virtual Environment
@@ -172,28 +272,6 @@ The application is fully responsive and optimized for mobile devices:
 
 ---
 
-## 🔮 Future Enhancements
-
-### High Priority
-- **Real-Time Bidding**: Upgrade to Django Channels (WebSockets) for instant updates
-- **Payment APIs**: Integrate with Razorpay, Stripe, or PayPal for automated transactions
-- **Push Notifications**: Web push notifications for real-time alerts
-- **Advanced Search**: Elasticsearch integration for better auction discovery
-
-### Medium Priority
-- **Proxy Bidding**: Automatic bidding up to user's maximum bid
-- **Auction Analytics**: Detailed analytics and reporting for sellers
-- **Multi-Language**: Internationalization support
-- **Mobile App**: Native mobile applications
-
-### Low Priority
-- **Social Features**: User profiles, following, social sharing
-- **Advanced Admin**: Custom admin dashboard with charts and analytics
-- **API Development**: REST API for third-party integrations
-- **Advanced Security**: 2FA, rate limiting, audit logs
-
----
-
 ## 📊 Performance & Optimization
 
 ### Current Optimizations
@@ -259,7 +337,90 @@ AuctionVistas includes a comprehensive newsletter system:
 - **Password Security**: Django's secure password hashing
 
 ---
+**Updated Features**
+## 🚀 Technologies Used
+- Python 3.x
+- Django Framework
+- HTML, CSS, Bootstrap
+- JavaScript (countdown, UI interactions)
+- SQLite (default database)
+- WeasyPrint (PDF invoice generation)
 
-*Last Updated: August 2025*
-*Version: 2.0 - Major UI/UX Improvements*
+---
 
+## ✨ Key Features
+
+### 🔨 Auction & Bidding
+- Auction status: *Upcoming / Live / Ended*
+- Live countdown timer
+- Bid validation:
+  - No negative bids
+  - Seller cannot bid on own auction
+  - Bids blocked before start & after end
+- Reserve price handling
+- Soft-close auction support
+- Bid history & audit trail
+
+---
+
+### 💳 Payments & Commission
+- Winner checkout flow
+- Payment options:
+  - UPI
+  - Bank Transfer
+  - COD
+- Website commission rules:
+  - *10% commission from Seller*
+  - *3% commission from Buyer*
+- Transport charges paid by Buyer to Seller
+
+---
+
+### 🔐 Escrow & Transaction Tracking
+Escrow-like transaction lifecycle:
+1. Pending Payment
+2. Paid
+3. Shipped
+4. Delivered
+5. Completed
+
+Ensures buyer & seller accountability.
+
+---
+
+### 📦 Shipping
+- Buyer shipping address capture
+- Delivery / transport charges
+- Seller shipment confirmation
+- Buyer delivery confirmation
+
+---
+
+### 🧾 Invoice & Receipts
+- Automatic invoice generation
+- Invoice includes:
+  - Winning bid amount
+  - Buyer & seller commission
+  - Delivery charges
+- Downloadable *PDF invoice / receipt*
+
+---
+
+### ⚠️ Disputes & Moderation
+- Buyer or seller can raise disputes
+- Dispute lifecycle:
+  - Open
+  - Under Review
+  - Resolved / Rejected
+- Admin resolution & audit trail
+- User suspension / ban tools
+
+---
+
+### ⭐ User Reputation System
+- Buyer ↔ Seller ratings after transaction completion
+- 1–5 star rating system
+- Optional written feedback
+- 
+  **Last Updated: August 2025**
+**Version: 2.0 - Major UI/UX Improvements**
