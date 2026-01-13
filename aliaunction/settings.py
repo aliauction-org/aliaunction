@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'auction_status',
     'bid_protection',
     'reserve_price',
+    'auction_close',
 ]
 
 MIDDLEWARE = [
