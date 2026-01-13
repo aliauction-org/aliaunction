@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Transaction Status</h2>
+
+<p>Auction: {{ escrow.auction.title }}</p>
+<p>Status: {{ escrow.get_status_display }}</p>
+
+{% if user == escrow.seller and escrow.status == "PAID" %}
+  <a href="{% url 'mark_shipped' escrow.id %}">Mark as Shipped</a>
+{% endif %}
+
+{% if user == escrow.buyer and escrow.status == "SHIPPED" %}
+  <a href="{% url 'mark_delivered' escrow.id %}">Confirm Delivery</a>
+{% endif %}
+
+{% if escrow.status == "DELIVERED" %}
+  <p>Awaiting completion…</p>
+{% endif %}
+{% endblock %}
