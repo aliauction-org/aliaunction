@@ -985,13 +985,19 @@
         </div>
       </div>
       {% endif %}
+
+      {% if user.is_authenticated and not has_buyer_deposit %}
+      <p>You must place a refundable deposit to bid.</p>
+      <a href="#">Pay Deposit</a>
+      {% endif %}
       
       <form method="post" class="bid-form">
         {% csrf_token %}
         <div class="form-group">
           <label class="form-label">Bid Amount (INR)</label>
           {{ form.amount }}
-          
+          </form>
+      
           <!-- Bid Suggestions -->
           <div class="bid-suggestions">
             <div class="bid-suggestion" onclick="setBidAmount({{ auction.current_price|add:1000 }})">
