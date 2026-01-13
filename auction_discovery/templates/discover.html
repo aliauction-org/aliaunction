@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Discover Auctions</h2>
+
+<form method="get">
+  {{ form.q }}
+  {{ form.min_price }}
+  {{ form.max_price }}
+
+  <label>{{ form.live_only }} Live only</label>
+  <label>{{ form.ending_soon }} Ending soon</label>
+  <label>{{ form.newest }} Newest</label>
+
+  <button type="submit">Search</button>
+</form>
+
+<hr>
+
+{% if auctions %}
+  <ul>
+    {% for auction in auctions %}
+      <li>
+        <a href="{% url 'auction_detail' auction.id %}">
+          {{ auction.title }}
+        </a>
+        — INR {{ auction.current_price }}
+        (Ends: {{ auction.end_time }})
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No auctions found.</p>
+{% endif %}
+
+{% endblock %}
