@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Verification Status</h2>
+
+{% if verification %}
+  <p>Phone verified: {{ verification.phone_verified }}</p>
+  <p>Admin verified: {{ verification.admin_verified }}</p>
+
+  {% if verification.is_verified %}
+    <span class="badge badge-live">✔ Verified Seller</span>
+  {% endif %}
+{% else %}
+  <p>You have not started verification.</p>
+{% endif %}
+
+{% endblock %}
