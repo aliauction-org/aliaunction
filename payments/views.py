@@ -5,6 +5,9 @@ from .models import PlatformPaymentDetails, UserPaymentProfile, PaymentProof
 from .forms import UserPaymentProfileForm, PaymentProofForm
 from auctions.models import Auction
 from .models import Invoice, payment
+from weasyprint import HTML
+from django.http import HttpResponse
+from django.template.loader import render_to_string
 
 # Create your views here.
 
@@ -92,3 +95,21 @@ def pay_invoice(request, invoice_id):
         return redirect("invoice_view", auction_id=invoice.auction.id)
 
     return render(request, "payments/pay.html", {"invoice": invoice})
+
+@login_required
+def download_invoice(request, invoice_id):
+    invoice = get_object_or_404(Invoice, id=invoice_id)
+
+    if request.user not in [invoice.buyer, invoice.seller] and not request.user.is_staff:
+        return HttpResponse("Unauthorized", status=403)
+
+    html_string = render_to_string(
+        "payments/invoice_pdf.html",
+        {"invoice": invoice}
+    )
+
+    pdf = HTML(string=html_string).write_pdf()
+
+    response = HttpResponse(pdf, content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename="invoice_{invoice.id}.pdf"'
+    return response
