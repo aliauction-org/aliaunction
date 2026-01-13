@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from escrow.models import Escrow
 from .forms import RatingForm
-from .models import Reviews
+from .models import reviews
 
 @login_required
 def leave_rating(request, escrow_id):
