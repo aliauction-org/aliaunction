@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'newsletter',
     'marketplace',
     'news',
+    'auction_status',
 ]
 
 MIDDLEWARE = [
