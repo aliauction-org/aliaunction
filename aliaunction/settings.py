@@ -140,3 +140,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'no-reply@aliaunction.com'
+
+
+'OPTIONS': {
+    'context_processors': [
+        ...
+        'auction_status.context_processors.auction_status_context',
+    ],
+},
