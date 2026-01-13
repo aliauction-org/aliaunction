@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>My Disputes</h2>
+
+{% if disputes %}
+  <ul>
+    {% for d in disputes %}
+      <li>
+        Auction: {{ d.auction.title }} |
+        Issue: {{ d.get_issue_type_display }} |
+        Status: {{ d.status }}
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No disputes raised.</p>
+{% endif %}
+{% endblock %}
