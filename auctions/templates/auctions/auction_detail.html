@@ -821,6 +821,33 @@
     .stat-number {
       font-size: 1.5rem;
     }
+    .badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-live {
+  background: #e6fff1;
+  color: #008a45;
+}
+
+.badge-upcoming {
+  background: #eef4ff;
+  color: #2357d9;
+}
+
+.badge-ended {
+  background: #f3f3f3;
+  color: #777;
+}
+
+.countdown {
+  display: inline-block;
+  margin-left: 10px;
+  font-weight: 600;
+}
   }
 </style>
 
@@ -841,7 +868,10 @@
       {% endif %}
     </div>
   </div>
-
+{% with status=get_auction_status(auction) %}
+  {% include "auction_status/badge.html" with status=status %}
+  {% include "auction_status/countdown.html" with seconds=get_countdown_seconds(auction) %}
+{% endwith %}
   <!-- Main Auction Grid -->
   <div class="auction-grid">
     <!-- Info Section -->
