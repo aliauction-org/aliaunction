@@ -2,6 +2,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from auctions.models import Auction
 from .models import Invoice
+from commission.services import calculation_commission
 
 @receiver(post_save, sender=Auction)
 def create_invoice_on_win(sender, instance, **kwargs):
