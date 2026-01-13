@@ -9,5 +9,6 @@ urlpatterns = [
     path('platform-details/', views.platform_payment_details, name='platform_payment_details'),
     path("invoice/<int:auction_id>/", views.invoice_view, name="invoice_view"),
     path("pay/<int:invoice_id>/", views.pay_invoice, name="pay_invoice"),
+    path("invoice/<int:invoice_id>/download/", views.download_invoice, name="download_invoice"),
     path("payments/", include("payments.urls")),
 ] 
