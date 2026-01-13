@@ -4,6 +4,7 @@ from django.contrib import messages
 from .models import PlatformPaymentDetails, UserPaymentProfile, PaymentProof
 from .forms import UserPaymentProfileForm, PaymentProofForm
 from auctions.models import Auction
+from .models import Invoice, payment
 
 # Create your views here.
 
@@ -63,3 +64,26 @@ def platform_payment_details(request):
     except PlatformPaymentDetails.DoesNotExist:
         platform_details = None
     return render(request, 'payments/platform_payment_details.html', {'platform_details': platform_details})
+
+@login_required
+def invoice_view(request, auction_id):
+    invoice = get_object_or_404(Invoice, auction__id=auction_id, buyer=request.user)
+    return render(request, "payments/invoice.html", {"invoice": invoice})
+
+
+@login_required
+def pay_invoice(request, invoice_id):
+    invoice = get_object_or_404(Invoice, id=invoice_id, buyer=request.user)
+
+    if request.method == "POST":
+        method = request.POST.get("method")
+        payment = Payment.objects.create(
+            invoice=invoice,
+            method=method,
+            status="SUCCESS"  # simulate success
+        )
+        invoice.status = "PAID"
+        invoice.save()
+        return redirect("invoice_view", auction_id=invoice.auction.id)
+
+    return render(request, "payments/pay.html", {"invoice": invoice})
