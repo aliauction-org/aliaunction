@@ -1,0 +1,32 @@
+<span 
+  class="countdown"
+  data-seconds="{{ seconds }}">
+</span>
+
+<script>
+(function(){
+  const el = document.currentScript.previousElementSibling;
+  let seconds = parseInt(el.dataset.seconds);
+
+  function tick(){
+    if (seconds <= 0) {
+      el.innerText = "Ended";
+      return;
+    }
+
+    let d = Math.floor(seconds / 86400);
+    let h = Math.floor((seconds % 86400) / 3600);
+    let m = Math.floor((seconds % 3600) / 60);
+    let s = seconds % 60;
+
+    el.innerText =
+      (d ? d+"d " : "") +
+      h+"h "+m+"m "+s+"s";
+
+    seconds--;
+  }
+
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
