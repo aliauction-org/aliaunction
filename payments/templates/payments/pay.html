@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Select Payment Method</h2>
+
+<form method="post">
+  {% csrf_token %}
+  <select name="method">
+    <option value="UPI">UPI</option>
+    <option value="PAYPAL">PayPal</option>
+    <option value="BANK">Bank Transfer</option>
+    <option value="COD">Cash on Delivery</option>
+  </select>
+  <button type="submit">Confirm Payment</button>
+</form>
+{% endblock %}
