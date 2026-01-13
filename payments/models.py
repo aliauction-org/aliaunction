@@ -76,20 +76,12 @@ class UserPaymentProfile(models.Model):
         on_delete=models.CASCADE,
         related_name="invoice"
     )
-    buyer = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="invoices"
-    )
-    seller = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="sales"
-    )
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="invoices")
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sales")
 
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    buyer_fee = models.DecimalField(max_digits=10, decimal_places=2)
-    seller_fee = models.DecimalField(max_digits=10, decimal_places=2)
+    buyer_commission = models.DecimalField(max_digits=10, decimal_places=2)
+    seller_commission = models.DecimalField(max_digits=10, decimal_places=2)
     transport_charge = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     STATUS_CHOICES = [
@@ -103,7 +95,7 @@ class UserPaymentProfile(models.Model):
         choices=STATUS_CHOICES,
         default="PENDING"
     )
-
+    is_paid = models.BooleanField(default=False
     created_at = models.DateTimeField(auto_now_add=True)
 
     def total_payable(self):
