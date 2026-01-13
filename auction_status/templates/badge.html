@@ -1,0 +1,7 @@
+{% if status == "UPCOMING" %}
+  <span class="badge badge-upcoming">Upcoming</span>
+{% elif status == "LIVE" %}
+  <span class="badge badge-live">Live</span>
+{% else %}
+  <span class="badge badge-ended">Ended</span>
+{% endif %}
