@@ -1,7 +1,7 @@
 # AuctionVistas: Online Auction System
 
 ## Overview
-AuctionVistas is a full-featured online auction platform built with Django, designed for real-time, secure, and user-friendly bidding, payments, and management. It supports manual payment flows, in-app and email notifications, reviews, and a robust admin dashboard. The platform features a modern, responsive design with comprehensive marketplace functionality and news/blog system.
+AuctionVistas is a full-featured online auction platform built with Django, designed for real-time, secure, and user-friendly bidding, payments, and management. It supports manual payment flows, in-app and email notifications, reviews, and a robust admin dashboard. The platform features a modern, responsive design with comprehensive marketplace functionality and new features like **anti-sniping**, **bulk uploads**, and **advanced rate limiting**.
 
 ---
 ## 🗂 COMPLETE PROJECT STRUCTURE
@@ -15,166 +15,65 @@ Aliauction_website_2026/
 ├── requirements.txt
 │
 ├── aliauction/                  # Main project configuration
-│   ├── _init_.py
-│   ├── asgi.py
-│   ├── settings.py
-│   ├── urls.py
-│   └── wsgi.py
-│
-├── auctions/                    # Core auction system
-│   ├── admin.py
-│   ├── apps.py
-│   ├── forms.py
-│   ├── models.py
-│   ├── urls.py
-│   ├── views.py
-│   ├── migrations/
-│   └── templates/
-│       └── auctions/
-│           ├── auction_detail.html
-│           ├── create_auction.html
-│           └── auction_list.html
-│
+├── auctions/                    # Core auction system & Bulk Upload
 ├── users/                       # User accounts & profiles
-│   ├── admin.py
-│   ├── apps.py
-│   ├── models.py
-│   ├── forms.py
-│   ├── views.py
-│   ├── urls.py
-│   └── migrations/
-│
 ├── payments/                    # Payments & invoices
-│   ├── admin.py
-│   ├── apps.py
-│   ├── models.py
-│   ├── views.py
-│   ├── urls.py
-│   └── templates/
-│       └── payments/
-│           ├── invoice_detail.html
-│           └── invoice_pdf.html
-│
 ├── escrow/                      # Escrow & transaction tracking
-│   ├── admin.py
-│   ├── apps.py
-│   ├── models.py
-│   ├── views.py
-│   ├── urls.py
-│   └── migrations/
-│
 ├── shipping/                    # Shipping & delivery
-│   ├── admin.py
-│   ├── apps.py
-│   ├── models.py
-│   ├── forms.py
-│   ├── views.py
-│   ├── urls.py
-│   └── migrations/
-│
 ├── disputes/                    # Dispute management
-│   ├── admin.py
-│   ├── apps.py
-│   ├── models.py
-│   ├── forms.py
-│   ├── views.py
-│   ├── urls.py
-│   └── migrations/
-│
 ├── ratings/                     # Buyer & seller ratings
-│   ├── admin.py
-│   ├── apps.py
-│   ├── models.py
-│   ├── forms.py
-│   ├── views.py
-│   ├── urls.py
-│   └── migrations/
-│
-├── templates/                   # Global templates
-│   ├── base.html
-│   ├── navbar.html
-│   └── footer.html
-│
-├── static/                      # Static assets
-│   ├── css/
-│   │   └── style.css
-│   ├── js/
-│   │   └── countdown.js
-│   └── images/
-│
-└── media/                       # Uploaded files
-    └── auctions/
+├── bid_protection/              # Anti-sniping & Rate limiting
+├── dashboard/                   # User dashboards
+├── auction_status/              # Real-time status utils
+├── reserve_price/               # Reserve price logic
+└── templates/                   # Global templates
+```
 
-## 🚀 Features Implemented
+## 🚀 Key Features
 
-### Core Auction System
-- **User Authentication & Profile**: Signup, login, password reset, profile page, bid/purchase history
-- **Auction Listing & Bidding**: Create auctions, upload images, real-time bidding (AJAX polling), Indian currency formatting
-- **Manual Payment Integration**: Platform and user payment profiles (bank, UPI, QR), payment proof uploads, admin/seller verification
-- **Notifications**: In-app (real-time, AJAX) and email notifications for outbid, auction won, auction ended, etc.
-- **Ratings & Reviews**: Users can rate and review auctions after bidding
-- **Admin Dashboard**: Approve/block/end auctions, manage commissions, verify payments, view all data
+### 🔨 Core Auction & Bidding
+- **Auction Status**: *Upcoming / Live / Ended* with real-time countdowns.
+- **Anti-Sniping**: Auctions automatically extend by X minutes if a bid is placed in the last Y minutes (configurable).
+- **Bid Protection**:
+  - Negative bid validation
+  - Seller cannot bid on own auction
+  - Bids blocked before start & after end
+  - **Rate Limiting**: Limits bids (10/min) and logins (5/min) to prevent abuse.
+- **Reserve Price**: Hidden reserve prices with status indicators ("Met" / "Not Met").
+- **Bulk Upload**: Admin/Sellers can upload multiple auctions via CSV.
 
-### 🏪 Marketplace & Navigation
-- **Comprehensive Marketplace**: Live auctions, upcoming items, categories, seller guides, and support pages
-- **Smart Navigation**: Context-aware "Live Auctions" section that adapts based on current page
-- **Footer Navigation**: Complete footer with organized links to all major sections
-- **Responsive Design**: Mobile-first approach with hamburger menu for smaller screens
+### 🏪 Marketplace Enhanced
+- **Categories**: Browse auctions by categories (Electronics, Art, Vehicles, etc.)
+- **Advanced Search**: Filter by price, live status, and category.
+- **Featured Auctions**: Highlighted auctions on the homepage.
+- **Watchlist**: Users can watch items and get "Ending Soon" notifications.
 
-### 📰 News & Content System
-- **News Blog**: Complete news system with articles, categories, and tags
-- **Featured Content**: Latest news, auction tips, and spotlight articles
-- **Rich Content Support**: HTML content rendering with proper formatting
-- **Content Management**: Admin interface for managing news articles and categories
+### 💳 Payments & Commission
+- **Winner Checkout**: Seamless flow for winning bidders.
+- **Payment Options**: UPI, Bank Transfer, COD, QR Code.
+- **Commission System**:
+  - *10% commission from Seller*
+  - *3% commission from Buyer*
+- **Escrow-like Transaction**: `Pending Payment` → `Paid` → `Shipped` → `Delivered` → `Completed`.
 
-### 🎨 Modern UI/UX
-- **Responsive Design**: Mobile-optimized with hamburger menu and touch-friendly interface
-- **Modern Styling**: Clean, professional design with consistent color scheme (green theme)
-- **Improved Layout**: Centered content with increased max-width (2400px) for better readability
-- **Enhanced Typography**: Better font hierarchy and spacing throughout the application
-- **Interactive Elements**: Hover effects, transitions, and smooth animations
+### 🧾 Invoice & Receipts
+- Automatic generation of detailed invoices.
+- **PDF Download**: Support for downloading payment receipts (via WeasyPrint).
 
-### 📱 Mobile Experience
-- **Hamburger Menu**: Collapsible navigation menu for mobile devices
-- **Touch-Friendly**: Optimized button sizes and spacing for mobile interaction
-- **Responsive Grid**: Auction cards and content adapt to screen size
-- **Mobile-First CSS**: Progressive enhancement from mobile to desktop
-
-### 🔧 Technical Improvements
-- **Performance Optimization**: Optimized CSS and JavaScript for faster loading
-- **Code Organization**: Better structured templates and improved maintainability
-- **Error Handling**: Enhanced error handling for notifications and API calls
-- **Accessibility**: Improved keyboard navigation and screen reader support
-
-### 📧 Communication Features
-- **Newsletter Signup**: Users can subscribe to auction updates via the footer form
-- **Contact System**: Contact form with admin review capabilities
-- **Email Notifications**: Automated email notifications for important events
+### ⭐ User System & Dashboard
+- **Dashboards**: Dedicated "My Auctions" (for sellers) and "My Bids" (for buyers) views with stats.
+- **Reputation**: Buyer ↔ Seller ratings (1–5 stars) after completed transactions.
+- **Notifications**: Email & In-app alerts for outbid, won, paid, shipped events.
 
 ---
 
-## 🛠 Tech Stack & Architecture
+## 🛠 Tech Stack
 
-### Backend
-- **Django 5.2**: Robust, secure, batteries-included backend framework
-- **SQLite (default)**: Easy local development; can switch to MySQL/Postgres for production
-- **Django Admin**: Powerful, customizable admin interface for rapid management
-
-### Frontend
-- **HTML5/CSS3**: Modern, semantic markup with custom CSS for optimal performance
-- **Vanilla JavaScript**: Lightweight, no-framework approach for interactivity
-- **AJAX Polling**: Real-time updates for bidding and notifications
-- **Responsive Design**: Mobile-first CSS with progressive enhancement
-
-### Payment System
-- **Manual Payment Flow**: No API integration; supports Indian payment methods (UPI, Bank Transfer, QR)
-- **Payment Verification**: Admin verification system with proof uploads
-- **Flexible Integration**: Easy to integrate with payment gateways in the future
-
-### Content Management
-- **Django ORM**: Efficient database queries and relationships
-- **File Uploads**: Image handling for auctions and user profiles
-- **Rich Text Support**: HTML content rendering for news articles
+- **Backend**: Django 5.2, Python 3.12
+- **Database**: SQLite (Dev) / PostgreSQL compatible
+- **Frontend**: HTML5, CSS3, Vanilla JS, Bootstrap (optional components)
+- **PDF Generation**: WeasyPrint
+- **Task Queue**: Custom management commands & tasks
 
 ---
 
@@ -183,10 +82,10 @@ Aliauction_website_2026/
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/Dimanjan/aliaunction.git
-cd aliaunction-main_updated_TY
+cd aliaunction
 ```
 
-### 2. Create and Activate a Virtual Environment
+### 2. Create and Activate Virtual Environment
 ```bash
 python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
@@ -195,8 +94,7 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 ### 3. Install Dependencies
 ```bash
 pip install -r requirements.txt
-# If requirements.txt is missing, install manually:
-pip install django pillow
+# If WeasyPrint has issues on macOS: brew install weasyprint
 ```
 
 ### 4. Apply Migrations
@@ -205,237 +103,43 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-### 5. Create a Superuser
+### 5. Create Superuser
 ```bash
 python manage.py createsuperuser
 ```
 
 ### 6. Seed Test Data (Recommended)
+This command populates the database with realistic test data:
 ```bash
 python manage.py seed_data
 ```
-This creates:
+Creates:
 - **Admin**: `admin` / `admin123`
 - **Sellers**: `seller1`, `seller2`, `seller3` / `password123`
 - **Buyers**: `buyer1`, `buyer2`, `buyer3`, `buyer4` / `password123`
 - 8 Categories, 10 Auctions, 27 Bids, 12 Watchlist entries
 
-### 7. (Optional) Populate News Articles
-```bash
-python manage.py populate_news
-```
-
-### 8. Run the Development Server
+### 7. Run Server
 ```bash
 python manage.py runserver 8001
 ```
 
-### 9. Access the Application
+### 8. Access Application
 | Page | URL |
 |------|-----|
 | Homepage | http://localhost:8001/ |
-| Admin Dashboard | http://localhost:8001/admin/ |
-| Discover Auctions | http://localhost:8001/discover/ |
+| Admin | http://localhost:8001/admin/ |
 | Marketplace | http://localhost:8001/marketplace/live-auctions/ |
-| News Section | http://localhost:8001/news/ |
-| My Watchlist | http://localhost:8001/watchlist/my/ |
-| My Dashboard | http://localhost:8001/dashboard/ |
-
-### 9. (Optional) Configure for Production
-- Set `DEBUG = False` in `settings.py`
-- Configure `MEDIA_ROOT` and `STATIC_ROOT`
-- Run `python manage.py collectstatic`
-- Set up a production database (PostgreSQL/MySQL)
+| Dashboard | http://localhost:8001/dashboard/ |
 
 ---
 
-## 📱 Mobile Responsiveness
-
-The application is fully responsive and optimized for mobile devices:
-
-- **Hamburger Menu**: Collapsible navigation for mobile screens
-- **Touch-Friendly**: Optimized button sizes and spacing
-- **Responsive Grid**: Content adapts to different screen sizes
-- **Mobile-First Design**: Progressive enhancement approach
-
-### Breakpoints
-- **Mobile**: ≤768px (hamburger menu, single column layout)
-- **Tablet**: 769px-1024px (adaptive grid)
-- **Desktop**: >1024px (full navigation, multi-column layout)
+## � Security Features
+- **CSRF & XSS Protection**: Native Django security.
+- **Rate Limiting**: Custom decorators for sensitive actions.
+- **Input Validation**: Extensive model and form validation.
+- **Secure File Uploads**: Validated image uploads.
 
 ---
-
-## 🎨 Design System
-
-### Color Palette
-- **Primary**: #10b981 (Green)
-- **Secondary**: #3a8dde (Blue)
-- **Dark**: #23284a (Navy)
-- **Light**: #f8fafc (Light Gray)
-- **Text**: #23284a (Dark)
-
-### Typography
-- **Font Family**: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif
-- **Headings**: Bold, hierarchical sizing
-- **Body Text**: Regular weight, optimal line height for readability
-
-### Layout
-- **Max Width**: 2400px for main content
-- **Container**: Centered with auto margins
-- **Grid System**: CSS Grid for responsive layouts
-- **Spacing**: Consistent padding and margins throughout
-
----
-
-## 📊 Performance & Optimization
-
-### Current Optimizations
-- **Minimal Dependencies**: No heavy JavaScript frameworks
-- **Optimized Images**: Responsive image handling
-- **Efficient Queries**: Optimized database queries with select_related
-- **Caching Ready**: Structure supports Redis/Memcached integration
-
-### Monitoring
-- **Error Tracking**: Django's built-in error handling
-- **Performance**: Django Debug Toolbar for development
-- **Logging**: Comprehensive logging for debugging
-
----
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 📞 Support & Contact
-
-- **In-App**: Use the Contact Us page for general inquiries
-- **GitHub**: Open an issue for bug reports or feature requests
-- **Email**: Contact through the application's contact form
-
----
-
-## 🗞 Newsletter System
-
-AuctionVistas includes a comprehensive newsletter system:
-
-- **Signup Form**: Available in the footer of every page
-- **Email Storage**: Secure storage in the database
-- **Admin Management**: Full subscriber management in Django admin
-- **Export Ready**: Easy export for third-party email services
-
-### Newsletter Features
-- Double opt-in support (configurable)
-- Unsubscribe functionality
-- Email template customization
-- Subscriber analytics
-
----
-
-## 🔒 Security Features
-
-- **CSRF Protection**: Built-in Django CSRF protection
-- **SQL Injection Prevention**: Django ORM protection
-- **XSS Protection**: Template auto-escaping
-- **Secure File Uploads**: Validated file uploads
-- **Password Security**: Django's secure password hashing
-
----
-**Updated Features**
-## 🚀 Technologies Used
-- Python 3.x
-- Django Framework
-- HTML, CSS, Bootstrap
-- JavaScript (countdown, UI interactions)
-- SQLite (default database)
-- WeasyPrint (PDF invoice generation)
-
----
-
-## ✨ Key Features
-
-### 🔨 Auction & Bidding
-- Auction status: *Upcoming / Live / Ended*
-- Live countdown timer
-- Bid validation:
-  - No negative bids
-  - Seller cannot bid on own auction
-  - Bids blocked before start & after end
-- Reserve price handling
-- Soft-close auction support
-- Bid history & audit trail
-
----
-
-### 💳 Payments & Commission
-- Winner checkout flow
-- Payment options:
-  - UPI
-  - Bank Transfer
-  - COD
-- Website commission rules:
-  - *10% commission from Seller*
-  - *3% commission from Buyer*
-- Transport charges paid by Buyer to Seller
-
----
-
-### 🔐 Escrow & Transaction Tracking
-Escrow-like transaction lifecycle:
-1. Pending Payment
-2. Paid
-3. Shipped
-4. Delivered
-5. Completed
-
-Ensures buyer & seller accountability.
-
----
-
-### 📦 Shipping
-- Buyer shipping address capture
-- Delivery / transport charges
-- Seller shipment confirmation
-- Buyer delivery confirmation
-
----
-
-### 🧾 Invoice & Receipts
-- Automatic invoice generation
-- Invoice includes:
-  - Winning bid amount
-  - Buyer & seller commission
-  - Delivery charges
-- Downloadable *PDF invoice / receipt*
-
----
-
-### ⚠️ Disputes & Moderation
-- Buyer or seller can raise disputes
-- Dispute lifecycle:
-  - Open
-  - Under Review
-  - Resolved / Rejected
-- Admin resolution & audit trail
-- User suspension / ban tools
-
----
-
-### ⭐ User Reputation System
-- Buyer ↔ Seller ratings after transaction completion
-- 1–5 star rating system
-- Optional written feedback
-- 
-  **Last Updated: August 2025**
-**Version: 2.0 - Major UI/UX Improvements**
+**Version: 2.1 - Feature Update (Jan 2026)**
+- Added: Anti-Sniping, Rate Limiting, Bulk Upload, Watchlist Notifications, Escrow Services.
