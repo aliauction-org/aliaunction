@@ -1,36 +1,147 @@
 {% extends "base.html" %}
+{% load indian_format %}
+{% load static %}
+
 {% block content %}
+<div class="container" style="padding: 2rem 0;">
+  <!-- Header -->
+  <div style="text-align: center; margin-bottom: 3rem;">
+    <h1 style="font-size: 2.5rem; color: var(--text-main); margin-bottom: 0.5rem;">Discover Auctions</h1>
+    <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">Find unique items, great deals, and rare
+      collectibles.</p>
+  </div>
 
-<h2>Discover Auctions</h2>
+  <div style="display: grid; grid-template-columns: 280px 1fr; gap: 2rem; align-items: start;">
+    <!-- Filters Sidebar -->
+    <div class="card" style="padding: 1.5rem; position: sticky; top: 90px;">
+      <h3
+        style="font-size: 1.2rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+        Filters</h3>
+      <form method="get">
+        <div class="form-group">
+          <label style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; display: block;">Search</label>
+          {{ form.q }}
+        </div>
 
-<form method="get">
-  {{ form.q }}
-  {{ form.min_price }}
-  {{ form.max_price }}
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem;">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label style="font-size: 0.8rem;">Min Price</label>
+            {{ form.min_price }}
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label style="font-size: 0.8rem;">Max Price</label>
+            {{ form.max_price }}
+          </div>
+        </div>
 
-  <label>{{ form.live_only }} Live only</label>
-  <label>{{ form.ending_soon }} Ending soon</label>
-  <label>{{ form.newest }} Newest</label>
+        <div style="margin-bottom: 1.5rem;">
+          <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; cursor: pointer;">
+            {{ form.live_only }}
+            <span style="font-size: 0.9rem;">Live Auctions Only</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; cursor: pointer;">
+            {{ form.ending_soon }}
+            <span style="font-size: 0.9rem;">Ending Soon</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+            {{ form.newest }}
+            <span style="font-size: 0.9rem;">Newest First</span>
+          </label>
+        </div>
 
-  <button type="submit">Search</button>
-</form>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Apply Filters</button>
+        <a href="{% url 'discover_auctions' %}" class="btn btn-outline"
+          style="width: 100%; margin-top: 0.5rem; text-align: center;">Clear</a>
+      </form>
+    </div>
 
-<hr>
+    <!-- Results Grid -->
+    <div>
+      {% if auctions %}
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem;">
+        {% for auction in auctions %}
+        <div class="card">
+          <a href="{% url 'auction_detail' auction.id %}"
+            style="text-decoration: none; color: inherit; display: block;">
+            <div style="aspect-ratio: 4/3; overflow: hidden; background-color: #f1f5f9; position: relative;">
+              {% if auction.image %}
+              <img src="{{ auction.image.url }}" alt="{{ auction.title }}"
+                style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+              {% else %}
+              <div
+                style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); font-size: 2rem;">
+                📷
+              </div>
+              {% endif %}
 
-{% if auctions %}
-  <ul>
-    {% for auction in auctions %}
-      <li>
-        <a href="{% url 'auction_detail' auction.id %}">
-          {{ auction.title }}
-        </a>
-        — INR {{ auction.current_price }}
-        (Ends: {{ auction.end_time }})
-      </li>
-    {% endfor %}
-  </ul>
-{% else %}
-  <p>No auctions found.</p>
-{% endif %}
+              {% if auction.category %}
+              <div
+                style="position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); color: white; padding: 2px 6px; font-size: 0.7rem; border-radius: 4px;">
+                {{ auction.category.name }}
+              </div>
+              {% endif %}
+            </div>
 
+            <div class="card-body" style="padding: 1rem;">
+              <h3
+                style="font-size: 1rem; margin-bottom: 0.5rem; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                title="{{ auction.title }}">
+                {{ auction.title }}
+              </h3>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+                <span style="font-weight: 700; color: var(--text-main);">₹{{ auction.current_price|indian_format }}</span>
+                <span style="font-size: 0.8rem; color: var(--text-secondary);">
+                  {% if auction.end_time|date:'U' < now|date:'U' %} <span style="color: var(--danger-color);">
+                    Ended</span>
+                {% else %}
+                {{ auction.end_time|timeuntil }}
+                {% endif %}
+                </span>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div
+        style="text-align: center; padding: 4rem; background: white; border-radius: 12px; border: 1px solid var(--border-color);">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+        <h3 style="color: var(--text-main);">No auctions found</h3>
+        <p style="color: var(--text-secondary);">Try adjusting your filters or search terms.</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Custom styles for discover form elements to match design system */
+  input[type="text"],
+  input[type="number"] {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+  }
+
+  input[type="checkbox"] {
+    accent-color: var(--accent-color);
+    width: 1rem;
+    height: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    div[style*="grid-template-columns: 280px 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+
+    .card[style*="top: 90px"] {
+      position: static !important;
+      margin-bottom: 2rem;
+    }
+  }
+</style>
 {% endblock %}

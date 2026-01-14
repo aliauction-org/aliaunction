@@ -23,4 +23,4 @@ def register(request):
 def profile(request):
     user = request.user
     bids = Bid.objects.filter(user=user).select_related('auction').order_by('-timestamp')
-    return render(request, 'users/profile.html', {'user': user, 'bids': bids})
+    return render(request, 'users/profile.html', {'user': user, 'profile_user': user, 'bids': bids})

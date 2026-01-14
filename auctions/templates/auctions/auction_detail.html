@@ -1,1224 +1,148 @@
 {% extends 'base.html' %}
 {% load indian_format %}
+{% load static %}
+
 {% block content %}
-<style>
-  .auction-container {
-    max-width: 2400px;
-    margin: 0 auto;
-    padding: 2rem;
-    background: #f8fafc;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    width: 100%;
-  }
-
-  .auction-header {
-    background: linear-gradient(135deg, #23284a 0%, #2b3a67 100%);
-    color: white;
-    padding: 3rem 2rem;
-    border-radius: 16px;
-    margin-bottom: 2rem;
-    text-align: center;
-    width: 100%;
-    max-width: 1200px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
-  }
-
-  .auction-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    color: white;
-  }
-
-  .auction-subtitle {
-    font-size: 1.2rem;
-    opacity: 0.9;
-    margin-bottom: 2rem;
-  }
-
-  .auction-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    margin-bottom: 2rem;
-    width: 100%;
-    max-width: 1200px;
-    justify-content: center;
-  }
-
-  .auction-image-section {
-    background: white;
-    border-radius: 16px;
-    padding: 2rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    min-height: 80vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    max-width: 100%;
-    position: relative;
-  }
-
-  .auction-image {
-    width: 90%;
-    height: 90%;
-    object-fit: contain;
-    border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    max-width: none;
-    max-height: none;
-  }
-
-  .auction-info-section {
-    background: white;
-    border-radius: 16px;
-    padding: 2rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  }
-
-  .price-display {
-    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-    color: white;
-    padding: 2rem;
-    border-radius: 12px;
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-
-  .current-price {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-  }
-
-  .price-label {
-    font-size: 1rem;
-    opacity: 0.9;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  .auction-meta {
-    display: grid;
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-
-  .meta-item {
-    display: flex;
-    align-items: center;
-    padding: 1rem;
-    background: #f8f9fa;
-    border-radius: 8px;
-    border-left: 4px solid #10b981;
-  }
-
-  .meta-icon {
-    font-size: 1.5rem;
-    margin-right: 1rem;
-    color: #10b981;
-  }
-
-  .meta-content h4 {
-    margin: 0;
-    font-size: 0.9rem;
-    color: #666666;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .meta-content p {
-    margin: 0.25rem 0 0 0;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #23284a;
-  }
-
-  .bid-section {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-    border-radius: 20px;
-    padding: 2.5rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-    margin-bottom: 2.5rem;
-    border: 1px solid rgba(16, 185, 129, 0.1);
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .bid-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #10b981, #34d399, #059669);
-  }
-
-  .section-title {
-    font-size: 1.75rem;
-    font-weight: 800;
-    color: #23284a;
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-    position: relative;
-  }
-
-  .section-icon {
-    margin-right: 1rem;
-    font-size: 1.5rem;
-    background: linear-gradient(135deg, #10b981, #34d399);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .bid-form {
-    background: linear-gradient(135deg, #f0fff4 0%, #ecfdf5 100%);
-    padding: 2.5rem;
-    border-radius: 16px;
-    margin-bottom: 2rem;
-    border: 2px solid rgba(16, 185, 129, 0.1);
-    position: relative;
-  }
-
-  .bid-form::before {
-    content: '💡';
-    position: absolute;
-    top: -10px;
-    right: 20px;
-    background: white;
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-
-  .form-group {
-    margin-bottom: 2rem;
-  }
-
-  .form-label {
-    display: block;
-    font-weight: 700;
-    color: #23284a;
-    margin-bottom: 0.75rem;
-    font-size: 1.1rem;
-  }
-
-  .form-input {
-    width: 100%;
-    padding: 1.25rem;
-    border: 2px solid #e2e8f0;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-    background: white;
-    font-weight: 600;
-  }
-
-  .form-input:focus {
-    outline: none;
-    border-color: #10b981;
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-    transform: translateY(-2px);
-  }
-
-  .bid-suggestions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .bid-suggestion {
-    background: white;
-    border: 2px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 600;
-    color: #23284a;
-  }
-
-  .bid-suggestion:hover {
-    border-color: #10b981;
-    background: #f0fff4;
-    transform: translateY(-2px);
-  }
-
-  .bid-button {
-    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-    color: white;
-    padding: 1.25rem 2.5rem;
-    border: none;
-    border-radius: 12px;
-    font-size: 1.2rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: 100%;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .bid-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s;
-  }
-
-  .bid-button:hover::before {
-    left: 100%;
-  }
-
-  .bid-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
-  }
-
-  .bid-button:active {
-    transform: translateY(-1px);
-  }
-
-  .login-prompt {
-    background: linear-gradient(135deg, #f0fff4 0%, #ecfdf5 100%);
-    border: 2px solid #10b981;
-    padding: 2rem;
-    border-radius: 16px;
-    text-align: center;
-    margin-bottom: 2rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .login-prompt::before {
-    content: '🔐';
-    position: absolute;
-    top: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: white;
-    padding: 10px 15px;
-    border-radius: 25px;
-    font-size: 1.2rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-
-  .login-prompt a {
-    color: #10b981;
-    font-weight: 700;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-  }
-
-  .login-prompt a:hover {
-    background: #10b981;
-    color: white;
-  }
-
-  .bid-history {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .bid-item {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-    padding: 1.5rem;
-    border-radius: 12px;
-    margin-bottom: 1rem;
-    border-left: 4px solid #10b981;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .bid-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.05), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-  }
-
-  .bid-item:hover::before {
-    transform: translateX(100%);
-  }
-
-  .bid-item:hover {
-    transform: translateX(5px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  }
-
-  .bid-amount {
-    font-weight: 800;
-    color: #10b981;
-    font-size: 1.3rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .bid-amount::before {
-    content: '💰';
-    font-size: 1.1rem;
-  }
-
-  .bid-details {
-    text-align: right;
-    color: #666666;
-    font-size: 0.95rem;
-  }
-
-  .bid-user {
-    font-weight: 700;
-    color: #23284a;
-    margin-bottom: 0.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.5rem;
-  }
-
-  .bid-user::before {
-    content: '👤';
-    font-size: 0.9rem;
-  }
-
-  .bid-timestamp {
-    color: #8b9dc3;
-    font-size: 0.85rem;
-  }
-
-  .bid-stats {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-
-  .stat-card {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-    padding: 2rem;
-    border-radius: 12px;
-    text-align: center;
-    border: 1px solid rgba(16, 185, 129, 0.1);
-    transition: all 0.3s ease;
-    min-height: 100px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-  }
-
-  .stat-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  }
-
-  .stat-number {
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: #10b981;
-    display: block;
-    word-wrap: break-word;
-    line-height: 1.2;
-    margin-bottom: 0.5rem;
-  }
-
-  .stat-label {
-    color: #666666;
-    font-weight: 600;
-    margin-top: 0.5rem;
-    font-size: 0.95rem;
-  }
-
-  .bid-trend {
-    background: linear-gradient(135deg, #f0fff4 0%, #ecfdf5 100%);
-    padding: 1.5rem;
-    border-radius: 12px;
-    margin-bottom: 2rem;
-    border: 1px solid rgba(16, 185, 129, 0.2);
-  }
-
-  .trend-title {
-    font-weight: 700;
-    color: #23284a;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .trend-title::before {
-    content: '📈';
-  }
-
-  .trend-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .trend-item {
-    text-align: center;
-  }
-
-  .trend-value {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #10b981;
-  }
-
-  .trend-label {
-    font-size: 0.9rem;
-    color: #666666;
-  }
-
-  .empty-bids {
-    text-align: center;
-    padding: 3rem 2rem;
-    color: #666666;
-  }
-
-  .empty-bids::before {
-    content: '🎯';
-    font-size: 3rem;
-    display: block;
-    margin-bottom: 1rem;
-  }
-
-  .empty-bids h4 {
-    color: #23284a;
-    margin-bottom: 0.5rem;
-  }
-
-  .reviews-section {
-    background: white;
-    border-radius: 16px;
-    padding: 2rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    margin-bottom: 2rem;
-    width: 100%;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .review-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-  }
-
-  .review-button {
-    background: #3a8dde;
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: background 0.3s ease;
-  }
-
-  .review-button:hover {
-    background: #2b6cb0;
-    color: white;
-  }
-
-  .winner-section {
-    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-    color: white;
-    padding: 2rem;
-    border-radius: 16px;
-    margin-bottom: 2rem;
-    text-align: center;
-  }
-
-  .winner-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-  }
-
-  .payment-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin-top: 1.5rem;
-  }
-
-  .payment-button {
-    background: white;
-    color: #10b981;
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: transform 0.3s ease;
-  }
-
-  .payment-button:hover {
-    transform: translateY(-2px);
-    color: #10b981;
-  }
-
-  .messages {
-    margin-bottom: 2rem;
-  }
-
-  .message {
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-  }
-
-  .message.success {
-    background: #f0fff4;
-    color: #059669;
-    border: 1px solid #10b981;
-  }
-
-  .message.error {
-    background: #fef2f2;
-    color: #dc2626;
-    border: 1px solid #fecaca;
-  }
-
-  .description-section {
-    background: white;
-    border-radius: 16px;
-    padding: 3rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    margin-bottom: 2rem;
-    min-height: 600px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    width: 100%;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .description-text {
-    line-height: 1.8;
-    color: #666666;
-    font-size: 1.2rem;
-    margin-top: 1.5rem;
-    flex-grow: 1;
-  }
-
-  .description-section .section-title {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #23284a;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .description-section .section-icon {
-    font-size: 2rem;
-  }
-
-  .bid-placement-section {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-    border-radius: 20px;
-    padding: 2.5rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-    margin-bottom: 2.5rem;
-    border: 1px solid rgba(16, 185, 129, 0.1);
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .bid-placement-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #10b981, #34d399, #059669);
-  }
-
-  .bid-placement-section .section-icon {
-    background: linear-gradient(135deg, #10b981, #34d399);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .bid-history-section {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-    border-radius: 20px;
-    padding: 2.5rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-    margin-bottom: 2.5rem;
-    border: 1px solid rgba(16, 185, 129, 0.1);
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .bid-history-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #3a8dde, #2b6cb0, #1e40af);
-  }
-
-  .bid-history-section .section-icon {
-    background: linear-gradient(135deg, #3a8dde, #2b6cb0);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  @media (max-width: 768px) {
-    .auction-grid {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-
-    .auction-image-section {
-      min-height: 60vh;
-      padding: 1rem;
-    }
-
-    .auction-image {
-      width: 95%;
-      height: 95%;
-      max-height: none;
-    }
-
-    .auction-container {
-      padding: 1rem;
-    }
-
-    .auction-header {
-      padding: 2rem 1rem;
-    }
-
-    .auction-title {
-      font-size: 2rem;
-    }
-
-    .current-price {
-      font-size: 2rem;
-    }
-
-    .bid-section {
-      padding: 1.5rem;
-      max-width: 100%;
-    }
-
-    .bid-form {
-      padding: 1.5rem;
-    }
-
-    .bid-item {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 1rem;
-    }
-
-    .bid-details {
-      text-align: left;
-    }
-
-    .bid-user {
-      justify-content: flex-start;
-    }
-
-    .bid-stats {
-      gap: 0.75rem;
-    }
-
-    .stat-card {
-      padding: 1.5rem;
-      min-height: 80px;
-    }
-
-    .stat-number {
-      font-size: 1.5rem;
-    }
-
-    .description-section {
-      min-height: 400px;
-      padding: 2rem;
-    }
-
-    .description-text {
-      font-size: 1.1rem;
-    }
-
-    .bid-placement-section,
-    .bid-history-section {
-      padding: 1.5rem;
-      max-width: 100%;
-    }
-
-    .bid-stats {
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
-
-    .stat-card {
-      padding: 1.5rem;
-      min-height: 100px;
-    }
-
-    .stat-number {
-      font-size: 1.5rem;
-    }
-
-    .badge {
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .badge-live {
-      background: #e6fff1;
-      color: #008a45;
-    }
-
-    .badge-upcoming {
-      background: #eef4ff;
-      color: #2357d9;
-    }
-
-    .badge-ended {
-      background: #f3f3f3;
-      color: #777;
-    }
-
-    .countdown {
-      display: inline-block;
-      margin-left: 10px;
-      font-weight: 600;
-    }
-  }
-</style>
-
-{% if user.is_authenticated %}
-<a href="{% url 'report_auction' auction.id %}">🚩 Report Auction</a>
-{% endif %}
-
-{% if auction.seller.seller_verification.is_verified %}
-<span class="badge badge-live">✔ Verified Seller</span>
-{% endif %}
-
-<div class="auction-container">
-  <!-- Auction Header -->
-  <div class="auction-header">
-    <h1 class="auction-title">{{ auction.title }}</h1>
-    <div style="display:flex; justify-content:center; gap:1rem; flex-wrap:wrap;">
-      <p class="auction-subtitle" style="margin-bottom:0;">Discover and bid on this unique item</p>
-      {% if user.is_authenticated %}
-      <form method="post" action="{% url 'toggle_watchlist' auction.id %}" style="display:inline;">
-        {% csrf_token %}
-        <button type="submit"
-          style="background:rgba(255,255,255,0.2); color:white; border:1px solid rgba(255,255,255,0.4); padding:5px 15px; border-radius:20px; cursor:pointer; font-weight:600; transition:all 0.3s;">
-          {% if is_watched %}
-          ★ Watching
-          {% else %}
-          ☆ Add to Watchlist
-          {% endif %}
-        </button>
-      </form>
-      {% endif %}
+<div class="container" style="padding-top: 2rem;">
+
+  <!-- Messages -->
+  {% if messages %}
+  <div class="messages" style="margin-bottom: 2rem;">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}"
+      style="padding: 1rem; margin-bottom: 1rem; border-radius: 4px; border: 1px solid var(--border-color); background-color: {% if message.tags == 'error' %}#fef2f2{% else %}#f0fdf4{% endif %}; color: {% if message.tags == 'error' %}#dc2626{% else %}#15803d{% endif %};">
+      {{ message }}
     </div>
-
-    <!-- Image Section -->
-    <div class="auction-image-section">
-      <div style="position:relative; width:100%; height:100%; display:flex; flex-direction:column; align-items:center;">
-        {% if auction.is_featured %}
-        <div
-          style="position:absolute; top:10px; right:10px; background:#ffd700; color:#000; padding:5px 15px; border-radius:20px; font-weight:bold; box-shadow:0 2px 10px rgba(0,0,0,0.2); z-index:10;">
-          ★ Featured</div>
-        {% endif %}
-
-        {% if auction.image %}
-        <img src="{{ auction.image.url }}" alt="{{ auction.title }}" class="auction-image" id="main-auction-image" />
-        {% else %}
-        <div
-          style="height: 400px; width:100%; background: #f8f9fa; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #666666;">
-          <span>No image available</span>
-        </div>
-        {% endif %}
-
-        {% if gallery_images %}
-        <div class="gallery-thumbnails"
-          style="display:flex; gap:10px; margin-top:20px; overflow-x:auto; padding:10px; max-width:100%;">
-          <!-- Main Image Thumbnail -->
-          {% if auction.image %}
-          <img src="{{ auction.image.url }}" onclick="changeMainImage(this.src)"
-            style="width:80px; height:60px; object-fit:cover; border-radius:8px; cursor:pointer; border:2px solid #3a8dde;"
-            class="gallery-thumb" />
-          {% endif %}
-
-          <!-- Gallery Images -->
-          {% for img in gallery_images %}
-          <img src="{{ img.image.url }}" onclick="changeMainImage(this.src)"
-            style="width:80px; height:60px; object-fit:cover; border-radius:8px; cursor:pointer; border:2px solid transparent;"
-            class="gallery-thumb" />
-          {% endfor %}
-        </div>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-
-  {% include "auction_status/badge.html" with status=status %}
-  {% include "auction_status/countdown.html" with seconds=countdown_seconds %}
-
-  {% if auction.close_mode %}
-  {% include "auction_close/badge.html" %}
-  {% endif %}
-
-  <!-- Main Auction Grid -->
-  <div class="auction-grid">
-    <!-- Info Section -->
-    <div class="auction-info-section">
-      <!-- Price Display -->
-      <div class="price-display">
-        <div class="price-label">Current Price</div>
-        <div class="current-price" id="current-price">INR {{ auction.current_price|indian_currency }}</div>
-      </div>
-
-      <!-- Auction Meta -->
-      <div class="auction-meta">
-        <div class="meta-item">
-          <div class="meta-icon">⏰</div>
-          <div class="meta-content">
-            <h4>Ends At</h4>
-            {% if auction.end_time|date:'U' < now|date:'U' %} <p style="color: #e53e3e; font-weight: bold;">Ended</p>
-              {% else %}
-              <p>{{ auction.end_time|date:"F j, Y, g:i a" }}</p>
-              {% endif %}
-          </div>
-        </div>
-
-        <div class="meta-item">
-          <div class="meta-icon">🏷️</div>
-          <div class="meta-content">
-            <h4>Starting Price</h4>
-            <p>INR {{ auction.starting_price|indian_currency }}</p>
-          </div>
-        </div>
-
-        <div class="meta-item">
-          <div class="meta-icon">👥</div>
-          <div class="meta-content">
-            <h4>Total Bids</h4>
-            <p>{{ bids.count }} bids</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Bid Placement Section -->
-  {% if user.is_authenticated %}
-  <div class="bid-placement-section">
-    <h3 class="section-title">
-      <span class="section-icon">💰</span>
-      Place Your Bid
-    </h3>
-
-    <!-- Bid Statistics -->
-    <div class="bid-stats">
-      <div class="stat-card">
-        <span class="stat-number">{{ bids.count }}</span>
-        <div class="stat-label">Total Bids</div>
-      </div>
-      <div class="stat-card">
-        <span class="stat-number">₹{{ auction.current_price|indian_currency }}</span>
-        <div class="stat-label">Current Price</div>
-      </div>
-      <div class="stat-card">
-        <span class="stat-number">₹{{ auction.starting_price|indian_currency }}</span>
-        <div class="stat-label">Starting Price</div>
-      </div>
-      {% if bids.count > 1 %}
-      <div class="stat-card">
-        <span class="stat-number">{{ auction.bids.values.distinct.count }}</span>
-        <div class="stat-label">Bidders</div>
-      </div>
-      {% endif %}
-    </div>
-
-    {% if user == auction.owner or user.is_staff %}
-    {% include "reserve_price/badge.html" with reserve_status=reserve_status %}
-    {% endif %}
-
-    <!-- Bid Trend -->
-    {% if bids.count > 1 %}
-    <div class="bid-trend">
-      <div class="trend-title">Bid Activity</div>
-      <div class="trend-info">
-        <div class="trend-item">
-          <div class="trend-value">{{ bids.count }}</div>
-          <div class="trend-label">Total Bids</div>
-        </div>
-        <div class="trend-item">
-          <div class="trend-value">{{ auction.bids.values.distinct.count }}</div>
-          <div class="trend-label">Unique Bidders</div>
-        </div>
-        <div class="trend-item">
-          <div class="trend-value">{{ auction.current_price|indian_currency }}</div>
-          <div class="trend-label">Current Bid</div>
-        </div>
-      </div>
-    </div>
-    {% endif %}
-
-    {% if user.is_authenticated and not has_buyer_deposit %}
-    <p>You must place a refundable deposit to bid.</p>
-    <a href="#">Pay Deposit</a>
-    {% endif %}
-
-    <form method="post" class="bid-form">
-      {% csrf_token %}
-      <div class="form-group">
-        <label class="form-label">Bid Amount (INR)</label>
-        {{ form.amount }}
-    </form>
-
-    <!-- Bid Suggestions -->
-    <div class="bid-suggestions">
-      <div class="bid-suggestion" onclick="setBidAmount({{ auction.current_price|add:1000 }})">
-        ₹{{ auction.current_price|add:1000|indian_currency }}
-      </div>
-      <div class="bid-suggestion" onclick="setBidAmount({{ auction.current_price|add:5000 }})">
-        ₹{{ auction.current_price|add:5000|indian_currency }}
-      </div>
-      <div class="bid-suggestion" onclick="setBidAmount({{ auction.current_price|add:10000 }})">
-        ₹{{ auction.current_price|add:10000|indian_currency }}
-      </div>
-    </div>
-  </div>
-  <button type="submit" class="bid-button">🚀 Place Bid</button>
-  </form>
-</div>
-{% else %}
-<div class="login-prompt"
-  style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 2rem; text-align: center; width: 100%; max-width: 1200px; margin-left: auto; margin-right: auto;">
-  <p>🔐 <strong>Login required to place a bid</strong></p>
-  <p>Please <a href="{% url 'login' %}">sign in</a> to participate in this auction.</p>
-</div>
-{% endif %}
-
-<!-- Description Section -->
-<div class="description-section">
-  <h3 class="section-title">
-    <span class="section-icon">📝</span>
-    Item Description
-  </h3>
-  <p class="description-text">{{ auction.description }}</p>
-</div>
-
-<!-- Bid History Section -->
-<div class="bid-history-section">
-  <h3 class="section-title">
-    <span class="section-icon">📊</span>
-    Bid History
-  </h3>
-  <ul class="bid-history" id="bid-history">
-    {% for bid in bids %}
-    <li class="bid-item">
-      <div class="bid-amount">INR {{ bid.amount|indian_currency }}</div>
-      <div class="bid-details">
-        <div class="bid-user">{{ bid.user.username }}</div>
-        <div class="bid-timestamp">{{ bid.timestamp|date:"M j, Y, g:i a" }}</div>
-      </div>
-    </li>
-    {% empty %}
-    <li class="bid-item">
-      <div class="empty-bids">
-        <h4>No bids yet</h4>
-        <p>Be the first to bid on this amazing item!</p>
-      </div>
-    </li>
     {% endfor %}
-  </ul>
-</div>
-
-<!-- Reviews Section -->
-<div class="reviews-section">
-  <p>Seller Rating:
-    <span class="seller-rating">★ {{ seller_reputation|floatformat:1 }}</span> ★
-  </p>
-  <h3 class="section-title">
-    <span class="section-icon">⭐</span>
-    Reviews
-  </h3>
-  <div class="review-actions">
-    <!-- Link removed as view not implemented -->
-    <!-- Submit review link removed as view not implemented -->
-  </div>
-</div>
-
-{% if is_winner and not auction.is_active %}
-<div class="winner-section">
-  <h3 class="winner-title">🎉 Congratulations! You won this auction!</h3>
-  <p><strong>Amount to Pay:</strong> INR {{ auction.current_price|indian_currency }}</p>
-
-  {% if user == auction.winner %}
-  <div class="payment-actions" style="flex-wrap:wrap;">
-    <a href="{% url 'invoice_view' auction.id %}" class="payment-button">View Invoice / Pay</a>
-    <a href="{% url 'platform_payment_details' %}" class="payment-button">View Payment Details</a>
-
-    {% if not has_payment_proof %}
-    <a href="{% url 'upload_payment_proof' auction.id %}" class="payment-button">Upload Payment Proof</a>
-    {% else %}
-    <span class="payment-button" style="background: #f0fff4; color: #10b981;">Payment Proof Uploaded ✓</span>
-    {% endif %}
-
-    <a href="{% url 'escrow_status' auction.id %}" class="payment-button" style="background:#23284a; color:white;">Track
-      Shipment / Escrow</a>
   </div>
   {% endif %}
-</div>
-{% endif %}
 
-<!-- Messages -->
-{% if messages %}
-<div class="messages">
-  {% for message in messages %}
-  <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
-    {{ message }}
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem;">
+
+    <!-- Left Column: Image & Description -->
+    <div style="flex: 1;">
+      <div class="card"
+        style="padding: 1rem; margin-bottom: 2rem; border: none; box-shadow: none; background: transparent;">
+        <div
+          style="background-color: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; padding: 2rem; display: flex; align-items: center; justify-content: center; min-height: 400px;">
+          {% if auction.image %}
+          <img src="{{ auction.image.url }}" alt="{{ auction.title }}"
+            style="max-width: 100%; max-height: 500px; object-fit: contain;">
+          {% else %}
+          <div style="color: var(--text-muted); font-size: 1.2rem;">No Image Available</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom: 2rem;">
+        <div class="card-body">
+          <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">Description</h2>
+          <div style="line-height: 1.7; color: var(--text-secondary);">
+            {{ auction.description|linebreaks }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Reviews Section if needed -->
+      <!-- Use standard card if reviews are implemented -->
+    </div>
+
+    <!-- Right Column: Bidding & Info -->
+    <div style="flex: 0 0 400px; max-width: 100%;">
+      <div class="card" style="position: sticky; top: var(--header-height); margin-top: 1rem;">
+        <div class="card-body">
+          <h1 style="font-size: 1.8rem; margin-bottom: 0.5rem; line-height: 1.3;">{{ auction.title }}</h1>
+          <div style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
+            Listed by <a href="#" style="font-weight: 500;">{{ auction.seller.username }}</a>
+          </div>
+
+          <div
+            style="background-color: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-md); text-align: center; margin-bottom: 1.5rem;">
+            <div
+              style="font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">
+              Current Price</div>
+            <div style="font-size: 2.5rem; font-weight: 700; color: var(--text-main);">₹{{ auction.current_price|indian_format }}</div>
+          </div>
+
+          <div style="margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.95rem;">
+              <span style="color: var(--text-secondary);">End Time:</span>
+              <span style="font-weight: 500;">{{ auction.end_time|date:"M d, Y, h:i a" }}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.95rem;">
+              <span style="color: var(--text-secondary);">Status:</span>
+              <span
+                style="font-weight: 600; color: {% if auction.is_active %}var(--success-color){% else %}var(--danger-color){% endif %};">
+                {% if auction.is_active %}Active{% else %}Closed{% endif %}
+              </span>
+            </div>
+          </div>
+
+          {% if user.is_authenticated %}
+          {% if auction.is_active %}
+          {% if user == auction.seller %}
+          <div class="alert"
+            style="background-color: var(--bg-secondary); color: var(--text-secondary); padding: 1rem; border-radius: 4px; text-align: center;">
+            You are the seller of this item.
+          </div>
+          {% else %}
+          <form method="post" action="{% url 'place_bid' auction.id %}">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="bid_amount">Your Bid (Min ₹{{ min_bid_amount|indian_format }})</label>
+              <div style="display: flex; gap: 0.5rem;">
+                <span
+                  style="padding: 0.75rem; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); border-right: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; display: flex; align-items: center;">₹</span>
+                <input type="number" name="amount" id="bid_amount" step="0.01" min="{{ min_bid_amount }}" required
+                  value="{{ min_bid_amount }}" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem;">Place
+              Bid</button>
+          </form>
+          {% endif %}
+          {% else %}
+          <div class="alert"
+            style="background-color: var(--bg-secondary); padding: 1rem; border-radius: 4px; text-align: center; font-weight: 500;">
+            This auction has ended.
+            {% if auction.winner %}
+            <div style="margin-top: 0.5rem; color: var(--success-color);">Winner: {{ auction.winner.username }}</div>
+            {% endif %}
+          </div>
+          {% endif %}
+          {% else %}
+          <div class="alert"
+            style="background-color: var(--bg-secondary); padding: 1.5rem; border-radius: 4px; text-align: center;">
+            <p style="margin-bottom: 1rem;">Please log in to place a bid.</p>
+            <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-outline btn-sm">Log In</a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Bid History -->
+      <div class="card" style="margin-top: 2rem;">
+        <div class="card-body">
+          <h3 style="font-size: 1.2rem; margin-bottom: 1rem;">Bid History</h3>
+          {% if bids %}
+          <ul style="border-top: 1px solid var(--border-color);">
+            {% for bid in bids %}
+            <li
+              style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
+              <div>
+                <span style="font-weight: 600; color: var(--text-main);">{{ bid.bidder.username }}</span>
+                <div style="font-size: 0.8rem; color: var(--text-secondary);">{{ bid.time|date:"M d, h:i a" }}</div>
+              </div>
+              <div style="font-weight: 600; color: var(--text-main);">₹{{ bid.amount|indian_format }}</div>
+            </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <p style="color: var(--text-secondary); text-align: center; margin: 1rem 0;">No bids yet.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
   </div>
-  {% endfor %}
 </div>
-{% endif %}
-</div>
-
-<p style="text-align:center; margin-top:1rem; color:#666;">{{ auction.watchers.count }} people watching this auction</p>
-
-<script>
-  function formatIndianNumber(x) {
-    x = x.toString().split('.');
-    var intPart = x[0];
-    var decPart = x.length > 1 ? '.' + x[1] : '';
-    var lastThree = intPart.substring(intPart.length - 3);
-    var otherNumbers = intPart.substring(0, intPart.length - 3);
-    if (otherNumbers != '')
-      lastThree = ',' + lastThree;
-    var formatted = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree + decPart;
-    return formatted;
-  }
-
-  function setBidAmount(amount) {
-    const amountField = document.querySelector('input[name="amount"]');
-    if (amountField) {
-      amountField.value = amount;
-      amountField.focus();
-    }
-  }
-
-  function updateAuctionStatus() {
-    fetch('{% url 'auction_status_api' auction.id %}')
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('current-price').textContent = 'INR ' + formatIndianNumber(data.current_price);
-
-        let bidList = '';
-        if (data.bids && data.bids.length > 0) {
-          data.bids.forEach(bid => {
-            bidList += '<li class="bid-item">' +
-              '<div class="bid-amount">INR ' + formatIndianNumber(bid.amount) + '</div>' +
-              '<div class="bid-details">' +
-              '<div class="bid-user">' + bid.user + '</div>' +
-              '<div class="bid-timestamp">' + bid.timestamp + '</div>' +
-              '</div>' +
-              '</li>';
-          });
-        } else {
-          bidList = '<li class="bid-item"><div class="empty-bids"><h4>No bids yet</h4><p>Be the first to bid on this amazing item!</p></div></li>';
-        }
-        document.getElementById('bid-history').innerHTML = bidList;
-      })
-      .catch(error => console.error('Error updating auction status:', error));
-  }
-
-  // Update every 2 seconds
-  setInterval(updateAuctionStatus, 2000);
-
-  // Style form inputs
-  const formInputs = document.querySelectorAll('input[type="number"], input[type="text"]');
-  formInputs.forEach(input => {
-    input.classList.add('form-input');
-  });
-  });
-
-  const socket = new WebSocket(
-    "ws://" + window.location.host + "/ws/auction/{{ auction.id }}/"
-  );
-
-  socket.onmessage = function (event) {
-    const data = JSON.parse(event.data);
-    console.log("Auction update:", data);
-    updateAuctionStatus(); // Trigger status update on WS message
-  };
-
-  function changeMainImage(src) {
-    document.getElementById('main-auction-image').src = src;
-    // Update border for active thumb
-    document.querySelectorAll('.gallery-thumb').forEach(img => {
-      img.style.border = img.src === src ? '2px solid #3a8dde' : '2px solid transparent';
-    });
-  }
-</script>
 {% endblock %}

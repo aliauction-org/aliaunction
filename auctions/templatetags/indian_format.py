@@ -19,4 +19,4 @@ def indian_currency(value):
     decimals = f"{value:.2f}".split('.')[-1]
     return f"{formatted}.{decimals}"
 
-register.filter('indian_currency', indian_currency) 
+register.filter('indian_format', indian_currency)

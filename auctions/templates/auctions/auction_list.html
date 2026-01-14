@@ -1,131 +1,107 @@
 {% extends 'base.html' %}
 {% load indian_format %}
+{% load static %}
+
 {% block content %}
-{% if user.is_authenticated %}
-<div style="display:flex;justify-content:center;margin-bottom:2.5rem;">
-  <a href="{% url 'create_auction' %}" class="card-btn"
-    style="display:flex;align-items:center;gap:0.7rem;font-size:1.35rem;padding:1rem 2.2rem;background:linear-gradient(90deg,#3a8dde,#7ecbff);color:#fff;border-radius:2rem;font-weight:700;box-shadow:0 2px 8px 0 rgba(49,130,206,0.10);text-decoration:none;transition:background 0.2s,box-shadow 0.2s;">
-    <span style="font-size:2.1rem;line-height:1;">+</span> Create New Auction
-  </a>
-</div>
-{% endif %}
-{% if auctions %}
-<style>
-  .card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  .card .title {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    color: #23284a;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .card .current-bid {
-    color: #10b981;
-    font-weight: 800;
-    font-size: 1.2rem;
-    margin-top: auto;
-  }
-
-  .card .timer {
-    font-size: 0.9rem;
-    color: #666;
-    margin-top: 0.5rem;
-  }
-
-  .card img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    transition: transform 0.3s;
-  }
-
-  .card:hover img {
-    transform: scale(1.02);
-  }
-
-  .category-badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 0.75rem;
-  }
-
-  .featured-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #ffd700;
-    color: #000;
-    padding: 2px 10px;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  }
-</style>
-
-<div class="auction-cards-grid"
-  style="width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;justify-items:center;margin:0 auto;max-width:1200px;">
-  {% for auction in auctions %}
-  <div class="card" style="width:100%;max-width:350px;">
-    {% if auction.category %}
-    <span class="category-badge">{{ auction.category.name }}</span>
-    {% endif %}
-
-    {% if auction.is_featured %}
-    <span class="featured-badge">Featured</span>
-    {% endif %}
-
-    {% if auction.image %}
-    <img src="{{ auction.image.url }}" alt="{{ auction.title }}" />
-    {% else %}
-    <img src="https://via.placeholder.com/180x180/3a8dde/ffffff?text=No+Image" alt="No Image" />
-    {% endif %}
-
-    <div class="title" title="{{ auction.title }}">{{ auction.title }}</div>
-    <div class="current-bid">INR {{ auction.current_price|indian_currency }}</div>
-
-    <div class="timer">
-      {% if auction.end_time|date:'U' < now|date:'U' %} <span style="color: #e53e3e; font-weight: bold;">Ended</span>
-        {% else %}
-        Ends: {{ auction.end_time|date:'M d, h:i a' }}
-        {% endif %}
-
-        {% if auction.workflow.status == "DRAFT" %}
-        <form method="post" action="{% url 'submit_auction' auction.id %}" style="margin-top:0.5rem;">
-          {% csrf_token %}
-          <button type="submit"
-            style="background:#e2e8f0; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Submit for
-            Approval</button>
-        </form>
-        {% elif auction.workflow.status == "PENDING" %}
-        <p style="color:#d69e2e; font-size:0.8rem; margin:0;">⚠ Awaiting Approval</p>
-        {% elif auction.workflow.status == "REJECTED" %}
-        <p style="color:#e53e3e; font-size:0.8rem; margin:0;">⚠ Rejected</p>
-        {% endif %}
+<div class="container" style="padding: 2rem 0;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+      <h1 style="font-size: 2rem; color: var(--text-main); margin-bottom: 0.5rem;">All Auctions</h1>
+      <p style="color: var(--text-secondary);">Browse our collection of premium items</p>
     </div>
 
-    <a href="{% url 'auction_detail' auction.id %}" class="card-btn"
-      style="margin-top:1rem; display:block; text-align:center; text-decoration:none;">View Details</a>
+    {% if user.is_authenticated %}
+    <a href="{% url 'create_auction' %}" class="btn btn-primary">
+      <span style="font-weight: bold; margin-right: 0.5rem;">+</span> Create Auction
+    </a>
+    {% endif %}
   </div>
-  {% endfor %}
+
+  {% if auctions %}
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;">
+    {% for auction in auctions %}
+    <div class="card">
+      <a href="{% url 'auction_detail' auction.id %}" style="text-decoration: none; color: inherit; display: block;">
+        <!-- Image Aspect Ratio Wrapper -->
+        <div style="aspect-ratio: 4/3; overflow: hidden; background-color: #f1f5f9; position: relative;">
+          {% if auction.image %}
+          <img src="{{ auction.image.url }}" alt="{{ auction.title }}"
+            style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+          {% else %}
+          <div
+            style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-muted);">
+            No Image
+          </div>
+          {% endif %}
+
+          {% if auction.category %}
+          <div
+            style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.6); color: white; padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; backdrop-filter: blur(4px);">
+            {{ auction.category.name }}
+          </div>
+          {% endif %}
+
+          {% if auction.is_featured %}
+          <div
+            style="position: absolute; top: 10px; right: 10px; background: var(--accent-color); color: white; padding: 4px 8px; font-size: 0.75rem; font-weight: 600; border-radius: 4px;">
+            FEATURED
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="card-body">
+          <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; line-height: 1.4; min-height: 3em;">
+            {{ auction.title|truncatechars:50 }}
+          </h3>
+
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 1rem;">
+            <div>
+              <div style="font-size: 0.85rem; color: var(--text-secondary);">Current Bid</div>
+              <div style="font-size: 1.25rem; font-weight: 700; color: var(--text-main);">
+                ₹{{ auction.current_price|indian_format }}
+              </div>
+            </div>
+
+            <div style="text-align: right;">
+              <div style="font-size: 0.85rem; color: var(--text-secondary);">Ends In</div>
+              <div style="font-size: 0.95rem; font-weight: 500; font-variant-numeric: tabular-nums;">
+                {% if auction.end_time|date:'U' < now|date:'U' %} <span style="color: var(--danger-color);">Ended</span>
+                  {% else %}
+                  {{ auction.end_time|timeuntil }}
+                  {% endif %}
+              </div>
+            </div>
+          </div>
+
+          {% if user == auction.seller or user.is_staff %}
+          <div
+            style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Status: {{ auction.workflow.status }}</span>
+
+            {% if auction.workflow.status == "DRAFT" %}
+            <form method="post" action="{% url 'submit_auction' auction.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary btn-sm"
+                style="font-size: 0.8rem; padding: 0.25rem 0.75rem;">Submit</button>
+            </form>
+            {% endif %}
+          </div>
+          {% endif %}
+        </div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div
+    style="text-align: center; padding: 5rem 1rem; background: white; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
+    <h3 style="font-size: 1.5rem; color: var(--text-main); margin-bottom: 0.5rem;">No active auctions</h3>
+    <p style="color: var(--text-secondary); margin-bottom: 2rem;">Check back later or start your own auction.</p>
+    {% if user.is_authenticated %}
+    <a href="{% url 'create_auction' %}" class="btn btn-primary">Create Auction</a>
+    {% endif %}
+  </div>
+  {% endif %}
 </div>
-{% else %}
-<div class="card">No active auctions.</div>
-{% endif %}
 {% endblock %}

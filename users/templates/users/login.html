@@ -1,335 +1,66 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="auth-container">
-    <div class="auth-card">
-        <div class="auth-header">
-            <h1>Welcome Back</h1>
-            <p>Sign in to your AuctionVistas account</p>
-        </div>
+<div style="display: flex; justify-content: center; align-items: center; min-height: 80vh; padding: 2rem 0;">
+    <div class="card" style="width: 100%; max-width: 480px; padding: 0;">
+        <div class="card-body" style="padding: 2.5rem;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h1 style="font-size: 1.75rem; color: var(--text-main); margin-bottom: 0.5rem;">Welcome Back</h1>
+                <p style="color: var(--text-secondary);">Sign in to your AuctionVistas account</p>
+            </div>
 
-        {% if messages %}
-            <div class="messages">
+            {% if messages %}
+            <div class="messages" style="margin-bottom: 1.5rem;">
                 {% for message in messages %}
-                    <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
-                        {{ message }}
-                    </div>
+                <div class="alert alert-{{ message.tags }}"
+                    style="padding: 0.75rem; border-radius: var(--radius-sm); font-size: 0.9rem; background-color: var(--bg-secondary); margin-bottom: 0.5rem;">
+                    {{ message }}
+                </div>
                 {% endfor %}
             </div>
-        {% endif %}
+            {% endif %}
 
-        <form method="post" class="auth-form">
-            {% csrf_token %}
-            
-            <div class="form-group">
-                <label for="{{ form.username.id_for_label }}">Username or Email</label>
-                {{ form.username }}
-                {% if form.username.errors %}
-                    <div class="error-text">{{ form.username.errors.0 }}</div>
-                {% endif %}
-            </div>
+            <form method="post" class="auth-form">
+                {% csrf_token %}
 
-            <div class="form-group">
-                <label for="{{ form.password.id_for_label }}">Password</label>
-                {{ form.password }}
-                {% if form.password.errors %}
-                    <div class="error-text">{{ form.password.errors.0 }}</div>
-                {% endif %}
-            </div>
-
-            <div class="form-options">
-                <label class="checkbox-label">
-                    <input type="checkbox" name="remember" id="remember">
-                    <span class="checkmark"></span>
-                    Remember me
-                </label>
-                <a href="{% url 'password_reset' %}" class="forgot-link">Forgot password?</a>
-            </div>
-
-            <button type="submit" class="auth-button">Sign In</button>
-        </form>
-
-        <div class="auth-footer">
-            <p>Don't have an account? <a href="{% url 'register' %}" class="auth-link">Create Account</a></p>
-        </div>
-
-        <div class="auth-features">
-            <h3>Quick Access Features</h3>
-            <div class="features-grid">
-                <div class="feature-item">
-                    <div class="feature-icon">🔔</div>
-                    <h4>Real-time Notifications</h4>
-                    <p>Get instant updates on bids, outbids, and auction end times</p>
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}">Username or Email</label>
+                    <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}" required
+                        style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+                    {% if form.username.errors %}
+                    <div style="color: var(--danger-color); font-size: 0.85rem; margin-top: 0.25rem;">{{
+                        form.username.errors.0 }}</div>
+                    {% endif %}
                 </div>
-                <div class="feature-item">
-                    <div class="feature-icon">📱</div>
-                    <h4>Mobile Optimized</h4>
-                    <p>Access your account from anywhere with our mobile-friendly platform</p>
+
+                <div class="form-group">
+                    <label for="{{ form.password.id_for_label }}">Password</label>
+                    <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}"
+                        required
+                        style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+                    {% if form.password.errors %}
+                    <div style="color: var(--danger-color); font-size: 0.85rem; margin-top: 0.25rem;">{{
+                        form.password.errors.0 }}</div>
+                    {% endif %}
                 </div>
-                <div class="feature-item">
-                    <div class="feature-icon">🔒</div>
-                    <h4>Secure Access</h4>
-                    <p>Your account is protected with industry-standard security measures</p>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <label
+                        style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal; font-size: 0.9rem; color: var(--text-secondary); margin: 0;">
+                        <input type="checkbox" name="remember" id="remember">
+                        Remember me
+                    </label>
+                    <a href="{% url 'password_reset' %}" style="font-size: 0.9rem;">Forgot password?</a>
                 </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">Sign In</button>
+            </form>
+
+            <div
+                style="text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                <p style="margin: 0; font-size: 0.95rem;">Don't have an account? <a href="{% url 'register' %}"
+                        style="font-weight: 600;">Create Account</a></p>
             </div>
         </div>
     </div>
 </div>
-
-<style>
-.auth-container {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    background: linear-gradient(135deg, #23284a 0%, #3a8dde 100%);
-}
-
-.auth-card {
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-    padding: 3rem;
-    max-width: 500px;
-    width: 100%;
-}
-
-.auth-header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.auth-header h1 {
-    color: #23284a;
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-}
-
-.auth-header p {
-    color: #666;
-    font-size: 1.1rem;
-}
-
-.messages {
-    margin-bottom: 2rem;
-}
-
-.message {
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    font-weight: 500;
-}
-
-.message.error {
-    background: #f0fff4;
-    color: #c53030;
-    border: 1px solid #10b981;
-}
-
-.message.success {
-    background: #f0fff4;
-    color: #2f855a;
-    border: 1px solid #c6f6d5;
-}
-
-.message.info {
-    background: #ebf8ff;
-    color: #2b6cb0;
-    border: 1px solid #bee3f8;
-}
-
-.auth-form {
-    margin-bottom: 2rem;
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
-    display: block;
-    color: #23284a;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 1rem;
-    border: 2px solid #e2e8f0;
-    border-radius: 12px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    background: #f8fafc;
-}
-
-.form-group input:focus {
-    outline: none;
-    border-color: #3a8dde;
-    background: white;
-    box-shadow: 0 0 0 3px rgba(58, 141, 222, 0.1);
-}
-
-.form-options {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-}
-
-.checkbox-label {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    color: #666;
-    font-size: 0.9rem;
-}
-
-.checkbox-label input[type="checkbox"] {
-    width: auto;
-    margin-right: 0.5rem;
-    accent-color: #3a8dde;
-}
-
-.forgot-link {
-    color: #3a8dde;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-
-.forgot-link:hover {
-    color: #10b981;
-}
-
-.error-text {
-    margin-top: 0.5rem;
-    color: #059669;
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-
-.auth-button {
-    width: 100%;
-    padding: 1rem 2rem;
-    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 1rem;
-}
-
-.auth-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
-}
-
-.auth-button:active {
-    transform: translateY(0);
-}
-
-.auth-footer {
-    text-align: center;
-    padding-top: 2rem;
-    border-top: 1px solid #e2e8f0;
-}
-
-.auth-footer p {
-    color: #666;
-    margin: 0;
-}
-
-.auth-link {
-    color: #3a8dde;
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.3s ease;
-}
-
-.auth-link:hover {
-    color: #10b981;
-}
-
-.auth-features {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid #e2e8f0;
-}
-
-.auth-features h3 {
-    text-align: center;
-    color: #23284a;
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.features-grid {
-    display: grid;
-    gap: 1rem;
-}
-
-.feature-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1rem;
-    background: #f8fafc;
-    border-radius: 12px;
-    transition: transform 0.3s ease;
-}
-
-.feature-item:hover {
-    transform: translateY(-2px);
-}
-
-.feature-icon {
-    font-size: 2rem;
-    flex-shrink: 0;
-}
-
-.feature-item h4 {
-    color: #23284a;
-    font-size: 1.1rem;
-    margin: 0 0 0.5rem 0;
-}
-
-.feature-item p {
-    color: #666;
-    font-size: 0.9rem;
-    margin: 0;
-    line-height: 1.5;
-}
-
-@media (max-width: 768px) {
-    .auth-container {
-        padding: 1rem;
-    }
-    
-    .auth-card {
-        padding: 2rem;
-    }
-    
-    .auth-header h1 {
-        font-size: 2rem;
-    }
-    
-    .form-options {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-    
-    .features-grid {
-        grid-template-columns: 1fr;
-    }
-}
-</style>
-{% endblock %} 
+{% endblock %}

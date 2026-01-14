@@ -1,159 +1,105 @@
 {% extends 'base.html' %}
 {% load indian_format %}
 {% block content %}
-<style>
-    .dashboard-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 2rem;
-        margin-bottom: 3rem;
-    }
 
-    .stat-card {
-        background: white;
-        padding: 2rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        transition: transform 0.3s;
-        text-align: center;
-        text-decoration: none;
-        color: #23284a;
-        display: block;
-    }
-
-    .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    }
-
-    .stat-icon {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-        display: block;
-    }
-
-    .stat-value {
-        font-size: 2rem;
-        font-weight: 800;
-        color: #10b981;
-        display: block;
-    }
-
-    .stat-label {
-        font-size: 1.1rem;
-        color: #666;
-        font-weight: 600;
-        display: block;
-        margin-top: 0.5rem;
-    }
-
-    .section-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
-    }
-
-    .section-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #23284a;
-    }
-
-    .activity-list {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        overflow: hidden;
-    }
-
-    .activity-item {
-        padding: 1.5rem;
-        border-bottom: 1px solid #eee;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        transition: background 0.2s;
-    }
-
-    .activity-item:last-child {
-        border-bottom: none;
-    }
-
-    .activity-item:hover {
-        background: #f8fafc;
-    }
-
-    .activity-main {
-        font-weight: 600;
-        color: #23284a;
-    }
-
-    .activity-sub {
-        font-size: 0.9rem;
-        color: #666;
-        margin-top: 0.25rem;
-    }
-
-    .activity-time {
-        font-size: 0.85rem;
-        color: #999;
-    }
-</style>
-
-<div class="container" style="max-width:1200px; padding:2rem;">
-    <div class="section-header">
-        <h1 class="section-title">👋 Welcome back, {{ user.username }}!</h1>
-        <a href="{% url 'profile' %}" style="color:#3a8dde; font-weight:600; text-decoration:none;">Edit Profile →</a>
+<div class="container" style="padding: 2rem 0;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <div>
+            <h1 style="font-size: 2rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem;">Dashboard
+            </h1>
+            <p style="color: var(--text-secondary);">Welcome back, {{ user.username }}!</p>
+        </div>
+        <a href="{% url 'profile' %}" class="btn btn-outline" style="font-size: 0.9rem;">View Profile</a>
     </div>
 
     <!-- Stats Grid -->
-    <div class="dashboard-grid">
-        <a href="{% url 'my_bids' %}" class="stat-card">
-            <span class="stat-icon">🎯</span>
-            <span class="stat-value">{{ my_bid_count }}</span>
-            <span class="stat-label">My Bids</span>
+    <div
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+        <a href="{% url 'my_bids' %}" class="card"
+            style="text-decoration: none; transition: transform 0.2s; border-left: 4px solid var(--accent-color);">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                <span style="font-size: 2rem;">🎯</span>
+                <span
+                    style="background: rgba(37, 99, 235, 0.1); color: var(--accent-color); padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.8rem;">Active</span>
+            </div>
+            <div style="font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1;">{{ my_bid_count }}</div>
+            <div style="color: var(--text-secondary); margin-top: 0.5rem; font-weight: 500;">My Bids</div>
         </a>
 
-        <a href="{% url 'my_auctions' %}" class="stat-card">
-            <span class="stat-icon">🔨</span>
-            <span class="stat-value">{{ my_auction_count }}</span>
-            <span class="stat-label">My Auctions</span>
+        <a href="{% url 'my_auctions' %}" class="card"
+            style="text-decoration: none; transition: transform 0.2s; border-left: 4px solid #10b981;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                <span style="font-size: 2rem;">🔨</span>
+                <span
+                    style="background: #ecfdf5; color: #10b981; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.8rem;">Seller</span>
+            </div>
+            <div style="font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1;">{{ my_auction_count }}</div>
+            <div style="color: var(--text-secondary); margin-top: 0.5rem; font-weight: 500;">My Auctions</div>
         </a>
 
-        <a href="{% url 'my_watchlist' %}" class="stat-card">
-            <span class="stat-icon">⭐</span>
-            <span class="stat-value">{{ watchlist_count }}</span>
-            <span class="stat-label">Watchlist</span>
+        <a href="{% url 'my_watchlist' %}" class="card"
+            style="text-decoration: none; transition: transform 0.2s; border-left: 4px solid #f59e0b;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                <span style="font-size: 2rem;">⭐</span>
+                <span
+                    style="background: #fffbeb; color: #f59e0b; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.8rem;">Saved</span>
+            </div>
+            <div style="font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1;">{{ watchlist_count }}</div>
+            <div style="color: var(--text-secondary); margin-top: 0.5rem; font-weight: 500;">Watchlist</div>
         </a>
 
-        <a href="{% url 'payment_history' %}" class="stat-card">
-            <span class="stat-icon">💳</span>
-            <span class="stat-value">Payments</span>
-            <span class="stat-label">History</span>
+        <a href="{% url 'payment_history' %}" class="card"
+            style="text-decoration: none; transition: transform 0.2s; border-left: 4px solid #6366f1;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                <span style="font-size: 2rem;">💳</span>
+                <span
+                    style="background: #eef2ff; color: #6366f1; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.8rem;">Wallet</span>
+            </div>
+            <div style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-top: 0.5rem;">Payments
+            </div>
+            <div style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.9rem;">View History</div>
         </a>
     </div>
 
     <!-- Recent Activity -->
-    <div class="section-header">
-        <h2 class="section-title">Recent Bid Activity</h2>
-        <a href="{% url 'my_bids' %}" style="color:#10b981; font-weight:600; text-decoration:none;">View All Bids →</a>
-    </div>
-
-    <div class="activity-list">
-        {% for bid in recent_bids %}
-        <a href="{% url 'auction_detail' bid.auction.id %}" class="activity-item" style="text-decoration:none;">
-            <div>
-                <div class="activity-main">Bid placed on "{{ bid.auction.title }}"</div>
-                <div class="activity-sub">Amount: INR {{ bid.amount|indian_currency }}</div>
-            </div>
-            <div class="activity-time">{{ bid.timestamp|timesince }} ago</div>
-        </a>
-        {% empty %}
-        <div class="activity-item" style="justify-content:center;">
-            <span style="color:#666;">No recent activity</span>
+    <div class="card">
+        <div
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
+            <h2 style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin: 0;">Recent Bid Activity
+            </h2>
+            <a href="{% url 'my_bids' %}"
+                style="color: var(--accent-color); text-decoration: none; font-weight: 600; font-size: 0.9rem;">View
+                All</a>
         </div>
-        {% endfor %}
+
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            {% for bid in recent_bids %}
+            <a href="{% url 'auction_detail' bid.auction.id %}"
+                style="text-decoration: none; color: inherit; display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-radius: 8px; background: #f8fafc; transition: background 0.2s;">
+                <div>
+                    <div style="font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">{{ bid.auction.title }}</div>
+                    <div style="font-size: 0.9rem; color: var(--text-secondary);">
+                        Bid Amount: <span style="color: var(--text-main); font-weight: 600;">₹{{ bid.amount|indian_format }}</span>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">{{ bid.timestamp|timesince }} ago</div>
+                </div>
+            </a>
+            {% empty %}
+            <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                <div style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;">📉</div>
+                No recent activity found.
+            </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
+
+<style>
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    }
+</style>
 {% endblock %}
