@@ -57,13 +57,18 @@ def apply_anti_sniping(auction):
 
 
 def auction_list(request):
-    auctions = Auction.objects.filter(workflow__status="LIVE").order_by('-created_at')
+    # Show all auctions that haven't expired yet
+    # Include auctions with workflow__status="LIVE" OR auctions without workflow objects
+    from django.db.models import Q
+    
+    now = timezone.now()
+    auctions = Auction.objects.filter(
+        Q(workflow__status="LIVE") | Q(workflow__isnull=True),
+        end_time__gt=now
+    ).order_by('-created_at')
     
     # Get featured auctions first
-    featured = Auction.objects.filter(
-        workflow__status="LIVE",
-        is_featured=True
-    ).order_by('featured_order')
+    featured = auctions.filter(is_featured=True).order_by('featured_order')
     
     return render(request, 'auctions/auction_list.html', {
         'auctions': auctions,

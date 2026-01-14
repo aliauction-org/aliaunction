@@ -128,8 +128,8 @@
             <div class="bid-info">
                 <h3><a href="{% url 'auction_detail' auction.id %}">{{ auction.title }}</a></h3>
                 <div class="bid-meta">
-                    <span>💵 My Bid: <strong>₹{{ auction.user_highest_bid|indian_currency }}</strong></span>
-                    <span>💰 Current: <strong>₹{{ auction.current_price|indian_currency }}</strong></span>
+                    <span>💵 My Bid: <strong>₹{{ auction.user_highest_bid|indian_format }}</strong></span>
+                    <span>💰 Current: <strong>₹{{ auction.current_price|indian_format }}</strong></span>
                     <span>⏳ Ends: {{ auction.end_time|timesince }} left</span>
                 </div>
             </div>
@@ -150,7 +150,7 @@
             <div class="bid-info">
                 <h3><a href="{% url 'auction_detail' auction.id %}">{{ auction.title }}</a></h3>
                 <div class="bid-meta">
-                    <span>🎉 Winning Bid: <strong>₹{{ auction.user_highest_bid|indian_currency }}</strong></span>
+                    <span>🎉 Winning Bid: <strong>₹{{ auction.user_highest_bid|indian_format }}</strong></span>
                     <span>📅 Won on: {{ auction.end_time|date:"M d, Y" }}</span>
                 </div>
             </div>
@@ -171,8 +171,8 @@
             <div class="bid-info">
                 <h3><a href="{% url 'auction_detail' auction.id %}">{{ auction.title }}</a></h3>
                 <div class="bid-meta">
-                    <span>💵 My Bid: ₹{{ auction.user_highest_bid|indian_currency }}</span>
-                    <span>💰 Sold for: ₹{{ auction.current_price|indian_currency }}</span>
+                    <span>💵 My Bid: ₹{{ auction.user_highest_bid|indian_format }}</span>
+                    <span>💰 Sold for: ₹{{ auction.current_price|indian_format }}</span>
                 </div>
             </div>
             <div class="bid-action">

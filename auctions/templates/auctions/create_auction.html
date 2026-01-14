@@ -1,109 +1,179 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block content %}
-<div style="display: flex; justify-content: center; padding: 2rem 0;">
-  <div class="card" style="width: 100%; max-width: 800px; padding: 0;">
-    <div class="card-header" style="padding: 2rem; border-bottom: 1px solid var(--border-color); text-align: center;">
-      <h1 style="font-size: 1.75rem; color: var(--text-main); margin-bottom: 0.5rem;">Create New Auction</h1>
-      <p style="color: var(--text-secondary); margin: 0;">List your item for thousands of potential buyers</p>
-    </div>
+<div style="max-width:800px;margin:2rem auto;">
 
-    <div class="card-body" style="padding: 2rem;">
-      {% if messages %}
-      <div class="messages" style="margin-bottom: 2rem;">
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}"
-          style="padding: 1rem; border-radius: var(--radius-sm); font-size: 0.95rem; background-color: {% if message.tags == 'error' %}#fef2f2{% else %}#f0fdf4{% endif %}; color: {% if message.tags == 'error' %}#dc2626{% else %}#15803d{% endif %}; border: 1px solid {% if message.tags == 'error' %}#fecaca{% else %}#bbf7d0{% endif %};">
-          {{ message }}
+  <h1>Create New Auction</h1>
+
+  {% if messages %}
+  {% for message in messages %}
+  <div>{{ message }}</div>
+  {% endfor %}
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {% for field in form %}
+    <div style="margin-bottom:1rem;">
+
+      <label for="{{ field.id_for_label }}">
+        {{ field.label }}
+        {% if field.field.required %}
+        <span style="color:red">*</span>
+        {% endif %}
+      </label>
+
+      {% if field.name == "image" %}
+
+      <div style="
+    border:2px dashed var(--border-color);
+    border-radius:12px;
+    padding:1.8rem;
+    text-align:center;
+    background:var(--bg-secondary);
+    cursor:pointer;
+    transition:all 0.2s ease;
+  " onclick="document.getElementById('{{ field.id_for_label }}').click();">
+
+        <div style="font-size:2rem; margin-bottom:0.5rem;">📷</div>
+
+        <div style="font-weight:600; margin-bottom:0.25rem;">
+          Upload product image
         </div>
-        {% endfor %}
+
+        <div style="font-size:0.85rem; color:var(--text-secondary);">
+          JPG, PNG or WEBP - max 5MB
+        </div>
+
+        <input type="file" name="{{ field.name }}" id="{{ field.id_for_label }}" accept="image/*" style="display:none;">
       </div>
+
+      {% elif field.name == "end_time" %}
+
+      <div style="display:flex; flex-direction:column; gap:0.5rem;">
+
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+
+          <input type="text" maxlength="2" placeholder="DD" oninput="autoJump(this, 'month')" id="day"
+            style="width:60px; padding:0.6rem; text-align:center;">
+
+          <span>/</span>
+
+          <input type="text" maxlength="2" placeholder="MM" oninput="autoJump(this, 'year')" id="month"
+            style="width:60px; padding:0.6rem; text-align:center;">
+
+          <span>/</span>
+
+          <input type="text" maxlength="4" placeholder="YYYY" oninput="autoJump(this, 'hour')" id="year"
+            style="width:80px; padding:0.6rem; text-align:center;">
+
+          <span style="margin-left:0.5rem;">⏰</span>
+
+          <input type="text" maxlength="2" placeholder="HH" oninput="autoJump(this, 'minute')" id="hour"
+            style="width:60px; padding:0.6rem; text-align:center;">
+
+          <span>:</span>
+
+          <input type="text" maxlength="2" placeholder="MM" oninput="updateHiddenDateTime()" id="minute"
+            style="width:60px; padding:0.6rem; text-align:center;">
+
+        </div>
+
+        <small style="color:var(--text-secondary);">
+          Day / Month / Year - 24 hour format
+        </small>
+
+        <!-- Hidden real field sent to Django -->
+        <input type="hidden" name="{{ field.name }}" id="{{ field.id_for_label }}">
+
+      </div>
+
+
+
+      {% elif field.name == "starting_bid" or field.name == "buy_now" %}
+
+      <div style="position:relative;">
+        <span style="position:absolute;left:6px;top:50%;transform:translateY(-50%)">₹</span>
+        <input type="{{ field.field.widget.input_type|default:'text' }}" name="{{ field.name }}"
+          id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}" style="padding-left:1.5rem;">
+      </div>
+
+      {% else %}
+
+      <input type="{{ field.field.widget.input_type|default:'text' }}" name="{{ field.name }}"
+        id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}">
+
       {% endif %}
 
-      <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
+      {% if field.help_text %}
+      <small>{{ field.help_text|safe }}</small>
+      {% endif %}
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-          {% for field in form %}
-          <div class="form-group"
-            style="grid-column: {% if field.name == 'description' or field.name == 'title' or field.name == 'image' %} 1 / -1 {% else %} span 1 {% endif %}; margin-bottom: 1rem;">
-            <label for="{{ field.id_for_label }}"
-              style="display: block; font-weight: 600; color: var(--text-main); margin-bottom: 0.5rem;">
-              {{ field.label }}
-              {% if field.field.required %}
-              <span style="color: var(--danger-color);">*</span>
-              {% endif %}
-            </label>
+      {% if field.errors %}
+      <div style="color:red">{{ field.errors.0 }}</div>
+      {% endif %}
 
-            {% if field.name == 'image' %}
-            <div
-              style="border: 2px dashed var(--border-color); padding: 2rem; text-align: center; border-radius: var(--radius-md); background: var(--bg-secondary);">
-              {{ field }}
-              <div style="margin-top: 0.5rem; color: var(--text-muted); font-size: 0.9rem;">Supported formats: JPG, PNG,
-                WEBP</div>
-            </div>
-            {% else %}
-            <div style="position: relative;">
-              {% if field.name == 'starting_bid' or field.name == 'buy_now' %}
-              <span
-                style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);">₹</span>
-              {% endif %}
-
-              <input type="{{ field.field.widget.input_type|default:'text' }}" name="{{ field.name }}"
-                id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}" 
-                {% if field.field.required %}required{% endif %}
-                {% if field.field.widget.attrs.step %}step="{{ field.field.widget.attrs.step }}"{% endif %}
-                {% if field.field.widget.attrs.min %}min="{{ field.field.widget.attrs.min }}"{% endif %}
-                class="form-control"
-                style="width: 100%; padding: 0.75rem; padding-left: 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-size: 1rem; transition: border-color 0.2s;">
-            </div>
-            {% endif %}
-
-            {% if field.help_text %}
-            <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">{{ field.help_text|safe
-              }}</div>
-            {% endif %}
-
-            {% if field.errors %}
-            <div style="color: var(--danger-color); font-size: 0.85rem; margin-top: 0.5rem;">{{ field.errors.0 }}</div>
-            {% endif %}
-          </div>
-          {% endfor %}
-        </div>
-
-        <div style="margin-top: 2rem; display: flex; gap: 1rem; align-items: center;">
-          <button type="submit" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1.1rem; flex: 1;">Create
-            Auction</button>
-          <a href="{% url 'dashboard_home' %}" class="btn btn-outline"
-            style="padding: 1rem 2rem; font-size: 1.1rem;">Cancel</a>
-        </div>
-      </form>
     </div>
-  </div>
+    {% endfor %}
+
+    <div style="margin-top:2rem; display:flex; gap:1rem;">
+      <button type="submit" style="
+      flex:1;
+      padding:0.9rem 1.2rem;
+      background:#131314;
+      color:white;
+      border:none;
+      border-radius:10px;
+      font-size:1rem;
+      font-weight:600;
+      cursor:pointer;
+      transition:background 0.2s;
+    " onmouseover="this.style.background='#1e40af'" onmouseout="this.style.background='#2563eb'">
+        Create Auction
+      </button>
+
+      <a href="{% url 'dashboard_home' %}" style="
+      padding:0.9rem 1.5rem;
+      border:1px solid red;
+      border-radius:10px;
+      font-size:1rem;
+      text-decoration:none;
+      color:var(--text-main);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    ">
+        Cancel
+      </a>
+    </div>
+
+
+  </form>
 </div>
 
-<style>
-  textarea {
-    width: 100%;
-    min-height: 150px;
-    padding: 1rem;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    font-family: inherit;
-    resize: vertical;
+
+<script>
+  function autoJump(current, nextId) {
+    if (current.value.length === current.maxLength) {
+      document.getElementById(nextId).focus();
+    }
+    updateHiddenDateTime();
   }
 
-  textarea:focus,
-  input:focus {
-    outline: none;
-    border-color: var(--primary-color) !important;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-  }
+  function updateHiddenDateTime() {
+    const d = document.getElementById('day').value;
+    const m = document.getElementById('month').value;
+    const y = document.getElementById('year').value;
+    const h = document.getElementById('hour').value;
+    const min = document.getElementById('minute').value;
 
-  input[type="file"] {
-    border: none !important;
-    padding: 0 !important;
+    if (d && m && y && h && min) {
+      document.getElementById('{{ field.id_for_label }}').value =
+        `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}T${h.padStart(2, '0')}:${min.padStart(2, '0')}`;
+    }
   }
-</style>
+</script>
+
 {% endblock %}
