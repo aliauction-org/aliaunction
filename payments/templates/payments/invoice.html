@@ -1,85 +1,124 @@
 {% extends "base.html" %}
+{% load indian_format %}
+
+{% block title %}Invoice - {{ invoice.auction.title }}{% endblock %}
+
 {% block content %}
-<h2>Invoice</h2>
+<div class="container" style="max-width: 800px; margin: 2rem auto; padding: 0 1rem;">
 
-<p>Auction: {{ invoice.auction.title }}</p>
-<p>Winning Price: ₹{{ invoice.amount }}</p>
-<p>Buyer Fee (3%): ₹{{ invoice.buyer_fee }}</p>
-<p>Transport: ₹{{ invoice.transport_charge }}</p>
+  <!-- Header -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1>🧾 Invoice</h1>
+    <span
+      style="background: {% if invoice.is_paid %}#10b981{% else %}#f59e0b{% endif %}; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: bold;">
+      {{ invoice.status }}
+    </span>
+  </div>
 
-<h3>Total: ₹{{ invoice.total_payable }}</h3>
+  <!-- Invoice Details Card -->
+  <div
+    style="background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 2rem;">
 
-<hr>
-<p><strong>Commission Details</strong></p>
-<p>Seller Commission (10%): ₹{{ invoice.seller_fee }}</p>
-<p>Buyer Commission (3%): ₹{{ invoice.buyer_fee }}</p>
-<p>{{ invoice.transport_charge }} Transport charges paid by Buyer to Seller</p><hr>
+    <!-- Invoice Meta -->
+    <div style="background: #f8fafc; padding: 1rem 1.5rem; border-bottom: 1px solid #e5e7eb;">
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; text-align: center;">
+        <div>
+          <div style="color: #6b7280; font-size: 0.9rem;">Invoice ID</div>
+          <div style="font-weight: bold;">#{{ invoice.id }}</div>
+        </div>
+        <div>
+          <div style="color: #6b7280; font-size: 0.9rem;">Date</div>
+          <div style="font-weight: bold;">{{ invoice.created_at|date:"d M Y" }}</div>
+        </div>
+        <div>
+          <div style="color: #6b7280; font-size: 0.9rem;">Auction</div>
+          <div style="font-weight: bold;">{{ invoice.auction.title|truncatechars:20 }}</div>
+        </div>
+      </div>
+    </div>
 
-{% if invoice.status == "PENDING" %}
-  <a href="{% url 'pay_invoice' invoice.id %}">Pay Now</a>
-{% else %}
-  <p>Status: {{ invoice.status }}</p>
+    <!-- Parties -->
+    <div
+      style="padding: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; border-bottom: 1px solid #e5e7eb;">
+      <div>
+        <h3 style="margin-bottom: 0.5rem; color: #10b981;">👤 Buyer</h3>
+        <p style="margin: 0; font-weight: bold;">{{ invoice.buyer.username }}</p>
+        <p style="margin: 0; color: #6b7280;">{{ invoice.buyer.email }}</p>
+      </div>
+      <div>
+        <h3 style="margin-bottom: 0.5rem; color: #3b82f6;">🏪 Seller</h3>
+        <p style="margin: 0; font-weight: bold;">{{ invoice.seller.username }}</p>
+        <p style="margin: 0; color: #6b7280;">{{ invoice.seller.email }}</p>
+      </div>
+    </div>
 
-<!DOCTYPE html>
-<html>
-<head>
-  <style>
-    body { font-family: Arial; font-size: 14px; }
-    h2 { border-bottom: 1px solid #000; }
-    table { width: 100%; border-collapse: collapse; }
-    td, th { padding: 8px; border: 1px solid #ccc; }
-  </style>
-</head>
-<body>
+    <!-- Charges Table -->
+    <div style="padding: 1.5rem;">
+      <h3 style="margin-bottom: 1rem;">💰 Charges Breakdown</h3>
+      <table style="width: 100%; border-collapse: collapse;">
+        <tr style="border-bottom: 1px solid #e5e7eb;">
+          <td style="padding: 0.75rem 0;">Winning Bid Amount</td>
+          <td style="padding: 0.75rem 0; text-align: right; font-weight: bold;">₹{{ invoice.amount|indian_format }}</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #e5e7eb;">
+          <td style="padding: 0.75rem 0;">Buyer Commission (3%)</td>
+          <td style="padding: 0.75rem 0; text-align: right;">₹{{ invoice.buyer_commission|indian_format }}</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #e5e7eb;">
+          <td style="padding: 0.75rem 0;">Delivery Charges</td>
+          <td style="padding: 0.75rem 0; text-align: right;">₹{{ invoice.transport_charge|indian_format }}</td>
+        </tr>
+        <tr style="background: #f0fdf4;">
+          <td style="padding: 1rem 0; font-size: 1.2rem; font-weight: bold;">Total Payable</td>
+          <td style="padding: 1rem 0; text-align: right; font-size: 1.4rem; font-weight: bold; color: #10b981;">₹{{
+            invoice.total_payable|indian_format }}</td>
+        </tr>
+      </table>
 
-<h2>Invoice</h2>
+      <div style="margin-top: 1rem; padding: 1rem; background: #fef3c7; border-radius: 8px; font-size: 0.9rem;">
+        <strong>ℹ️ Commission Info:</strong><br>
+        • Seller Commission (10%): ₹{{ invoice.seller_commission|indian_format }} - Deducted from seller's payout<br>
+        • Transport charges are paid by Buyer directly to Seller
+      </div>
+    </div>
+  </div>
 
-<p><strong>Invoice ID:</strong> {{ invoice.id }}</p>
-<p><strong>Date:</strong> {{ invoice.created_at }}</p>
+  <!-- Action Buttons -->
+  <div style="display: flex; gap: 1rem; justify-content: center;">
+    {% if invoice.status == "PENDING" %}
+    <a href="{% url 'pay_invoice' invoice.id %}" class="btn btn-primary"
+      style="padding: 1rem 2rem; font-size: 1.1rem; background: linear-gradient(135deg, #10b981, #059669); border: none; border-radius: 8px; color: white; text-decoration: none; font-weight: bold;">
+      💳 Pay Now
+    </a>
+    {% endif %}
 
-<h3>Auction</h3>
-<p>{{ invoice.auction.title }}</p>
+    <a href="{% url 'download_invoice' invoice.id %}" class="btn btn-secondary"
+      style="padding: 1rem 2rem; font-size: 1.1rem; background: #f1f5f9; border: none; border-radius: 8px; color: #475569; text-decoration: none;">
+      📥 Download PDF
+    </a>
 
-<h3>Buyer</h3>
-<p>{{ invoice.buyer.username }}</p>
+    {% if invoice.auction.escrow %}
+    <a href="{% url 'escrow_status' invoice.auction.escrow.id %}" class="btn"
+      style="padding: 1rem 2rem; font-size: 1.1rem; background: #eff6ff; border: none; border-radius: 8px; color: #1d4ed8; text-decoration: none;">
+      📦 Track Order
+    </a>
+    {% endif %}
+  </div>
 
-<h3>Seller</h3>
-<p>{{ invoice.seller.username }}</p>
+  <!-- Payment Status -->
+  {% if invoice.is_paid %}
+  <div style="margin-top: 2rem; padding: 1.5rem; background: #f0fdf4; border-radius: 12px; text-align: center;">
+    <h3 style="color: #10b981; margin-bottom: 0.5rem;">✅ Payment Received</h3>
+    <p style="color: #6b7280; margin: 0;">Thank you! Your payment has been confirmed.</p>
+    {% if invoice.auction.escrow %}
+    <p style="margin-top: 1rem;">
+      <a href="{% url 'escrow_status' invoice.auction.escrow.id %}" style="color: #10b981; font-weight: bold;">
+        View Order Status →
+      </a>
+    </p>
+    {% endif %}
+  </div>
+  {% endif %}
 
-<h3>Charges</h3>
-<table>
-  <tr>
-    <th>Description</th>
-    <th>Amount</th>
-  </tr>
-  <tr>
-    <td>Winning Bid</td>
-    <td>{{ invoice.amount }}</td>
-  </tr>
-  <tr>
-    <td>Buyer Commission (3%)</td>
-    <td>{{ invoice.buyer_commission }}</td>
-  </tr>
-  <tr>
-    <td>Seller Commission (10%)</td>
-    <td>{{ invoice.seller_commission }}</td>
-  </tr>
-  <tr>
-    <td>Delivery Charge</td>
-    <td>{{ invoice.transport_charge }}</td>
-  </tr>
-</table>
-
-<h3>Status</h3>
-<p>Payment: {{ invoice.is_paid|yesno:"Paid,Pending" }}</p>
-<p>Escrow: {{ invoice.auction.escrow.get_status_display }}</p>
-
-
-  <a href="{% url 'download_invoice' invoice.id %}">
-  Download Invoice (PDF)
-</a>
-  
-</body>
-</html>
-{% endif %}
+</div>
 {% endblock %}

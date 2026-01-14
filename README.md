@@ -210,21 +210,36 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
-### 6. (Optional) Populate Sample Data
+### 6. Seed Test Data (Recommended)
 ```bash
-python manage.py populate_news  # Populate news articles
+python manage.py seed_data
+```
+This creates:
+- **Admin**: `admin` / `admin123`
+- **Sellers**: `seller1`, `seller2`, `seller3` / `password123`
+- **Buyers**: `buyer1`, `buyer2`, `buyer3`, `buyer4` / `password123`
+- 8 Categories, 10 Auctions, 27 Bids, 12 Watchlist entries
+
+### 7. (Optional) Populate News Articles
+```bash
+python manage.py populate_news
 ```
 
-### 7. Run the Development Server
+### 8. Run the Development Server
 ```bash
 python manage.py runserver 8001
 ```
 
-### 8. Access the Application
-- **Main Site**: [http://localhost:8001/](http://localhost:8001/)
-- **Admin Dashboard**: [http://localhost:8001/admin/](http://localhost:8001/admin/)
-- **Marketplace**: [http://localhost:8001/marketplace/](http://localhost:8001/marketplace/)
-- **News Section**: [http://localhost:8001/news/](http://localhost:8001/news/)
+### 9. Access the Application
+| Page | URL |
+|------|-----|
+| Homepage | http://localhost:8001/ |
+| Admin Dashboard | http://localhost:8001/admin/ |
+| Discover Auctions | http://localhost:8001/discover/ |
+| Marketplace | http://localhost:8001/marketplace/live-auctions/ |
+| News Section | http://localhost:8001/news/ |
+| My Watchlist | http://localhost:8001/watchlist/my/ |
+| My Dashboard | http://localhost:8001/dashboard/ |
 
 ### 9. (Optional) Configure for Production
 - Set `DEBUG = False` in `settings.py`

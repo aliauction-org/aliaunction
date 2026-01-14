@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Rate {{ role }} - {{ target.username }}{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 500px; margin: 2rem auto; padding: 0 1rem;">
+
+    <h1 style="text-align: center; margin-bottom: 2rem;">⭐ Rate {{ role|title }}</h1>
+
+    <div style="background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 2rem;">
+
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div
+                style="width: 80px; height: 80px; background: #e0e7ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 2rem;">
+                👤
+            </div>
+            <h2 style="margin: 0;">{{ target.username }}</h2>
+            <p style="color: #6b7280; margin: 0.5rem 0;">{{ role }}</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- Star Rating -->
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Rating</label>
+                <div style="display: flex; justify-content: center; gap: 0.5rem;" id="starRating">
+                    {% for i in "12345" %}
+                    <label style="cursor: pointer;">
+                        <input type="radio" name="stars" value="{{ forloop.counter }}" required style="display: none;">
+                        <span class="star" style="font-size: 2.5rem; color: #e5e7eb; transition: color 0.2s;">★</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Review Text -->
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;" for="review">
+                    Your Feedback (Optional)
+                </label>
+                <textarea name="review" id="review" rows="4" placeholder="Share your experience..."
+                    style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 8px; resize: vertical;"></textarea>
+            </div>
+
+            <button type="submit"
+                style="width: 100%; padding: 1rem; background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer;">
+                Submit Rating
+            </button>
+        </form>
+    </div>
+
+</div>
+
+<script>
+    document.querySelectorAll('#starRating label').forEach((label, index) => {
+        label.addEventListener('click', function () {
+            document.querySelectorAll('#starRating .star').forEach((star, starIndex) => {
+                star.style.color = starIndex <= index ? '#fbbf24' : '#e5e7eb';
+            });
+        });
+
+        label.addEventListener('mouseenter', function () {
+            document.querySelectorAll('#starRating .star').forEach((star, starIndex) => {
+                star.style.color = starIndex <= index ? '#fcd34d' : '#e5e7eb';
+            });
+        });
+    });
+
+    document.getElementById('starRating').addEventListener('mouseleave', function () {
+        const checked = document.querySelector('#starRating input:checked');
+        document.querySelectorAll('#starRating .star').forEach((star, index) => {
+            if (checked) {
+                star.style.color = index < parseInt(checked.value) ? '#fbbf24' : '#e5e7eb';
+            } else {
+                star.style.color = '#e5e7eb';
+            }
+        });
+    });
+</script>
+{% endblock %}

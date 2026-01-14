@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load indian_format %}
+
+{% block title %}Bulk Upload Auctions{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 800px; margin: 2rem auto; padding: 0 1rem;">
+    <h1 style="margin-bottom: 1.5rem;">📦 Bulk Upload Auctions</h1>
+    
+    <div style="background: #f8fafc; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+        <h3 style="margin-bottom: 1rem;">Instructions</h3>
+        <ol style="margin-left: 1.5rem; line-height: 1.8;">
+            <li>Download the CSV template below</li>
+            <li>Fill in your auction details (each row = one auction)</li>
+            <li>Upload the completed CSV file</li>
+            <li>All auctions will be created as <strong>Drafts</strong> for your review</li>
+        </ol>
+        
+        <a href="{% url 'download_csv_template' %}" class="btn btn-secondary" style="margin-top: 1rem;">
+            📥 Download CSV Template
+        </a>
+    </div>
+    
+    <div style="background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <h3 style="margin-bottom: 1rem;">Upload CSV File</h3>
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div style="margin-bottom: 1.5rem;">
+                <label for="csv_file" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                    Select CSV File
+                </label>
+                <input type="file" 
+                       name="csv_file" 
+                       id="csv_file" 
+                       accept=".csv"
+                       required
+                       style="width: 100%; padding: 0.75rem; border: 2px dashed #ddd; border-radius: 8px;">
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                🚀 Upload and Create Auctions
+            </button>
+        </form>
+    </div>
+    
+    <div style="margin-top: 2rem; padding: 1rem; background: #fffbeb; border-radius: 8px; border-left: 4px solid #f59e0b;">
+        <strong>⚠️ Note:</strong>
+        <ul style="margin: 0.5rem 0 0 1.5rem;">
+            <li>Maximum 100 auctions per upload</li>
+            <li>Images must be uploaded separately after creating auctions</li>
+            <li>Available categories: {% for cat in categories %}{{ cat }}{% if not forloop.last %}, {% endif %}{% endfor %}</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

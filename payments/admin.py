@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Payment, Refund, PlatformPaymentDetails, UserPaymentProfile, PaymentProof
+from .models import Payment, Refund, PlatformPaymentDetails, UserPaymentProfile, PaymentProof, Invoice, InvoicePayment
 from django.utils import timezone
 
 @admin.register(Payment)

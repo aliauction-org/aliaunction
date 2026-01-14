@@ -1,20 +1,71 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<style>
+  .card {
+    position: relative;
+    background: #fff;
+    color: #23284a;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    box-shadow: 0 2px 12px 0 rgba(44, 62, 80, 0.06);
+    width: 100%;
+    max-width: 350px;
+    padding: 1.5rem;
+    border-radius: 12px;
+    transition: transform 0.3s;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+  }
+
+  .featured-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ffd700;
+    color: #000;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+  }
+
+  .category-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    z-index: 10;
+  }
+</style>
 <div style="background:linear-gradient(90deg,#23284a 0%,#2b3a67 100%);padding:0 0 2.5rem 0;">
   <div style="max-width:2400px;margin:0 auto;padding:2.5rem 1rem 0 1rem;text-align:center;">
     <div style="display:flex;flex-wrap:wrap;gap:2.5rem;align-items:flex-start;justify-content:center;">
       <!-- Sidebar -->
-      <aside style="flex:1;min-width:260px;max-width:320px;background:#fff;border-radius:18px;box-shadow:0 2px 12px 0 rgba(44,62,80,0.06);padding:2rem 1.2rem;margin-bottom:2rem;">
+      <aside
+        style="flex:1;min-width:260px;max-width:320px;background:#fff;border-radius:18px;box-shadow:0 2px 12px 0 rgba(44,62,80,0.06);padding:2rem 1.2rem;margin-bottom:2rem;">
         <form method="get" style="margin-bottom:2rem;">
-          <input type="text" name="search" placeholder="Search products..." value="{{ search_query|default:'' }}" style="width:100%;padding:0.7rem 1rem;border-radius:10px;border:1.5px solid #d1d5db;font-size:1rem;background:#f7fafd;">
-          <button type="submit" style="margin-top:0.7rem;width:100%;background:#3a8dde;color:#fff;font-weight:600;border:none;border-radius:10px;padding:0.7rem 0;">Search</button>
+          <input type="text" name="search" placeholder="Search products..." value="{{ search_query|default:'' }}"
+            style="width:100%;padding:0.7rem 1rem;border-radius:10px;border:1.5px solid #d1d5db;font-size:1rem;background:#f7fafd;">
+          <button type="submit"
+            style="margin-top:0.7rem;width:100%;background:#3a8dde;color:#fff;font-weight:600;border:none;border-radius:10px;padding:0.7rem 0;">Search</button>
         </form>
         <div style="margin-bottom:2rem;">
           <h4 style="margin-bottom:0.7rem;color:#23284a;font-size:1.1rem;">Product Category</h4>
           <ul style="list-style:none;padding:0;margin:0;">
             {% for category in categories %}
-              <li style="margin-bottom:0.5rem;"><a href="?category={{ category.slug }}" style="color:#3a8dde;text-decoration:none;">{{ category.name }}</a> <span style="color:#b0b6d6;font-size:0.97rem;">({{ category.count }})</span></li>
+            <li style="margin-bottom:0.5rem;"><a href="?category={{ category.slug }}"
+                style="color:#3a8dde;text-decoration:none;">{{ category.name }}</a> <span
+                style="color:#b0b6d6;font-size:0.97rem;">({{ category.count }})</span></li>
             {% endfor %}
           </ul>
         </div>
@@ -24,46 +75,67 @@
         </div>
       </aside>
       <!-- Main Content -->
-      <main style="flex:3;min-width:320px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+      <main
+        style="flex:3;min-width:320px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
         <!-- Hero Section -->
-        <div style="background:#23284a;border-radius:18px;padding:2rem 1.5rem 1.5rem 1.5rem;margin-bottom:2.5rem;box-shadow:0 2px 12px 0 rgba(44,62,80,0.06);display:flex;align-items:center;gap:2rem;flex-wrap:wrap;width:100%;">
+        <div
+          style="background:#23284a;border-radius:18px;padding:2rem 1.5rem 1.5rem 1.5rem;margin-bottom:2.5rem;box-shadow:0 2px 12px 0 rgba(44,62,80,0.06);display:flex;align-items:center;gap:2rem;flex-wrap:wrap;width:100%;">
           <div style="flex:2;min-width:220px;">
-            <h1 style="color:#fff;font-size:2.2rem;font-weight:800;margin-bottom:0.7rem;">Discover & Bid on Unique Items</h1>
-            <div style="color:#ffffff;font-size:1.2rem;margin-bottom:1.2rem;">Join live auctions, find rare collectibles, and win your next treasure!</div>
+            <h1 style="color:#fff;font-size:2.2rem;font-weight:800;margin-bottom:0.7rem;">Discover & Bid on Unique Items
+            </h1>
+            <div style="color:#ffffff;font-size:1.2rem;margin-bottom:1.2rem;">Join live auctions, find rare
+              collectibles, and win your next treasure!</div>
           </div>
           <div style="flex:1;min-width:180px;display:flex;gap:0.5rem;flex-wrap:wrap;">
-            <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=facearea&w=120&q=80" style="width:60px;height:60px;border-radius:12px;object-fit:cover;">
-            <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=facearea&w=120&q=80" style="width:60px;height:60px;border-radius:12px;object-fit:cover;">
-            <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=facearea&w=120&q=80" style="width:60px;height:60px;border-radius:12px;object-fit:cover;">
-            <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=facearea&w=120&q=80" style="width:60px;height:60px;border-radius:12px;object-fit:cover;">
+            <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=facearea&w=120&q=80"
+              style="width:60px;height:60px;border-radius:12px;object-fit:cover;">
+            <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=facearea&w=120&q=80"
+              style="width:60px;height:60px;border-radius:12px;object-fit:cover;">
+            <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=facearea&w=120&q=80"
+              style="width:60px;height:60px;border-radius:12px;object-fit:cover;">
+            <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=facearea&w=120&q=80"
+              style="width:60px;height:60px;border-radius:12px;object-fit:cover;">
           </div>
         </div>
         <!-- Auction Grid -->
-        <div class="auction-cards-grid" style="width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;justify-items:center;justify-content:center;margin:0 auto;max-width:1200px;">
+        <div class="auction-cards-grid"
+          style="width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;justify-items:center;justify-content:center;margin:0 auto;max-width:1200px;">
           {% for auction in auctions %}
-            <div class="card" style="background:#fff;color:#23284a;align-items:flex-start;box-shadow:0 2px 12px 0 rgba(44,62,80,0.06);width:100%;max-width:350px;">
-              {% if auction.image %}
-                <img src="{{ auction.image.url }}" alt="{{ auction.title }}" style="width:100%;max-width:300px;border-radius:12px;margin-bottom:1rem;object-fit:cover;">
-              {% else %}
-                <img src="https://via.placeholder.com/300x200/eee/888?text=No+Image" alt="No Image" style="width:100%;max-width:300px;border-radius:12px;margin-bottom:1rem;object-fit:cover;">
-              {% endif %}
-              <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.3rem;">{{ auction.title }}</div>
-              <div style="font-size:1rem;color:#000000;margin-bottom:0.5rem;">Current bid: ₹{{ auction.current_price }}</div>
-              <div style="font-size:0.97rem;color:#b0b6d6;margin-bottom:0.7rem;">
-                {% if auction.end_time|date:'U' < now|date:'U' %}
-                  <span style="color: #e53e3e; font-weight: bold;">Ended</span>
-                {% else %}
-                  {{ auction.end_time|date:'M d, Y, h:i a' }}
-                {% endif %}
-              </div>
-              <a href="{% url 'auction_detail' auction.id %}" class="card-btn" style="background:#3a8dde;color:#fff;font-weight:600;border-radius:1.2rem;padding:0.6rem 0;text-align:center;box-shadow:0 2px 8px 0 rgba(49,130,206,0.10);text-decoration:none;width:100%;margin-top:auto;">Bid now</a>
+          <div class="card">
+            {% if auction.is_featured %}
+            <span class="featured-badge">Featured</span>
+            {% endif %}
+
+            {% if auction.category %}
+            <span class="category-badge">{{ auction.category.name }}</span>
+            {% endif %}
+            {% if auction.image %}
+            <img src="{{ auction.image.url }}" alt="{{ auction.title }}"
+              style="width:100%;max-width:300px;border-radius:12px;margin-bottom:1rem;object-fit:cover;">
+            {% else %}
+            <img src="https://via.placeholder.com/300x200/eee/888?text=No+Image" alt="No Image"
+              style="width:100%;max-width:300px;border-radius:12px;margin-bottom:1rem;object-fit:cover;">
+            {% endif %}
+            <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.3rem;">{{ auction.title }}</div>
+            <div style="font-size:1rem;color:#000000;margin-bottom:0.5rem;">Current bid: ₹{{ auction.current_price }}
             </div>
+            <div style="font-size:0.97rem;color:#b0b6d6;margin-bottom:0.7rem;">
+              {% if auction.end_time|date:'U' < now|date:'U' %} <span style="color: #e53e3e; font-weight: bold;">
+                Ended</span>
+                {% else %}
+                {{ auction.end_time|date:'M d, Y, h:i a' }}
+                {% endif %}
+            </div>
+            <a href="{% url 'auction_detail' auction.id %}" class="card-btn"
+              style="background:#3a8dde;color:#fff;font-weight:600;border-radius:1.2rem;padding:0.6rem 0;text-align:center;box-shadow:0 2px 8px 0 rgba(49,130,206,0.10);text-decoration:none;width:100%;margin-top:auto;">Bid
+              now</a>
+          </div>
           {% empty %}
-            <div class="card" style="background:#fff;color:#23284a;">No auctions found.</div>
+          <div class="card" style="background:#fff;color:#23284a;">No auctions found.</div>
           {% endfor %}
         </div>
       </main>
     </div>
   </div>
 </div>
-{% endblock %} 
+{% endblock %}

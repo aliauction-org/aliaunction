@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load indian_format %}
+{% block content %}
+<style>
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #23284a;
+        margin-bottom: 2rem;
+    }
+
+    .bids-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .bid-group {
+        margin-bottom: 3rem;
+    }
+
+    .group-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #23284a;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #eee;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .bid-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        transition: transform 0.2s;
+        border-left: 5px solid #ddd;
+    }
+
+    .bid-card:hover {
+        transform: translateX(5px);
+    }
+
+    .status-active {
+        border-left-color: #10b981;
+    }
+
+    .status-won {
+        border-left-color: #3a8dde;
+        background: #f0f9ff;
+    }
+
+    .status-lost {
+        border-left-color: #e53e3e;
+    }
+
+    .bid-info h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.2rem;
+    }
+
+    .bid-info h3 a {
+        color: #23284a;
+        text-decoration: none;
+    }
+
+    .bid-info h3 a:hover {
+        color: #3a8dde;
+    }
+
+    .bid-meta {
+        font-size: 0.95rem;
+        color: #666;
+        display: flex;
+        gap: 1.5rem;
+    }
+
+    .bid-meta span {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .bid-action a {
+        padding: 0.6rem 1.2rem;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .btn-view {
+        background: #eee;
+        color: #333;
+    }
+
+    .btn-pay {
+        background: #10b981;
+        color: white;
+        box-shadow: 0 2px 5px rgba(16, 185, 129, 0.3);
+    }
+
+    .empty-state {
+        padding: 2rem;
+        text-align: center;
+        color: #888;
+        background: #f8fafc;
+        border-radius: 8px;
+        border: 2px dashed #e2e8f0;
+    }
+</style>
+
+<div class="bids-container">
+    <h1 class="section-title">🎯 My Bids</h1>
+
+    <!-- Active Bids -->
+    <div class="bid-group">
+        <h2 class="group-title">🟢 Active Auctions</h2>
+        {% for auction in active_bids %}
+        <div class="bid-card status-active">
+            <div class="bid-info">
+                <h3><a href="{% url 'auction_detail' auction.id %}">{{ auction.title }}</a></h3>
+                <div class="bid-meta">
+                    <span>💵 My Bid: <strong>₹{{ auction.user_highest_bid|indian_currency }}</strong></span>
+                    <span>💰 Current: <strong>₹{{ auction.current_price|indian_currency }}</strong></span>
+                    <span>⏳ Ends: {{ auction.end_time|timesince }} left</span>
+                </div>
+            </div>
+            <div class="bid-action">
+                <a href="{% url 'auction_detail' auction.id %}" class="btn-view">View Auction</a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-state">No active bids currently. <a href="{% url 'auction_list' %}">Explore Auctions</a></div>
+        {% endfor %}
+    </div>
+
+    <!-- Won Auctions -->
+    <div class="bid-group">
+        <h2 class="group-title">🏆 Won Auctions</h2>
+        {% for auction in won_auctions %}
+        <div class="bid-card status-won">
+            <div class="bid-info">
+                <h3><a href="{% url 'auction_detail' auction.id %}">{{ auction.title }}</a></h3>
+                <div class="bid-meta">
+                    <span>🎉 Winning Bid: <strong>₹{{ auction.user_highest_bid|indian_currency }}</strong></span>
+                    <span>📅 Won on: {{ auction.end_time|date:"M d, Y" }}</span>
+                </div>
+            </div>
+            <div class="bid-action">
+                <a href="{% url 'invoice_view' auction.id %}" class="btn-pay">View Invoice</a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-state">You haven't won any auctions yet.</div>
+        {% endfor %}
+    </div>
+
+    <!-- Lost Auctions -->
+    <div class="bid-group">
+        <h2 class="group-title">❌ Ended / Lost</h2>
+        {% for auction in lost_auctions %}
+        <div class="bid-card status-lost">
+            <div class="bid-info">
+                <h3><a href="{% url 'auction_detail' auction.id %}">{{ auction.title }}</a></h3>
+                <div class="bid-meta">
+                    <span>💵 My Bid: ₹{{ auction.user_highest_bid|indian_currency }}</span>
+                    <span>💰 Sold for: ₹{{ auction.current_price|indian_currency }}</span>
+                </div>
+            </div>
+            <div class="bid-action">
+                <a href="{% url 'auction_detail' auction.id %}" class="btn-view">View Result</a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-state">No past bid history.</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

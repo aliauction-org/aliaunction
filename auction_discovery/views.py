@@ -1,15 +1,18 @@
 from django.shortcuts import render
 from django.utils import timezone
-from auctions.models import Auction
+from auctions.models import Auction, Category
 from .forms import AuctionSearchForm
 from auction_status.utils import get_auction_status
+
 
 def discover_auctions(request):
     form = AuctionSearchForm(request.GET or None)
     auctions = Auction.objects.all()
+    categories = Category.objects.filter(is_active=True)
 
     if form.is_valid():
         q = form.cleaned_data.get("q")
+        category = form.cleaned_data.get("category")
         min_price = form.cleaned_data.get("min_price")
         max_price = form.cleaned_data.get("max_price")
         live_only = form.cleaned_data.get("live_only")
@@ -18,6 +21,9 @@ def discover_auctions(request):
 
         if q:
             auctions = auctions.filter(title__icontains=q)
+
+        if category:
+            auctions = auctions.filter(category=category)
 
         if min_price is not None:
             auctions = auctions.filter(current_price__gte=min_price)
@@ -39,6 +45,8 @@ def discover_auctions(request):
         "auction_discovery/discover.html",
         {
             "form": form,
-            "auctions": auctions
+            "auctions": auctions,
+            "categories": categories
         }
     )
+

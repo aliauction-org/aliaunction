@@ -19,22 +19,35 @@ from django.urls import path, include
 from django.shortcuts import render
 from django.conf import settings
 from django.conf.urls.static import static
-from auctions.models import Auction
+from auctions.models import Auction, Category
 from django.db.models import Count
 from django.db.models import Q
 from django.utils import timezone
 
 def homepage(request):
     query = request.GET.get('search', '').strip()
+    category_slug = request.GET.get('category', '').strip()
+    
     auctions = Auction.objects.filter(is_active=True)
+    
     if query:
         auctions = auctions.filter(Q(title__icontains=query) | Q(description__icontains=query))
+    
+    if category_slug:
+        auctions = auctions.filter(category__slug=category_slug)
+        
     auctions = auctions.order_by('-created_at')
-    categories = Auction.objects.values('id', 'title').annotate(count=Count('id'))[:5]  # Placeholder for categories
+    
+    # Get active categories with auction counts
+    categories = Category.objects.filter(is_active=True).annotate(
+        count=Count('auctions', filter=Q(auctions__is_active=True))
+    ).order_by('order', 'name')
+    
     return render(request, 'home.html', {
         'auctions': auctions, 
         'categories': categories, 
         'search_query': query,
+        'selected_category': category_slug,
         'now': timezone.now()
     })
 
@@ -49,8 +62,17 @@ urlpatterns = [
     path('newsletter-signup/', include('newsletter.urls')),
     path('marketplace/', include('marketplace.urls')),
     path('news/', include('news.urls')),
+    path('dashboard/', include('dashboard.urls')),
+    path('watchlist/', include('watchlist.urls')),
+    path('discover/', include('auction_discovery.urls')),
+    path('reports/', include('reports.urls')),
+    path('verification/', include('seller_verification.urls')),
+    path('escrow/', include('escrow.urls')),
+    path('shipping/', include('shipping.urls')),
+    path('ratings/', include('reviews.urls')),
     path('', homepage, name='home'),
 ]
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

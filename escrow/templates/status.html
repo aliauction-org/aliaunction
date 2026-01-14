@@ -1,43 +1,214 @@
 {% extends "base.html" %}
+{% load indian_format %}
+
+{% block title %}Order Status - {{ escrow.auction.title }}{% endblock %}
+
 {% block content %}
-<h2>Transaction Status</h2>
+<div class="container" style="max-width: 800px; margin: 2rem auto; padding: 0 1rem;">
 
-<p>Auction: {{ escrow.auction.title }}</p>
-<p>Status: {{ escrow.get_status_display }}</p>
+  <h1 style="margin-bottom: 2rem;">📦 Order Status</h1>
 
-{% if user == escrow.seller and escrow.status == "PAID" %}
-  <a href="{% url 'mark_shipped' escrow.id %}">Mark as Shipped</a>
-{% endif %}
+  <!-- Auction Info -->
+  <div
+    style="background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 2rem;">
+    <div style="display: flex; gap: 1.5rem; align-items: center;">
+      {% if escrow.auction.image %}
+      <img src="{{ escrow.auction.image.url }}"
+        style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
+      {% endif %}
+      <div>
+        <h2 style="margin: 0 0 0.5rem;">{{ escrow.auction.title }}</h2>
+        <div style="color: #6b7280;">
+          Seller: <strong>{{ escrow.seller.username }}</strong> •
+          Buyer: <strong>{{ escrow.buyer.username }}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
 
-{% if user == escrow.buyer and escrow.status == "SHIPPED" %}
-  <a href="{% url 'mark_delivered' escrow.id %}">Confirm Delivery</a>
-{% endif %}
+  <!-- Status Progress Bar -->
+  <div
+    style="background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 2rem; margin-bottom: 2rem;">
+    <h3 style="margin-bottom: 1.5rem;">Transaction Status</h3>
 
-{% if user == escrow.buyer and escrow.status == "PAID" %}
-  <a href="{% url 'add_shipping' escrow.id %}">
-    Add / Update Shipping Address
-  </a>
-{% endif %}
+    <div style="display: flex; justify-content: space-between; position: relative;">
+      <!-- Progress line -->
+      <div style="position: absolute; top: 20px; left: 40px; right: 40px; height: 4px; background: #e5e7eb;">
+        <div
+          style="height: 100%; background: #10b981; width: {% if escrow.status == 'PENDING_PAYMENT' %}0%{% elif escrow.status == 'PAID' %}25%{% elif escrow.status == 'SHIPPED' %}50%{% elif escrow.status == 'DELIVERED' %}75%{% else %}100%{% endif %};">
+        </div>
+      </div>
 
-{% if escrow.shipping %}
-  <h3>Shipping Address</h3>
-  <p>{{ escrow.shipping.full_name }}</p>
-  <p>{{ escrow.shipping.address_line1 }}, {{ escrow.shipping.city }}</p>
-  <p>{{ escrow.shipping.state }} - {{ escrow.shipping.postal_code }}</p>
-{% endif %}
+      <!-- Status Steps -->
+      {% with current_status=escrow.status %}
 
-{% if escrow.status == "DELIVERED" %}
-  <p>Awaiting completion…</p>
-{% endif %}
-{% if escrow.status == "COMPLETED" %}
-  {% if user == escrow.buyer %}
-    <a href="{% url 'leave_rating' escrow.id %}">
-      Rate Seller
-    </a>
-  {% elif user == escrow.seller %}
-    <a href="{% url 'leave_rating' escrow.id %}">
-      Rate Buyer
-    </a>
-  {% endif %}
-{% endif %}
+      <div style="text-align: center; z-index: 1;">
+        <div
+          style="width: 40px; height: 40px; border-radius: 50%; background: {% if current_status == 'PENDING_PAYMENT' %}#f59e0b{% else %}#10b981{% endif %}; color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; font-weight: bold;">
+          {% if current_status != 'PENDING_PAYMENT' %}✓{% else %}1{% endif %}
+        </div>
+        <div
+          style="font-size: 0.85rem; {% if current_status == 'PENDING_PAYMENT' %}font-weight: bold; color: #f59e0b;{% endif %}">
+          Pending<br>Payment</div>
+      </div>
+
+      <div style="text-align: center; z-index: 1;">
+        <div
+          style="width: 40px; height: 40px; border-radius: 50%; background: {% if current_status == 'PAID' %}#f59e0b{% elif current_status in 'SHIPPED,DELIVERED,COMPLETED' %}#10b981{% else %}#e5e7eb{% endif %}; color: {% if current_status in 'PAID,SHIPPED,DELIVERED,COMPLETED' %}white{% else %}#9ca3af{% endif %}; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; font-weight: bold;">
+          {% if current_status in 'SHIPPED,DELIVERED,COMPLETED' %}✓{% else %}2{% endif %}
+        </div>
+        <div style="font-size: 0.85rem; {% if current_status == 'PAID' %}font-weight: bold; color: #f59e0b;{% endif %}">
+          Paid</div>
+      </div>
+
+      <div style="text-align: center; z-index: 1;">
+        <div
+          style="width: 40px; height: 40px; border-radius: 50%; background: {% if current_status == 'SHIPPED' %}#f59e0b{% elif current_status in 'DELIVERED,COMPLETED' %}#10b981{% else %}#e5e7eb{% endif %}; color: {% if current_status in 'SHIPPED,DELIVERED,COMPLETED' %}white{% else %}#9ca3af{% endif %}; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; font-weight: bold;">
+          {% if current_status in 'DELIVERED,COMPLETED' %}✓{% else %}3{% endif %}
+        </div>
+        <div
+          style="font-size: 0.85rem; {% if current_status == 'SHIPPED' %}font-weight: bold; color: #f59e0b;{% endif %}">
+          Shipped</div>
+      </div>
+
+      <div style="text-align: center; z-index: 1;">
+        <div
+          style="width: 40px; height: 40px; border-radius: 50%; background: {% if current_status == 'DELIVERED' %}#f59e0b{% elif current_status == 'COMPLETED' %}#10b981{% else %}#e5e7eb{% endif %}; color: {% if current_status in 'DELIVERED,COMPLETED' %}white{% else %}#9ca3af{% endif %}; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; font-weight: bold;">
+          {% if current_status == 'COMPLETED' %}✓{% else %}4{% endif %}
+        </div>
+        <div
+          style="font-size: 0.85rem; {% if current_status == 'DELIVERED' %}font-weight: bold; color: #f59e0b;{% endif %}">
+          Delivered</div>
+      </div>
+
+      <div style="text-align: center; z-index: 1;">
+        <div
+          style="width: 40px; height: 40px; border-radius: 50%; background: {% if current_status == 'COMPLETED' %}#10b981{% else %}#e5e7eb{% endif %}; color: {% if current_status == 'COMPLETED' %}white{% else %}#9ca3af{% endif %}; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; font-weight: bold;">
+          {% if current_status == 'COMPLETED' %}✓{% else %}5{% endif %}
+        </div>
+        <div
+          style="font-size: 0.85rem; {% if current_status == 'COMPLETED' %}font-weight: bold; color: #10b981;{% endif %}">
+          Complete</div>
+      </div>
+
+      {% endwith %}
+    </div>
+  </div>
+
+  <!-- Action Cards -->
+  <div style="display: grid; gap: 1rem;">
+
+    <!-- Shipping Address -->
+    {% if escrow.shipping %}
+    <div style="background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      <h3 style="margin-bottom: 1rem;">📍 Shipping Address</h3>
+      <p style="margin: 0;"><strong>{{ escrow.shipping.full_name }}</strong></p>
+      <p style="margin: 0.25rem 0; color: #6b7280;">{{ escrow.shipping.phone }}</p>
+      <p style="margin: 0.25rem 0;">{{ escrow.shipping.address_line1 }}</p>
+      {% if escrow.shipping.address_line2 %}<p style="margin: 0.25rem 0;">{{ escrow.shipping.address_line2 }}</p>{%
+      endif %}
+      <p style="margin: 0.25rem 0;">{{ escrow.shipping.city }}, {{ escrow.shipping.state }} - {{
+        escrow.shipping.postal_code }}</p>
+      <p style="margin: 0.25rem 0;">{{ escrow.shipping.country }}</p>
+      {% if escrow.shipping.delivery_charge %}
+      <p style="margin-top: 1rem; padding: 0.5rem; background: #f0fdf4; border-radius: 4px;">
+        <strong>Delivery Charge:</strong> ₹{{ escrow.shipping.delivery_charge|indian_format }}
+      </p>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Action Buttons Based on Status -->
+
+    {% if user == escrow.buyer and escrow.status == "PENDING_PAYMENT" %}
+    <div style="background: #fef3c7; border-radius: 12px; padding: 1.5rem; text-align: center;">
+      <h3 style="margin-bottom: 1rem; color: #92400e;">⏳ Payment Required</h3>
+      <a href="{% url 'invoice_view' escrow.auction.id %}"
+        style="display: inline-block; padding: 1rem 2rem; background: #10b981; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">
+        View Invoice & Pay
+      </a>
+    </div>
+    {% endif %}
+
+    {% if user == escrow.buyer and escrow.status == "PAID" %}
+    <div style="background: #eff6ff; border-radius: 12px; padding: 1.5rem;">
+      <h3 style="margin-bottom: 1rem; color: #1d4ed8;">📋 Add Shipping Address</h3>
+      <p style="color: #6b7280; margin-bottom: 1rem;">Please provide your shipping address so the seller can dispatch
+        the item.</p>
+      <a href="{% url 'add_shipping' escrow.id %}"
+        style="display: inline-block; padding: 0.75rem 1.5rem; background: #3b82f6; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">
+        Add / Update Address
+      </a>
+    </div>
+    {% endif %}
+
+    {% if user == escrow.seller and escrow.status == "PAID" %}
+    <div style="background: #fef3c7; border-radius: 12px; padding: 1.5rem; text-align: center;">
+      <h3 style="margin-bottom: 1rem; color: #92400e;">📦 Ready to Ship?</h3>
+      <p style="color: #6b7280; margin-bottom: 1rem;">Once you've dispatched the item, mark it as shipped.</p>
+      <a href="{% url 'mark_shipped' escrow.id %}"
+        style="display: inline-block; padding: 0.75rem 1.5rem; background: #f59e0b; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">
+        ✓ Mark as Shipped
+      </a>
+    </div>
+    {% endif %}
+
+    {% if user == escrow.buyer and escrow.status == "SHIPPED" %}
+    <div style="background: #f0fdf4; border-radius: 12px; padding: 1.5rem; text-align: center;">
+      <h3 style="margin-bottom: 1rem; color: #059669;">📬 Item Shipped!</h3>
+      <p style="color: #6b7280; margin-bottom: 1rem;">The seller has shipped your item. Confirm when you receive it.</p>
+      <a href="{% url 'mark_delivered' escrow.id %}"
+        style="display: inline-block; padding: 0.75rem 1.5rem; background: #10b981; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">
+        ✓ Confirm Delivery
+      </a>
+    </div>
+    {% endif %}
+
+    {% if escrow.status == "DELIVERED" %}
+    <div style="background: #f0fdf4; border-radius: 12px; padding: 1.5rem; text-align: center;">
+      <h3 style="margin-bottom: 0.5rem; color: #059669;">✅ Item Delivered</h3>
+      <p style="color: #6b7280;">Transaction will be marked complete shortly.</p>
+    </div>
+    {% endif %}
+
+    {% if escrow.status == "COMPLETED" %}
+    <div style="background: #f0fdf4; border-radius: 12px; padding: 1.5rem; text-align: center;">
+      <h3 style="margin-bottom: 1rem; color: #059669;">🎉 Transaction Complete!</h3>
+
+      {% if user == escrow.buyer %}
+      <a href="{% url 'leave_rating' escrow.id %}"
+        style="display: inline-block; padding: 0.75rem 1.5rem; background: #6366f1; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">
+        ⭐ Rate Seller
+      </a>
+      {% elif user == escrow.seller %}
+      <a href="{% url 'leave_rating' escrow.id %}"
+        style="display: inline-block; padding: 0.75rem 1.5rem; background: #6366f1; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">
+        ⭐ Rate Buyer
+      </a>
+      {% endif %}
+    </div>
+
+    <!-- Show existing ratings if any -->
+    {% if escrow.rating %}
+    <div style="background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      <h3 style="margin-bottom: 1rem;">⭐ Rating</h3>
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        {% for i in "12345" %}
+        <span
+          style="color: {% if forloop.counter <= escrow.rating.stars %}#fbbf24{% else %}#e5e7eb{% endif %}; font-size: 1.5rem;">★</span>
+        {% endfor %}
+      </div>
+      {% if escrow.rating.review %}
+      <p style="margin-top: 0.5rem; color: #6b7280;">"{{ escrow.rating.review }}"</p>
+      {% endif %}
+      <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #9ca3af;">
+        By {{ escrow.rating.given_by.username }} • {{ escrow.rating.created_at|date:"d M Y" }}
+      </p>
+    </div>
+    {% endif %}
+    {% endif %}
+
+  </div>
+
+</div>
 {% endblock %}

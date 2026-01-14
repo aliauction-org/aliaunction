@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load indian_format %}
+{% block content %}
+<style>
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s;
+        text-align: center;
+        text-decoration: none;
+        color: #23284a;
+        display: block;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #10b981;
+        display: block;
+    }
+
+    .stat-label {
+        font-size: 1.1rem;
+        color: #666;
+        font-weight: 600;
+        display: block;
+        margin-top: 0.5rem;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #23284a;
+    }
+
+    .activity-list {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+
+    .activity-item {
+        padding: 1.5rem;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background 0.2s;
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-item:hover {
+        background: #f8fafc;
+    }
+
+    .activity-main {
+        font-weight: 600;
+        color: #23284a;
+    }
+
+    .activity-sub {
+        font-size: 0.9rem;
+        color: #666;
+        margin-top: 0.25rem;
+    }
+
+    .activity-time {
+        font-size: 0.85rem;
+        color: #999;
+    }
+</style>
+
+<div class="container" style="max-width:1200px; padding:2rem;">
+    <div class="section-header">
+        <h1 class="section-title">👋 Welcome back, {{ user.username }}!</h1>
+        <a href="{% url 'profile' %}" style="color:#3a8dde; font-weight:600; text-decoration:none;">Edit Profile →</a>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="dashboard-grid">
+        <a href="{% url 'my_bids' %}" class="stat-card">
+            <span class="stat-icon">🎯</span>
+            <span class="stat-value">{{ my_bid_count }}</span>
+            <span class="stat-label">My Bids</span>
+        </a>
+
+        <a href="{% url 'my_auctions' %}" class="stat-card">
+            <span class="stat-icon">🔨</span>
+            <span class="stat-value">{{ my_auction_count }}</span>
+            <span class="stat-label">My Auctions</span>
+        </a>
+
+        <a href="{% url 'my_watchlist' %}" class="stat-card">
+            <span class="stat-icon">⭐</span>
+            <span class="stat-value">{{ watchlist_count }}</span>
+            <span class="stat-label">Watchlist</span>
+        </a>
+
+        <a href="{% url 'payment_history' %}" class="stat-card">
+            <span class="stat-icon">💳</span>
+            <span class="stat-value">Payments</span>
+            <span class="stat-label">History</span>
+        </a>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="section-header">
+        <h2 class="section-title">Recent Bid Activity</h2>
+        <a href="{% url 'my_bids' %}" style="color:#10b981; font-weight:600; text-decoration:none;">View All Bids →</a>
+    </div>
+
+    <div class="activity-list">
+        {% for bid in recent_bids %}
+        <a href="{% url 'auction_detail' bid.auction.id %}" class="activity-item" style="text-decoration:none;">
+            <div>
+                <div class="activity-main">Bid placed on "{{ bid.auction.title }}"</div>
+                <div class="activity-sub">Amount: INR {{ bid.amount|indian_currency }}</div>
+            </div>
+            <div class="activity-time">{{ bid.timestamp|timesince }} ago</div>
+        </a>
+        {% empty %}
+        <div class="activity-item" style="justify-content:center;">
+            <span style="color:#666;">No recent activity</span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

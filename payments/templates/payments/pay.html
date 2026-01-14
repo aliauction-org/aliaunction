@@ -1,15 +1,132 @@
 {% extends "base.html" %}
-{% block content %}
-<h2>Select Payment Method</h2>
+{% load indian_format %}
 
-<form method="post">
-  {% csrf_token %}
-  <select name="method">
-    <option value="UPI">UPI</option>
-    <option value="PAYPAL">PayPal</option>
-    <option value="BANK">Bank Transfer</option>
-    <option value="COD">Cash on Delivery</option>
-  </select>
-  <button type="submit">Confirm Payment</button>
-</form>
+{% block title %}Pay Invoice - {{ invoice.auction.title }}{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 600px; margin: 2rem auto; padding: 0 1rem;">
+
+  <h1 style="text-align: center; margin-bottom: 2rem;">💳 Select Payment Method</h1>
+
+  <!-- Invoice Summary -->
+  <div style="background: #f8fafc; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+      <span>Auction:</span>
+      <strong>{{ invoice.auction.title|truncatechars:30 }}</strong>
+    </div>
+    <div style="display: flex; justify-content: space-between; font-size: 1.2rem; color: #10b981; font-weight: bold;">
+      <span>Total Amount:</span>
+      <span>₹{{ invoice.total_payable|indian_format }}</span>
+    </div>
+  </div>
+
+  <form method="post" id="paymentForm">
+    {% csrf_token %}
+
+    <!-- Payment Options -->
+    <div style="display: grid; gap: 1rem; margin-bottom: 2rem;">
+
+      <!-- UPI -->
+      <label
+        style="display: flex; align-items: center; padding: 1.5rem; background: white; border: 2px solid #e5e7eb; border-radius: 12px; cursor: pointer; transition: all 0.2s;"
+        class="payment-option">
+        <input type="radio" name="method" value="UPI" required style="margin-right: 1rem; width: 20px; height: 20px;">
+        <div style="flex: 1;">
+          <div style="font-weight: bold; font-size: 1.1rem;">📱 UPI</div>
+          <div style="color: #6b7280; font-size: 0.9rem;">Google Pay, PhonePe, Paytm, BHIM</div>
+        </div>
+      </label>
+
+      <!-- NEFT/IMPS -->
+      <label
+        style="display: flex; align-items: center; padding: 1.5rem; background: white; border: 2px solid #e5e7eb; border-radius: 12px; cursor: pointer; transition: all 0.2s;"
+        class="payment-option">
+        <input type="radio" name="method" value="NEFT" style="margin-right: 1rem; width: 20px; height: 20px;">
+        <div style="flex: 1;">
+          <div style="font-weight: bold; font-size: 1.1rem;">🏦 NEFT / IMPS</div>
+          <div style="color: #6b7280; font-size: 0.9rem;">Direct bank transfer</div>
+        </div>
+      </label>
+
+      <!-- Bank Transfer -->
+      <label
+        style="display: flex; align-items: center; padding: 1.5rem; background: white; border: 2px solid #e5e7eb; border-radius: 12px; cursor: pointer; transition: all 0.2s;"
+        class="payment-option">
+        <input type="radio" name="method" value="BANK" style="margin-right: 1rem; width: 20px; height: 20px;">
+        <div style="flex: 1;">
+          <div style="font-weight: bold; font-size: 1.1rem;">🏛️ Bank Transfer</div>
+          <div style="color: #6b7280; font-size: 0.9rem;">Manual bank deposit</div>
+        </div>
+      </label>
+
+      <!-- COD -->
+      <label
+        style="display: flex; align-items: center; padding: 1.5rem; background: white; border: 2px solid #e5e7eb; border-radius: 12px; cursor: pointer; transition: all 0.2s;"
+        class="payment-option">
+        <input type="radio" name="method" value="COD" style="margin-right: 1rem; width: 20px; height: 20px;">
+        <div style="flex: 1;">
+          <div style="font-weight: bold; font-size: 1.1rem;">💵 Cash on Delivery</div>
+          <div style="color: #6b7280; font-size: 0.9rem;">Pay when you receive the item</div>
+        </div>
+      </label>
+
+    </div>
+
+    <!-- Reference ID (for manual payments) -->
+    <div id="referenceSection" style="display: none; margin-bottom: 2rem;">
+      <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">
+        Transaction Reference ID (Optional)
+      </label>
+      <input type="text" name="reference_id" placeholder="Enter UPI/NEFT reference number"
+        style="width: 100%; padding: 1rem; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem;">
+      <p style="color: #6b7280; font-size: 0.9rem; margin-top: 0.5rem;">
+        Enter your transaction ID for faster verification
+      </p>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit"
+      style="width: 100%; padding: 1rem; background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; border-radius: 8px; font-size: 1.2rem; font-weight: bold; cursor: pointer;">
+      ✅ Confirm Payment
+    </button>
+
+    <p style="text-align: center; color: #6b7280; margin-top: 1rem; font-size: 0.9rem;">
+      After confirming, please upload payment proof for verification
+    </p>
+
+  </form>
+
+  <!-- Platform Payment Details -->
+  <div style="margin-top: 2rem; padding: 1.5rem; background: #eff6ff; border-radius: 12px;">
+    <h3 style="margin-bottom: 1rem; color: #1d4ed8;">📋 Platform Payment Details</h3>
+    <a href="{% url 'platform_payment_details' %}" style="color: #1d4ed8; text-decoration: underline;">
+      View bank account & UPI details for payment →
+    </a>
+  </div>
+
+</div>
+
+<style>
+  .payment-option:has(input:checked) {
+    border-color: #10b981 !important;
+    background: #f0fdf4 !important;
+  }
+
+  .payment-option:hover {
+    border-color: #10b981;
+  }
+</style>
+
+<script>
+  document.querySelectorAll('input[name="method"]').forEach(radio => {
+    radio.addEventListener('change', function () {
+      const refSection = document.getElementById('referenceSection');
+      if (this.value === 'UPI' || this.value === 'NEFT' || this.value === 'BANK') {
+        refSection.style.display = 'block';
+      } else {
+        refSection.style.display = 'none';
+      }
+    });
+  });
+</script>
 {% endblock %}

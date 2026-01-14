@@ -4,12 +4,18 @@ from django.contrib import messages
 from .models import PlatformPaymentDetails, UserPaymentProfile, PaymentProof
 from .forms import UserPaymentProfileForm, PaymentProofForm
 from auctions.models import Auction
-from .models import Invoice, payment
-from weasyprint import HTML
+from .models import Invoice, InvoicePayment
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 
-# Create your views here.
+# Try to import WeasyPrint, but make it optional
+try:
+    from weasyprint import HTML
+    WEASYPRINT_AVAILABLE = True
+except OSError:
+    # WeasyPrint requires external libraries (gobject, pango, etc.)
+    WEASYPRINT_AVAILABLE = False
+    HTML = None
 
 @login_required
 def payment_profile(request):
@@ -80,21 +86,22 @@ def pay_invoice(request, invoice_id):
 
     if request.method == "POST":
         method = request.POST.get("method")
-        payment = Payment.objects.create(
+        payment = InvoicePayment.objects.create(
             invoice=invoice,
             method=method,
             status="SUCCESS"  # simulate success
         )
         
         if hasattr(invoice.auction, "escrow") and hasattr(invoice.auction.escrow, "shipping"):
-    invoice.transport_charge = invoice.auction.escrow.shipping.delivery_charge
-    invoice.save(update_fields=["transport_charge"])
+            invoice.transport_charge = invoice.auction.escrow.shipping.delivery_charge
+            invoice.save(update_fields=["transport_charge"])
     
         invoice.status = "PAID"
         invoice.save()
         return redirect("invoice_view", auction_id=invoice.auction.id)
 
     return render(request, "payments/pay.html", {"invoice": invoice})
+
 
 @login_required
 def download_invoice(request, invoice_id):
@@ -108,8 +115,85 @@ def download_invoice(request, invoice_id):
         {"invoice": invoice}
     )
 
-    pdf = HTML(string=html_string).write_pdf()
+    if WEASYPRINT_AVAILABLE and HTML:
+        pdf = HTML(string=html_string).write_pdf()
+        response = HttpResponse(pdf, content_type="application/pdf")
+        response["Content-Disposition"] = f'attachment; filename="invoice_{invoice.id}.pdf"'
+        return response
+    else:
+        # Fallback: return HTML if WeasyPrint not available
+        return HttpResponse(html_string, content_type="text/html")
 
-    response = HttpResponse(pdf, content_type="application/pdf")
-    response["Content-Disposition"] = f'attachment; filename="invoice_{invoice.id}.pdf"'
-    return response
+
+@login_required
+def winner_checkout(request, auction_id):
+    """
+    Winner checkout flow - creates Invoice and Escrow for the auction winner.
+    Only accessible by the winning bidder after auction ends.
+    """
+    from decimal import Decimal
+    from escrow.models import Escrow
+    from commission.models import CommissionRule
+    
+    auction = get_object_or_404(Auction, id=auction_id)
+    
+    # Verify auction has ended
+    from django.utils import timezone
+    if auction.end_time > timezone.now():
+        messages.error(request, "This auction hasn't ended yet.")
+        return redirect('auction_detail', auction_id=auction.id)
+    
+    # Get the winning bid
+    highest_bid = auction.bids.order_by('-amount', '-timestamp').first()
+    if not highest_bid:
+        messages.error(request, "No bids were placed on this auction.")
+        return redirect('auction_detail', auction_id=auction.id)
+    
+    # Verify current user is the winner
+    if highest_bid.user != request.user:
+        messages.error(request, "You are not the winner of this auction.")
+        return redirect('auction_detail', auction_id=auction.id)
+    
+    # Check if invoice already exists
+    try:
+        invoice = Invoice.objects.get(auction=auction)
+        return redirect('invoice_view', auction_id=auction.id)
+    except Invoice.DoesNotExist:
+        pass
+    
+    # Get commission rules
+    try:
+        commission_rule = CommissionRule.objects.filter(is_active=True).first()
+        buyer_percent = commission_rule.buyer_percent if commission_rule else Decimal('3.00')
+        seller_percent = commission_rule.seller_percent if commission_rule else Decimal('10.00')
+    except CommissionRule.DoesNotExist:
+        buyer_percent = Decimal('3.00')
+        seller_percent = Decimal('10.00')
+    
+    # Calculate commissions
+    amount = auction.current_price
+    buyer_commission = (amount * buyer_percent / 100).quantize(Decimal('0.01'))
+    seller_commission = (amount * seller_percent / 100).quantize(Decimal('0.01'))
+    
+    # Create Invoice
+    invoice = Invoice.objects.create(
+        auction=auction,
+        buyer=request.user,
+        seller=auction.owner,
+        amount=amount,
+        buyer_commission=buyer_commission,
+        seller_commission=seller_commission,
+        transport_charge=Decimal('0.00'),  # Set later with shipping
+        status='PENDING'
+    )
+    
+    # Create Escrow
+    Escrow.objects.create(
+        auction=auction,
+        buyer=request.user,
+        seller=auction.owner,
+        status='PENDING_PAYMENT'
+    )
+    
+    messages.success(request, 'Invoice created! Please proceed to payment.')
+    return redirect('invoice_view', auction_id=auction.id)

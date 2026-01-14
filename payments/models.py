@@ -70,7 +70,7 @@ class UserPaymentProfile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Invoice(models.Model):
+class Invoice(models.Model):
     auction = models.OneToOneField(
         Auction,
         on_delete=models.CASCADE,
@@ -95,26 +95,28 @@ class UserPaymentProfile(models.Model):
         choices=STATUS_CHOICES,
         default="PENDING"
     )
-    is_paid = models.BooleanField(default=False
+    is_paid = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def total_payable(self):
-        return self.amount + self.buyer_fee + self.transport_charge
+        return self.amount + self.buyer_commission + self.transport_charge
 
-    def _str_(self):
+    def __str__(self):
         return f"Invoice for {self.auction.title}"
 
 
-class Payment(models.Model):
+class InvoicePayment(models.Model):
+    """Payment record for an invoice (renamed to avoid conflict with existing Payment model)"""
     invoice = models.ForeignKey(
         Invoice,
         on_delete=models.CASCADE,
-        related_name="payments"
+        related_name="invoice_payments"
     )
 
     METHOD_CHOICES = [
         ("UPI", "UPI"),
-        ("PAYPAL", "PayPal"),
+        ("NEFT", "NEFT"),
+        ("IMPS", "IMPS"),
         ("BANK", "Bank Transfer"),
         ("COD", "Cash on Delivery"),
     ]
@@ -127,3 +129,6 @@ class Payment(models.Model):
         default="INITIATED"
     )
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Payment {self.id} for Invoice {self.invoice.id}"

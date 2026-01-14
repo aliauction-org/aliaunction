@@ -15,6 +15,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 LOGIN_REDIRECT_URL = '/users/profile/'
+LOGIN_URL = '/users/login/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -37,8 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bid_protection.apps.BidProtectionConfig',
-    'reserve_price.context_processors.reserve_context',
     'users',
     'auctions',
     'payments',
@@ -59,7 +58,6 @@ INSTALLED_APPS = [
     'seller_verification',
     'channels',
     'auction_ws',
-    'payments',
     'deposits',
     'commission',
     'auction_workflow',
@@ -67,6 +65,7 @@ INSTALLED_APPS = [
     'escrow',
     'shipping',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -166,10 +165,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'no-reply@aliaunction.com'
 
-
-'OPTIONS': {
-    'context_processors': [
-        ...
-        'auction_status.context_processors.auction_status_context',
-    ],
-},

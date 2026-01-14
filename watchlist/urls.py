@@ -5,4 +5,4 @@ urlpatterns = [
     path("toggle/<int:auction_id>/", views.toggle_watchlist, name="toggle_watchlist"),
     path("my/", views.my_watchlist, name="my_watchlist"),
 ]
-path("watchlist/", include("watchlist.urls")),
+

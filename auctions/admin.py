@@ -1,16 +1,19 @@
 from django.contrib import admin
-from .models import Auction, Bid, ProxyBid
+from .models import Auction, Bid, ProxyBid, Category, AuctionImage
 from notifications.models import Notification
 from django.core.mail import send_mail
 from django.conf import settings
+
 
 def approve_auctions(modeladmin, request, queryset):
     queryset.update(is_active=True)
 approve_auctions.short_description = "Approve selected auctions"
 
+
 def block_auctions(modeladmin, request, queryset):
     queryset.update(is_active=False)
 block_auctions.short_description = "Block selected auctions"
+
 
 def end_auctions(modeladmin, request, queryset):
     for auction in queryset:
@@ -39,21 +42,49 @@ def end_auctions(modeladmin, request, queryset):
             )
 end_auctions.short_description = "End selected auctions and notify winner/seller"
 
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug', 'is_active', 'order')
+    list_editable = ('order', 'is_active')
+    prepopulated_fields = {'slug': ('name',)}
+    search_fields = ('name',)
+
+
+class AuctionImageInline(admin.TabularInline):
+    model = AuctionImage
+    extra = 1
+    fields = ('image', 'caption', 'is_primary', 'order')
+
+
 @admin.register(Auction)
 class AuctionAdmin(admin.ModelAdmin):
-    list_display = ('title', 'owner', 'current_price', 'is_active', 'end_time')
-    list_filter = ('is_active', 'end_time')
+    list_display = ('title', 'owner', 'category', 'current_price', 'is_active', 'is_featured', 'view_count', 'end_time')
+    list_filter = ('is_active', 'is_featured', 'category', 'end_time')
     search_fields = ('title', 'owner__username')
+    list_editable = ('is_featured',)
     actions = [approve_auctions, block_auctions, end_auctions]
+    inlines = [AuctionImageInline]
+
 
 @admin.register(Bid)
 class BidAdmin(admin.ModelAdmin):
-    list_display = ('auction', 'user', 'amount', 'timestamp')
-    list_filter = ('auction', 'user')
+    list_display = ('auction', 'user', 'amount', 'timestamp', 'ip_address')
+    list_filter = ('auction', 'user', 'timestamp')
     search_fields = ('auction__title', 'user__username')
+    readonly_fields = ('ip_address', 'user_agent')
+
 
 @admin.register(ProxyBid)
 class ProxyBidAdmin(admin.ModelAdmin):
     list_display = ('auction', 'user', 'max_bid', 'created_at')
     list_filter = ('auction', 'user')
     search_fields = ('auction__title', 'user__username')
+
+
+@admin.register(AuctionImage)
+class AuctionImageAdmin(admin.ModelAdmin):
+    list_display = ('auction', 'caption', 'is_primary', 'order')
+    list_filter = ('auction', 'is_primary')
+    list_editable = ('order', 'is_primary')
+

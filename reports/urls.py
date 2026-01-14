@@ -6,4 +6,3 @@ urlpatterns = [
     path("user/<int:user_id>/", views.report_user, name="report_user"),
 ]
 
-path("report/", include("reports.urls")),
