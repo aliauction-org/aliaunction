@@ -68,14 +68,14 @@
 
         <script>
           let currentZoom = 1;
-          
+
           function openImageZoom() {
             document.getElementById('image-lightbox').style.display = 'flex';
             document.body.style.overflow = 'hidden';
             currentZoom = 1;
             updateZoom();
           }
-          
+
           function closeImageZoom(event) {
             if (event.target.id === 'image-lightbox' || event.target.tagName === 'BUTTON') {
               document.getElementById('image-lightbox').style.display = 'none';
@@ -83,36 +83,36 @@
               resetZoom();
             }
           }
-          
+
           function zoomImage(delta) {
             currentZoom = Math.max(0.5, Math.min(4, currentZoom + delta));
             updateZoom();
           }
-          
+
           function resetZoom() {
             currentZoom = 1;
             updateZoom();
           }
-          
+
           function updateZoom() {
             const img = document.getElementById('lightbox-image');
             img.style.transform = 'scale(' + currentZoom + ')';
             document.getElementById('zoom-level').textContent = Math.round(currentZoom * 100) + '%';
           }
-          
+
           // Keyboard support
-          document.addEventListener('keydown', function(e) {
+          document.addEventListener('keydown', function (e) {
             const lightbox = document.getElementById('image-lightbox');
             if (lightbox && lightbox.style.display === 'flex') {
-              if (e.key === 'Escape') closeImageZoom({target: lightbox});
+              if (e.key === 'Escape') closeImageZoom({ target: lightbox });
               if (e.key === '+' || e.key === '=') zoomImage(0.25);
               if (e.key === '-') zoomImage(-0.25);
               if (e.key === '0') resetZoom();
             }
           });
-          
+
           // Mouse wheel zoom
-          document.getElementById('image-lightbox')?.addEventListener('wheel', function(e) {
+          document.getElementById('image-lightbox')?.addEventListener('wheel', function (e) {
             e.preventDefault();
             zoomImage(e.deltaY > 0 ? -0.1 : 0.1);
           });
