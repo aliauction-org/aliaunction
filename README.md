@@ -7,7 +7,7 @@ AuctionVistas is a full-featured online auction platform built with Django, desi
 ## 🗂 COMPLETE PROJECT STRUCTURE
 
 ```text
-Aliauction_website_2026/
+
 │
 ├── manage.py
 ├── db.sqlite3
