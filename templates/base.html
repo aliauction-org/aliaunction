@@ -25,7 +25,7 @@
                 {% if user.is_authenticated %}
                 <a href="{% url 'create_auction' %}">Create Auction</a>
                 <a href="{% url 'dashboard_home' %}">Dashboard</a>
-                <a href="#" id="notification-bell">🔔 <span id="notification-count"
+                <a href="{% url 'notifications_list' %}" id="notification-bell">🔔 <span id="notification-count"
                         style="color:var(--accent-color); font-weight:bold;"></span></a>
 
                 <form method="post" action="{% url 'logout' %}" style="display:inline;">

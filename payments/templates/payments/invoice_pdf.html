@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice #{{ invoice.id }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #333;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #6366f1;
+        }
+
+        .invoice-info {
+            text-align: right;
+        }
+
+        .invoice-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .invoice-number {
+            color: #666;
+        }
+
+        .parties {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+
+        .party {
+            width: 45%;
+        }
+
+        .party-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .party-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .auction-details {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .auction-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .table th,
+        .table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table td.amount {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+        }
+
+        .table tr.total {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .table tr.total td {
+            border-top: 2px solid #333;
+            padding-top: 15px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-paid {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+        }
+
+        .commission-note {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fffbeb;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #78350f;
+        }
+
+        @media print {
+            body {
+                padding: 20px;
+            }
+
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="invoice-header">
+        <div class="logo">AuctionVistas</div>
+        <div class="invoice-info">
+            <div class="invoice-title">INVOICE</div>
+            <div class="invoice-number">#{{ invoice.id }}</div>
+            <div style="margin-top: 10px; color: #666;">
+                Date: {{ invoice.created_at|date:"F d, Y" }}
+            </div>
+            <div style="margin-top: 5px;">
+                <span
+                    class="status-badge {% if invoice.status == 'PAID' %}status-paid{% else %}status-pending{% endif %}">
+                    {{ invoice.status }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="parties">
+        <div class="party">
+            <div class="party-title">Bill To (Buyer)</div>
+            <div class="party-name">{{ invoice.buyer.username }}</div>
+            <div>{{ invoice.buyer.email }}</div>
+        </div>
+        <div class="party">
+            <div class="party-title">Seller</div>
+            <div class="party-name">{{ invoice.seller.username }}</div>
+            <div>{{ invoice.seller.email }}</div>
+        </div>
+    </div>
+
+    <div class="auction-details">
+        <div class="auction-title">{{ invoice.auction.title }}</div>
+        <div style="color: #666;">
+            Auction ID: {{ invoice.auction.id }} |
+            End Date: {{ invoice.auction.end_time|date:"F d, Y, g:i a" }}
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th style="text-align: right;">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Winning Bid Amount</td>
+                <td class="amount">₹{{ invoice.amount }}</td>
+            </tr>
+            <tr>
+                <td>Buyer Commission (3%)</td>
+                <td class="amount">₹{{ invoice.buyer_commission }}</td>
+            </tr>
+            {% if invoice.transport_charge > 0 %}
+            <tr>
+                <td>Transport / Delivery Charges</td>
+                <td class="amount">₹{{ invoice.transport_charge }}</td>
+            </tr>
+            {% endif %}
+            <tr class="total">
+                <td>Total Payable</td>
+                <td class="amount">₹{{ invoice.total_payable }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="commission-note">
+        <strong>Commission Note:</strong> The seller will pay a 10% commission (₹{{ invoice.seller_commission }}) to the
+        platform.
+        Transport charges, if applicable, are to be paid by the buyer directly to the seller.
+    </div>
+
+    <div class="footer">
+        <p>Thank you for using AuctionVistas!</p>
+        <p style="margin-top: 5px;">This is a computer-generated invoice.</p>
+        <p style="margin-top: 10px; color: #aaa;">Generated on {{ invoice.created_at|date:"F d, Y, g:i a" }}</p>
+    </div>
+
+    <div class="no-print" style="margin-top: 30px; text-align: center;">
+        <button onclick="window.print()"
+            style="padding: 10px 30px; font-size: 16px; cursor: pointer; background: #6366f1; color: white; border: none; border-radius: 5px;">
+            Print Invoice
+        </button>
+    </div>
+</body>
+
+</html>

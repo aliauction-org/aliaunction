@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="padding: 4rem 2rem; text-align: center;">
+    <div class="card" style="max-width: 500px; margin: 0 auto;">
+        <div class="card-body" style="padding: 3rem;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">⏰</div>
+            <h1 style="font-size: 1.8rem; margin-bottom: 1rem; color: var(--text-main);">Too Many Requests</h1>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem; line-height: 1.6;">
+                You've made too many requests in a short period. Please wait before trying again.
+            </p>
+
+            <div
+                style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-md); margin-bottom: 2rem;">
+                <div style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Please wait</div>
+                <div id="countdown" style="font-size: 2.5rem; font-weight: 700; color: var(--accent-color);">{{
+                    wait_time }}s</div>
+            </div>
+
+            <a href="javascript:history.back()" class="btn btn-outline">Go Back</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    let waitTime = {{ wait_time }};
+    const countdownEl = document.getElementById('countdown');
+
+    const timer = setInterval(() => {
+        waitTime--;
+        if (waitTime <= 0) {
+            clearInterval(timer);
+            countdownEl.textContent = 'Ready!';
+            countdownEl.style.color = 'var(--success-color)';
+            // Auto-reload after countdown
+            setTimeout(() => window.location.reload(), 500);
+        } else {
+            countdownEl.textContent = waitTime + 's';
+        }
+    }, 1000);
+</script>
+{% endblock %}

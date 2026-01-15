@@ -131,3 +131,114 @@ def dashboard_home(request):
         'watchlist_count': watchlist_count,
         'recent_bids': recent_bids,
     })
+
+
+@login_required
+def bulk_upload(request):
+    """
+    CSV bulk upload for creating multiple auctions at once.
+    Expected CSV format: title,description,starting_price,end_time,category_slug
+    """
+    import csv
+    from io import TextIOWrapper
+    from datetime import datetime
+    from django.contrib import messages
+    from auctions.models import Category
+    
+    # Sample CSV template for download
+    sample_csv = """title,description,starting_price,end_time,category_slug
+"Vintage Watch","Beautiful vintage watch from 1960s",5000,2026-02-01 18:00,watches
+"Antique Vase","Rare Chinese antique vase",15000,2026-02-03 20:00,antiques
+"Art Painting","Original oil painting",25000,2026-02-05 19:00,art"""
+    
+    if request.method == 'POST':
+        if 'csv_file' not in request.FILES:
+            messages.error(request, 'Please upload a CSV file.')
+            return render(request, 'dashboard/bulk_upload.html', {'sample_csv': sample_csv})
+        
+        csv_file = request.FILES['csv_file']
+        
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'File must be a CSV file.')
+            return render(request, 'dashboard/bulk_upload.html', {'sample_csv': sample_csv})
+        
+        try:
+            # Read CSV file
+            decoded_file = TextIOWrapper(csv_file.file, encoding='utf-8')
+            reader = csv.DictReader(decoded_file)
+            
+            created_count = 0
+            errors = []
+            
+            for row_num, row in enumerate(reader, start=2):  # Start from 2 (1 for header)
+                try:
+                    # Parse fields
+                    title = row.get('title', '').strip()
+                    description = row.get('description', '').strip()
+                    starting_price = float(row.get('starting_price', 0))
+                    end_time_str = row.get('end_time', '').strip()
+                    category_slug = row.get('category_slug', '').strip()
+                    
+                    # Validate required fields
+                    if not title:
+                        errors.append(f"Row {row_num}: Title is required")
+                        continue
+                    if not description:
+                        errors.append(f"Row {row_num}: Description is required")
+                        continue
+                    if starting_price <= 0:
+                        errors.append(f"Row {row_num}: Starting price must be greater than 0")
+                        continue
+                    
+                    # Parse end time
+                    try:
+                        end_time = datetime.strptime(end_time_str, '%Y-%m-%d %H:%M')
+                        end_time = timezone.make_aware(end_time)
+                    except ValueError:
+                        errors.append(f"Row {row_num}: Invalid date format. Use YYYY-MM-DD HH:MM")
+                        continue
+                    
+                    # Validate end time is in future
+                    if end_time <= timezone.now():
+                        errors.append(f"Row {row_num}: End time must be in the future")
+                        continue
+                    
+                    # Get category (optional)
+                    category = None
+                    if category_slug:
+                        try:
+                            category = Category.objects.get(slug=category_slug)
+                        except Category.DoesNotExist:
+                            errors.append(f"Row {row_num}: Category '{category_slug}' not found")
+                            continue
+                    
+                    # Create auction
+                    auction = Auction.objects.create(
+                        title=title,
+                        description=description,
+                        starting_price=starting_price,
+                        current_price=starting_price,
+                        end_time=end_time,
+                        owner=request.user,
+                        category=category,
+                        is_active=True
+                    )
+                    created_count += 1
+                    
+                except Exception as e:
+                    errors.append(f"Row {row_num}: {str(e)}")
+            
+            if created_count > 0:
+                messages.success(request, f'Successfully created {created_count} auction(s).')
+            
+            if errors:
+                for error in errors[:10]:  # Show first 10 errors
+                    messages.warning(request, error)
+                if len(errors) > 10:
+                    messages.warning(request, f'... and {len(errors) - 10} more errors.')
+            
+        except Exception as e:
+            messages.error(request, f'Error processing CSV: {str(e)}')
+    
+    return render(request, 'dashboard/bulk_upload.html', {'sample_csv': sample_csv})
+

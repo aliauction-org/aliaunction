@@ -12,6 +12,7 @@ from django.utils import timezone
 from django.core.exceptions import ValidationError
 from auction_ws.utils import broadcast_auction_update
 from bid_protection.validators import validate_bid
+from bid_protection.rate_limiting import rate_limit_bids
 from auction_status.utils import get_auction_status
 from reserve_price.utils import reserve_status
 from reviews.utils import get_reputation
@@ -34,12 +35,28 @@ def apply_anti_sniping(auction):
     """
     Check if anti-sniping should extend the auction.
     Returns True if auction was extended.
+    Uses configurable settings from AntiSnipingSettings model.
     """
-    if not hasattr(auction, 'anti_sniping'):
-        return False
+    from auction_close.models import AntiSnipingSettings, GlobalAuctionSettings
     
-    config = auction.anti_sniping
-    if not config.is_enabled:
+    # Get auction-specific settings or use defaults
+    try:
+        config = auction.anti_sniping
+    except AntiSnipingSettings.DoesNotExist:
+        # Use global defaults
+        global_settings = GlobalAuctionSettings.get_settings()
+        if not global_settings.default_anti_sniping_enabled:
+            return False
+        # Create settings for this auction using defaults
+        config = AntiSnipingSettings.objects.create(
+            auction=auction,
+            is_enabled=global_settings.default_anti_sniping_enabled,
+            threshold_minutes=global_settings.default_threshold_minutes,
+            extension_minutes=global_settings.default_extension_minutes,
+            max_extensions=global_settings.default_max_extensions
+        )
+    
+    if not config.can_extend():
         return False
     
     now = timezone.now()
@@ -51,6 +68,11 @@ def apply_anti_sniping(auction):
         extension = timedelta(minutes=config.extension_minutes)
         auction.end_time = auction.end_time + extension
         auction.save(update_fields=['end_time'])
+        
+        # Track extension count
+        config.extensions_used += 1
+        config.save(update_fields=['extensions_used'])
+        
         return True
     
     return False
@@ -60,20 +82,92 @@ def auction_list(request):
     # Show all auctions that haven't expired yet
     # Include auctions with workflow__status="LIVE" OR auctions without workflow objects
     from django.db.models import Q
+    from auctions.models import Category
+    from datetime import timedelta
     
     now = timezone.now()
+    
+    # Base queryset
     auctions = Auction.objects.filter(
         Q(workflow__status="LIVE") | Q(workflow__isnull=True),
         end_time__gt=now
-    ).order_by('-created_at')
+    )
+    
+    # Get filter parameters
+    search_query = request.GET.get('q', '').strip()
+    category_slug = request.GET.get('category', '').strip()
+    min_price = request.GET.get('min_price', '').strip()
+    max_price = request.GET.get('max_price', '').strip()
+    ending_soon = request.GET.get('ending_soon', '') == '1'
+    new_auctions = request.GET.get('new', '') == '1'
+    live_only = request.GET.get('live_only', '') == '1'
+    sort_by = request.GET.get('sort', '-created_at')
+    
+    # Apply search filter
+    if search_query:
+        auctions = auctions.filter(
+            Q(title__icontains=search_query) |
+            Q(description__icontains=search_query)
+        )
+    
+    # Apply category filter
+    if category_slug:
+        auctions = auctions.filter(category__slug=category_slug)
+    
+    # Apply price range filter
+    if min_price:
+        try:
+            auctions = auctions.filter(current_price__gte=float(min_price))
+        except ValueError:
+            pass
+    
+    if max_price:
+        try:
+            auctions = auctions.filter(current_price__lte=float(max_price))
+        except ValueError:
+            pass
+    
+    # Ending soon: auctions ending within 24 hours
+    if ending_soon:
+        ending_threshold = now + timedelta(hours=24)
+        auctions = auctions.filter(end_time__lte=ending_threshold)
+    
+    # New auctions: created within 7 days
+    if new_auctions:
+        new_threshold = now - timedelta(days=7)
+        auctions = auctions.filter(created_at__gte=new_threshold)
+    
+    # Live only filter (already applied by default, but explicit check)
+    if live_only:
+        auctions = auctions.filter(is_active=True)
+    
+    # Sort
+    valid_sorts = ['-created_at', 'created_at', '-current_price', 'current_price', 'end_time', '-end_time']
+    if sort_by in valid_sorts:
+        auctions = auctions.order_by(sort_by)
+    else:
+        auctions = auctions.order_by('-created_at')
     
     # Get featured auctions first
     featured = auctions.filter(is_featured=True).order_by('featured_order')
     
+    # Get all categories for filter dropdown
+    categories = Category.objects.filter(is_active=True).order_by('order', 'name')
+    
     return render(request, 'auctions/auction_list.html', {
         'auctions': auctions,
         'featured_auctions': featured,
-        'now': timezone.now()
+        'categories': categories,
+        'now': now,
+        # Pass filter values back to template
+        'search_query': search_query,
+        'selected_category': category_slug,
+        'min_price': min_price,
+        'max_price': max_price,
+        'ending_soon': ending_soon,
+        'new_auctions': new_auctions,
+        'live_only': live_only,
+        'sort_by': sort_by,
     })
 
 
@@ -97,6 +191,7 @@ def send_auction_won_email(winner, auction):
         )
 
 
+@rate_limit_bids
 def auction_detail(request, auction_id):
     auction = get_object_or_404(Auction, id=auction_id)
     

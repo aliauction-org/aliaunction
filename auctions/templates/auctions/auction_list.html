@@ -17,6 +17,80 @@
     {% endif %}
   </div>
 
+  <!-- Search & Filters -->
+  <div class="card" style="margin-bottom: 2rem; padding: 1.5rem;">
+    <form method="get" action="" id="filter-form">
+      <!-- Search Bar -->
+      <div style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
+        <div style="flex: 2; min-width: 250px;">
+          <input type="text" name="q" placeholder="Search auctions..." value="{{ search_query }}"
+            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+        </div>
+        <div style="flex: 1; min-width: 150px;">
+          <select name="category"
+            style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white;">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+            <option value="{{ cat.slug }}" {% if selected_category==cat.slug %}selected{% endif %}>{{ cat.name }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+      </div>
+
+      <!-- Advanced Filters Row -->
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+        <!-- Price Range -->
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span style="color: var(--text-secondary); font-size: 0.9rem;">Price:</span>
+          <input type="number" name="min_price" placeholder="Min" value="{{ min_price }}"
+            style="width: 80px; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+          <span style="color: var(--text-muted);">-</span>
+          <input type="number" name="max_price" placeholder="Max" value="{{ max_price }}"
+            style="width: 80px; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+        </div>
+
+        <div style="height: 25px; width: 1px; background: var(--border-color);"></div>
+
+        <!-- Quick Filters -->
+        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.9rem;">
+          <input type="checkbox" name="ending_soon" value="1" {% if ending_soon %}checked{% endif %}>
+          <span>Ending Soon (24h)</span>
+        </label>
+
+        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.9rem;">
+          <input type="checkbox" name="new" value="1" {% if new_auctions %}checked{% endif %}>
+          <span>New (7 days)</span>
+        </label>
+
+        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.9rem;">
+          <input type="checkbox" name="live_only" value="1" {% if live_only %}checked{% endif %}>
+          <span>Live Only</span>
+        </label>
+
+        <div style="flex: 1;"></div>
+
+        <!-- Sort -->
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span style="color: var(--text-secondary); font-size: 0.9rem;">Sort:</span>
+          <select name="sort" onchange="document.getElementById('filter-form').submit()"
+            style="padding: 0.5rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white;">
+            <option value="-created_at" {% if sort_by=='-created_at' %}selected{% endif %}>Newest First</option>
+            <option value="created_at" {% if sort_by=='created_at' %}selected{% endif %}>Oldest First</option>
+            <option value="-current_price" {% if sort_by=='-current_price' %}selected{% endif %}>Highest Price</option>
+            <option value="current_price" {% if sort_by=='current_price' %}selected{% endif %}>Lowest Price</option>
+            <option value="end_time" {% if sort_by=='end_time' %}selected{% endif %}>Ending Soonest</option>
+          </select>
+        </div>
+
+        {% if search_query or selected_category or min_price or max_price or ending_soon or new_auctions or live_only %}
+        <a href="{% url 'auction_list' %}" style="color: var(--text-secondary); font-size: 0.9rem;">Clear Filters</a>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+
   {% if auctions %}
   <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;">
     {% for auction in auctions %}
