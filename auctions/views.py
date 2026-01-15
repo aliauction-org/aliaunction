@@ -193,6 +193,9 @@ def send_auction_won_email(winner, auction):
 
 @rate_limit_bids
 def auction_detail(request, auction_id):
+    from watchlist.models import Watchlist
+    from payments.models import Invoice
+    
     auction = get_object_or_404(Auction, id=auction_id)
     
     # Increment view count
@@ -205,14 +208,25 @@ def auction_detail(request, auction_id):
     already_reviewed = False
     is_winner = False
     has_payment_proof = False
+    in_watchlist = False
+    has_invoice = False
+    invoice_id = None
     
     if request.user.is_authenticated:
         has_bid = bids.filter(user=request.user).exists()
-        # already_reviewed = reviews.filter(user=request.user).exists()
+        # Check if in watchlist
+        in_watchlist = Watchlist.objects.filter(user=request.user, auction=auction).exists()
         # Check if user is the winner (highest bidder)
         highest_bid = auction.bids.order_by('-amount', '-timestamp').first()
         if highest_bid and highest_bid.user == request.user:
             is_winner = True
+            # Check if invoice exists for this auction
+            try:
+                invoice = Invoice.objects.get(auction=auction)
+                has_invoice = True
+                invoice_id = invoice.id
+            except Invoice.DoesNotExist:
+                pass
         # Check if user has already uploaded payment proof
         has_payment_proof = auction.payment_proofs.filter(payer=request.user, direction='to_platform').exists()
     
@@ -281,6 +295,9 @@ def auction_detail(request, auction_id):
         'already_reviewed': already_reviewed,
         'is_winner': is_winner,
         'has_payment_proof': has_payment_proof,
+        'in_watchlist': in_watchlist,
+        'has_invoice': has_invoice,
+        'invoice_id': invoice_id,
         'status': get_auction_status(auction),
         'reserve_status': reserve_status(auction),
         'seller_reputation': get_reputation(auction.owner),

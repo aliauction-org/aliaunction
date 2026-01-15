@@ -19,7 +19,7 @@
       <select name="category" style="width: auto; min-width: 200px;">
         <option value="">All Categories</option>
         {% for category in categories %}
-        <option value="{{ category.slug }}" {% if request.GET.category == category.slug %}selected{% endif %}>
+        <option value="{{ category.slug }}" {% if request.GET.category==category.slug %}selected{% endif %}>
           {{ category.name }}
         </option>
         {% endfor %}
@@ -32,7 +32,16 @@
   <!-- Auction Grid -->
   <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;">
     {% for auction in auctions %}
-    <div class="card">
+    <div class="card" style="position: relative;">
+      <!-- Watchlist Button -->
+      {% if user.is_authenticated and user != auction.owner %}
+      <a href="{% url 'toggle_watchlist' auction.id %}"
+        style="position: absolute; top: 10px; left: 10px; z-index: 10; background: rgba(255,255,255,0.9); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.2rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"
+        title="{% if auction.id in watchlist_ids %}Remove from Watchlist{% else %}Add to Watchlist{% endif %}">
+        {% if auction.id in watchlist_ids %}❤️{% else %}🤍{% endif %}
+      </a>
+      {% endif %}
+
       <a href="{% url 'auction_detail' auction.id %}" style="text-decoration: none; color: inherit; display: block;">
         <!-- Image Aspect Ratio Wrapper -->
         <div style="aspect-ratio: 4/3; overflow: hidden; background-color: #f1f5f9; position: relative;">

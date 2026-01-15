@@ -25,6 +25,8 @@ from django.db.models import Q
 from django.utils import timezone
 
 def homepage(request):
+    from watchlist.models import Watchlist
+    
     query = request.GET.get('search', '').strip()
     category_slug = request.GET.get('category', '').strip()
     
@@ -43,12 +45,18 @@ def homepage(request):
         count=Count('auctions', filter=Q(auctions__is_active=True))
     ).order_by('order', 'name')
     
+    # Get user's watchlist IDs for showing heart icons
+    watchlist_ids = []
+    if request.user.is_authenticated:
+        watchlist_ids = list(Watchlist.objects.filter(user=request.user).values_list('auction_id', flat=True))
+    
     return render(request, 'home.html', {
         'auctions': auctions, 
         'categories': categories, 
         'search_query': query,
         'selected_category': category_slug,
-        'now': timezone.now()
+        'now': timezone.now(),
+        'watchlist_ids': watchlist_ids,
     })
 
 urlpatterns = [
@@ -69,6 +77,7 @@ urlpatterns = [
     path('verification/', include('seller_verification.urls')),
     path('escrow/', include('escrow.urls')),
     path('shipping/', include('shipping.urls')),
+    path('disputes/', include('disputes.urls')),
     path('ratings/', include('reviews.urls')),
     path('', homepage, name='home'),
 ]

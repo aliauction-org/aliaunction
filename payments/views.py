@@ -83,6 +83,9 @@ def invoice_view(request, auction_id):
 @login_required
 def pay_invoice(request, invoice_id):
     invoice = get_object_or_404(Invoice, id=invoice_id, buyer=request.user)
+    
+    # Get platform payment details for display
+    platform_details = PlatformPaymentDetails.objects.first()
 
     if request.method == "POST":
         method = request.POST.get("method")
@@ -100,7 +103,10 @@ def pay_invoice(request, invoice_id):
         invoice.save()
         return redirect("invoice_view", auction_id=invoice.auction.id)
 
-    return render(request, "payments/pay.html", {"invoice": invoice})
+    return render(request, "payments/pay.html", {
+        "invoice": invoice,
+        "platform_details": platform_details
+    })
 
 
 @login_required

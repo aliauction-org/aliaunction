@@ -5,70 +5,117 @@
 <div class="container" style="padding: 2rem 0;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
         <div>
-            <h1 style="font-size: 2rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem;">Dashboard</h1>
+            <h1 style="font-size: 2rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem;">Dashboard
+            </h1>
             <p style="color: var(--text-secondary);">Welcome back, {{ user.username }}!</p>
         </div>
         <a href="{% url 'profile' %}" class="btn btn-outline" style="font-size: 0.9rem;">View Profile</a>
     </div>
 
     <!-- Stats Grid -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+    <div
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
 
         <!-- Active Bids Card -->
-        <a href="{% url 'my_bids' %}" class="card" style="text-decoration: none; transition: transform 0.2s; border-left: 4px solid var(--accent-color); padding: 1.5rem;">
+        <a href="{% url 'my_bids' %}" class="card"
+            style="text-decoration: none; transition: transform 0.2s; border-left: 4px solid var(--accent-color); padding: 1.5rem;">
             <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
                 <span style="font-size: 2rem;">🎯</span>
-                <span style="background: rgba(37, 99, 235, 0.1); color: var(--accent-color); padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.8rem;">Active</span>
+                <span
+                    style="background: rgba(37, 99, 235, 0.1); color: var(--accent-color); padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.8rem;">Active</span>
             </div>
-            <div style="font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1;">{{ my_bid_count }}</div>
+            <div style="font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1;">{{ my_bid_count
+                }}</div>
             <div style="color: var(--text-secondary); margin-top: 0.5rem; font-weight: 500;">My Bids</div>
         </a>
 
         <!-- My Auctions Card -->
-        <a href="{% url 'my_auctions' %}" class="card" style="text-decoration: none; transition: transform 0.2s; border-left: 4px solid #10b981; padding: 1.5rem;">
+        <a href="{% url 'my_auctions' %}" class="card"
+            style="text-decoration: none; transition: transform 0.2s; border-left: 4px solid #10b981; padding: 1.5rem;">
             <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
                 <span style="font-size: 2rem;">🔨</span>
-                <span style="background: #ecfdf5; color: #10b981; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.8rem;">Seller</span>
+                <span
+                    style="background: #ecfdf5; color: #10b981; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.8rem;">Seller</span>
             </div>
-            <div style="font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1;">{{ my_auction_count }}</div>
+            <div style="font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1;">{{
+                my_auction_count }}</div>
             <div style="color: var(--text-secondary); margin-top: 0.5rem; font-weight: 500;">My Auctions</div>
         </a>
 
         <!-- Watchlist Card -->
-        <a href="{% url 'my_watchlist' %}" class="card" style="text-decoration: none; transition: transform 0.2s; border-left: 4px solid #f59e0b; padding: 1.5rem;">
+        <a href="{% url 'my_watchlist' %}" class="card"
+            style="text-decoration: none; transition: transform 0.2s; border-left: 4px solid #f59e0b; padding: 1.5rem;">
             <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
                 <span style="font-size: 2rem;">⭐</span>
-                <span style="background: #fffbeb; color: #f59e0b; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.8rem;">Saved</span>
+                <span
+                    style="background: #fffbeb; color: #f59e0b; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.8rem;">Saved</span>
             </div>
-            <div style="font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1;">{{ watchlist_count }}</div>
+            <div style="font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1;">{{
+                watchlist_count }}</div>
             <div style="color: var(--text-secondary); margin-top: 0.5rem; font-weight: 500;">Watchlist</div>
         </a>
 
         <!-- Wallet Card -->
-        <a href="{% url 'payment_history' %}" class="card" style="text-decoration: none; transition: transform 0.2s; border-left: 4px solid #6366f1; padding: 1.5rem;">
+        <a href="{% url 'payment_history' %}" class="card"
+            style="text-decoration: none; transition: transform 0.2s; border-left: 4px solid #6366f1; padding: 1.5rem;">
             <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
                 <span style="font-size: 2rem;">💳</span>
-                <span style="background: #eef2ff; color: #6366f1; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.8rem;">Wallet</span>
+                <span
+                    style="background: #eef2ff; color: #6366f1; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.8rem;">Wallet</span>
             </div>
-            <div style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-top: 0.5rem;">Payments</div>
+            <div style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-top: 0.5rem;">Payments
+            </div>
             <div style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.9rem;">View History</div>
+        </a>
+
+        <!-- Payment Profile Card (For Sellers) -->
+        <a href="{% url 'payment_profile' %}" class="card"
+            style="text-decoration: none; transition: transform 0.2s; border-left: 4px solid #8b5cf6; padding: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                <span style="font-size: 2rem;">🏦</span>
+                <span
+                    style="background: #f3e8ff; color: #8b5cf6; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.8rem;">Seller</span>
+            </div>
+            <div style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-top: 0.5rem;">Bank Details
+            </div>
+            <div style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.9rem;">Add Payment Info</div>
+        </a>
+
+        <!-- My Disputes Card -->
+        <a href="{% url 'my_disputes' %}" class="card"
+            style="text-decoration: none; transition: transform 0.2s; border-left: 4px solid #ef4444; padding: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                <span style="font-size: 2rem;">⚠️</span>
+                <span
+                    style="background: #fef2f2; color: #ef4444; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.8rem;">Support</span>
+            </div>
+            <div style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-top: 0.5rem;">Disputes
+            </div>
+            <div style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.9rem;">View Tickets</div>
         </a>
     </div>
 
     <!-- Recent Activity -->
     <div class="card" style="padding: 1.5rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
-            <h2 style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin: 0;">Recent Bid Activity</h2>
-            <a href="{% url 'my_bids' %}" style="color: var(--accent-color); text-decoration: none; font-weight: 600; font-size: 0.9rem;">View All</a>
+        <div
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
+            <h2 style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin: 0;">Recent Bid Activity
+            </h2>
+            <a href="{% url 'my_bids' %}"
+                style="color: var(--accent-color); text-decoration: none; font-weight: 600; font-size: 0.9rem;">View
+                All</a>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 0.5rem;">
             {% for bid in recent_bids %}
-            <a href="{% url 'auction_detail' bid.auction.id %}" style="text-decoration: none; color: inherit; display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-radius: 8px; background: #f8fafc; transition: background 0.2s;">
+            <a href="{% url 'auction_detail' bid.auction.id %}"
+                style="text-decoration: none; color: inherit; display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-radius: 8px; background: #f8fafc; transition: background 0.2s;">
                 <div>
-                    <div style="font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">{{ bid.auction.title }}</div>
+                    <div style="font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">{{ bid.auction.title
+                        }}</div>
                     <div style="font-size: 0.9rem; color: var(--text-secondary);">
-                        Bid Amount: <span style="color: var(--text-main); font-weight: 600;">₹{{ bid.amount|indian_format }}</span>
+                        Bid Amount: <span style="color: var(--text-main); font-weight: 600;">₹{{
+                            bid.amount|indian_format }}</span>
                     </div>
                 </div>
                 <div style="text-align: right;">

@@ -2,178 +2,217 @@
 {% load static %}
 
 {% block content %}
-<div style="max-width:800px;margin:2rem auto;">
+<div style="max-width:800px;margin:2rem auto;padding:0 1rem;">
 
-  <h1>Create New Auction</h1>
+  <h1 style="margin-bottom: 2rem;">Create New Auction</h1>
 
   {% if messages %}
   {% for message in messages %}
-  <div>{{ message }}</div>
+  <div
+    style="padding: 1rem; margin-bottom: 1rem; background: {% if message.tags == 'error' %}#fef2f2{% else %}#f0fdf4{% endif %}; color: {% if message.tags == 'error' %}#dc2626{% else %}#15803d{% endif %}; border-radius: 8px;">
+    {{ message }}</div>
   {% endfor %}
   {% endif %}
 
-  <form method="post" enctype="multipart/form-data">
+  <form method="post" enctype="multipart/form-data" id="auctionForm">
     {% csrf_token %}
 
-    {% for field in form %}
-    <div style="margin-bottom:1rem;">
+    <!-- Title -->
+    <div style="margin-bottom:1.5rem;">
+      <label for="id_title" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+        Title <span style="color:red">*</span>
+      </label>
+      <input type="text" name="title" id="id_title" required
+        style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem;"
+        value="{{ form.title.value|default:'' }}">
+      {% if form.title.errors %}
+      <div style="color:red; margin-top: 0.25rem;">{{ form.title.errors.0 }}</div>
+      {% endif %}
+    </div>
 
-      <label for="{{ field.id_for_label }}">
-        {{ field.label }}
-        {% if field.field.required %}
-        <span style="color:red">*</span>
-        {% endif %}
+    <!-- Description -->
+    <div style="margin-bottom:1.5rem;">
+      <label for="id_description" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+        Description <span style="color:red">*</span>
+      </label>
+      <textarea name="description" id="id_description" rows="5" required
+        style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; resize: vertical;">{{ form.description.value|default:'' }}</textarea>
+      {% if form.description.errors %}
+      <div style="color:red; margin-top: 0.25rem;">{{ form.description.errors.0 }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Starting Price -->
+    <div style="margin-bottom:1.5rem;">
+      <label for="id_starting_price" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+        Starting Price <span style="color:red">*</span>
+      </label>
+      <div style="position:relative;">
+        <span
+          style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color: var(--text-secondary);">₹</span>
+        <input type="number" name="starting_price" id="id_starting_price" step="0.01" min="0" required
+          style="width: 100%; padding: 0.75rem 0.75rem 0.75rem 2rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem;"
+          value="{{ form.starting_price.value|default:'' }}">
+      </div>
+      {% if form.starting_price.errors %}
+      <div style="color:red; margin-top: 0.25rem;">{{ form.starting_price.errors.0 }}</div>
+      {% endif %}
+    </div>
+
+    <!-- End Time -->
+    <div style="margin-bottom:1.5rem;">
+      <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+        End Date & Time <span style="color:red">*</span>
       </label>
 
-      {% if field.name == "image" %}
+      <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items: center;">
+        <input type="text" maxlength="2" placeholder="DD" id="day"
+          style="width:60px; padding:0.75rem; text-align:center; border: 1px solid var(--border-color); border-radius: 8px;">
+        <span style="color: var(--text-secondary);">/</span>
+        <input type="text" maxlength="2" placeholder="MM" id="month"
+          style="width:60px; padding:0.75rem; text-align:center; border: 1px solid var(--border-color); border-radius: 8px;">
+        <span style="color: var(--text-secondary);">/</span>
+        <input type="text" maxlength="4" placeholder="YYYY" id="year"
+          style="width:80px; padding:0.75rem; text-align:center; border: 1px solid var(--border-color); border-radius: 8px;">
+        <span style="margin-left:0.5rem;">⏰</span>
+        <input type="text" maxlength="2" placeholder="HH" id="hour"
+          style="width:60px; padding:0.75rem; text-align:center; border: 1px solid var(--border-color); border-radius: 8px;">
+        <span style="color: var(--text-secondary);">:</span>
+        <input type="text" maxlength="2" placeholder="MM" id="minute"
+          style="width:60px; padding:0.75rem; text-align:center; border: 1px solid var(--border-color); border-radius: 8px;">
+      </div>
 
-      <div style="
-    border:2px dashed var(--border-color);
-    border-radius:12px;
-    padding:1.8rem;
-    text-align:center;
-    background:var(--bg-secondary);
-    cursor:pointer;
-    transition:all 0.2s ease;
-  " onclick="document.getElementById('{{ field.id_for_label }}').click();">
+      <small style="color:var(--text-secondary); display: block; margin-top: 0.5rem;">
+        Format: Day / Month / Year - Hour:Minute (24-hour format)
+      </small>
 
-        <div style="font-size:2rem; margin-bottom:0.5rem;">📷</div>
+      <!-- Hidden field for Django -->
+      <input type="hidden" name="end_time" id="id_end_time">
 
-        <div style="font-weight:600; margin-bottom:0.25rem;">
-          Upload product image
+      {% if form.end_time.errors %}
+      <div style="color:red; margin-top: 0.25rem;">{{ form.end_time.errors.0 }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Image Upload -->
+    <div style="margin-bottom:1.5rem;">
+      <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+        Product Image
+      </label>
+
+      <div id="imageUploadArea" style="
+        border: 2px dashed var(--border-color);
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        background: var(--bg-secondary);
+        cursor: pointer;
+        transition: all 0.2s ease;
+      " onclick="document.getElementById('id_image').click();">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📷</div>
+        <div style="font-weight: 600; margin-bottom: 0.25rem;" id="imageFileName">
+          Click to upload product image
         </div>
-
-        <div style="font-size:0.85rem; color:var(--text-secondary);">
+        <div style="font-size: 0.85rem; color: var(--text-secondary);">
           JPG, PNG or WEBP - max 5MB
         </div>
-
-        <input type="file" name="{{ field.name }}" id="{{ field.id_for_label }}" accept="image/*" style="display:none;">
+        <input type="file" name="image" id="id_image" accept="image/*" style="display:none;"
+          onchange="updateImageName(this)">
       </div>
 
-      {% elif field.name == "end_time" %}
-
-      <div style="display:flex; flex-direction:column; gap:0.5rem;">
-
-        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-
-          <input type="text" maxlength="2" placeholder="DD" oninput="autoJump(this, 'month')" id="day"
-            style="width:60px; padding:0.6rem; text-align:center;">
-
-          <span>/</span>
-
-          <input type="text" maxlength="2" placeholder="MM" oninput="autoJump(this, 'year')" id="month"
-            style="width:60px; padding:0.6rem; text-align:center;">
-
-          <span>/</span>
-
-          <input type="text" maxlength="4" placeholder="YYYY" oninput="autoJump(this, 'hour')" id="year"
-            style="width:80px; padding:0.6rem; text-align:center;">
-
-          <span style="margin-left:0.5rem;">⏰</span>
-
-          <input type="text" maxlength="2" placeholder="HH" oninput="autoJump(this, 'minute')" id="hour"
-            style="width:60px; padding:0.6rem; text-align:center;">
-
-          <span>:</span>
-
-          <input type="text" maxlength="2" placeholder="MM" oninput="updateHiddenDateTime()" id="minute"
-            style="width:60px; padding:0.6rem; text-align:center;">
-
-        </div>
-
-        <small style="color:var(--text-secondary);">
-          Day / Month / Year - 24 hour format
-        </small>
-
-        <!-- Hidden real field sent to Django -->
-        <input type="hidden" name="{{ field.name }}" id="{{ field.id_for_label }}">
-
-      </div>
-
-
-
-      {% elif field.name == "starting_bid" or field.name == "buy_now" %}
-
-      <div style="position:relative;">
-        <span style="position:absolute;left:6px;top:50%;transform:translateY(-50%)">₹</span>
-        <input type="{{ field.field.widget.input_type|default:'text' }}" name="{{ field.name }}"
-          id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}" style="padding-left:1.5rem;">
-      </div>
-
-      {% else %}
-
-      <input type="{{ field.field.widget.input_type|default:'text' }}" name="{{ field.name }}"
-        id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}">
-
+      {% if form.image.errors %}
+      <div style="color:red; margin-top: 0.25rem;">{{ form.image.errors.0 }}</div>
       {% endif %}
-
-      {% if field.help_text %}
-      <small>{{ field.help_text|safe }}</small>
-      {% endif %}
-
-      {% if field.errors %}
-      <div style="color:red">{{ field.errors.0 }}</div>
-      {% endif %}
-
     </div>
-    {% endfor %}
 
+    <!-- Submit Buttons -->
     <div style="margin-top:2rem; display:flex; gap:1rem;">
       <button type="submit" style="
-      flex:1;
-      padding:0.9rem 1.2rem;
-      background:#131314;
-      color:white;
-      border:none;
-      border-radius:10px;
-      font-size:1rem;
-      font-weight:600;
-      cursor:pointer;
-      transition:background 0.2s;
-    " onmouseover="this.style.background='#1e40af'" onmouseout="this.style.background='#2563eb'">
-        Create Auction
+        flex: 1;
+        padding: 1rem 1.5rem;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      ">
+        🚀 Create Auction
       </button>
 
       <a href="{% url 'dashboard_home' %}" style="
-      padding:0.9rem 1.5rem;
-      border:1px solid red;
-      border-radius:10px;
-      font-size:1rem;
-      text-decoration:none;
-      color:var(--text-main);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    ">
+        padding: 1rem 1.5rem;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        font-size: 1rem;
+        text-decoration: none;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      ">
         Cancel
       </a>
     </div>
 
-
   </form>
 </div>
 
-
 <script>
-  function autoJump(current, nextId) {
-    if (current.value.length === current.maxLength) {
-      document.getElementById(nextId).focus();
-    }
-    updateHiddenDateTime();
-  }
+  // Auto-jump between date/time fields
+  const fields = ['day', 'month', 'year', 'hour', 'minute'];
+
+  fields.forEach((fieldId, index) => {
+    const field = document.getElementById(fieldId);
+    field.addEventListener('input', function () {
+      // Only allow numbers
+      this.value = this.value.replace(/[^0-9]/g, '');
+
+      // Auto-jump to next field
+      if (this.value.length === this.maxLength && index < fields.length - 1) {
+        document.getElementById(fields[index + 1]).focus();
+      }
+
+      // Update hidden datetime field
+      updateHiddenDateTime();
+    });
+  });
 
   function updateHiddenDateTime() {
-    const d = document.getElementById('day').value;
-    const m = document.getElementById('month').value;
+    const d = document.getElementById('day').value.padStart(2, '0');
+    const m = document.getElementById('month').value.padStart(2, '0');
     const y = document.getElementById('year').value;
-    const h = document.getElementById('hour').value;
-    const min = document.getElementById('minute').value;
+    const h = document.getElementById('hour').value.padStart(2, '0');
+    const min = document.getElementById('minute').value.padStart(2, '0');
 
-    if (d && m && y && h && min) {
-      document.getElementById('{{ field.id_for_label }}').value =
-        `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}T${h.padStart(2, '0')}:${min.padStart(2, '0')}`;
+    if (d && m && y && y.length === 4 && h && min) {
+      const dateTimeValue = `${y}-${m}-${d}T${h}:${min}`;
+      document.getElementById('id_end_time').value = dateTimeValue;
+      console.log('DateTime set to:', dateTimeValue);
     }
   }
+
+  function updateImageName(input) {
+    const fileName = input.files[0] ? input.files[0].name : 'Click to upload product image';
+    document.getElementById('imageFileName').textContent = fileName;
+    if (input.files[0]) {
+      document.getElementById('imageUploadArea').style.borderColor = '#10b981';
+      document.getElementById('imageUploadArea').style.background = '#f0fdf4';
+    }
+  }
+
+  // Form validation before submit
+  document.getElementById('auctionForm').addEventListener('submit', function (e) {
+    const endTime = document.getElementById('id_end_time').value;
+    if (!endTime) {
+      e.preventDefault();
+      alert('Please fill in the complete end date and time.');
+      document.getElementById('day').focus();
+      return false;
+    }
+  });
 </script>
 
 {% endblock %}
