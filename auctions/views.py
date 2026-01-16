@@ -17,6 +17,8 @@ from auction_status.utils import get_auction_status
 from reserve_price.utils import reserve_status
 from reviews.utils import get_reputation
 from datetime import timedelta
+from watchlist.models import Watchlist
+from payments.models import Invoice
 
 # Create your views here.
 
@@ -193,9 +195,6 @@ def send_auction_won_email(winner, auction):
 
 @rate_limit_bids
 def auction_detail(request, auction_id):
-    from watchlist.models import Watchlist
-    from payments.models import Invoice
-    
     auction = get_object_or_404(Auction, id=auction_id)
     
     # Increment view count
@@ -220,6 +219,10 @@ def auction_detail(request, auction_id):
         highest_bid = auction.bids.order_by('-amount', '-timestamp').first()
         if highest_bid and highest_bid.user == request.user:
             is_winner = True
+            if auction.end_time <= timezone.now():
+                 if not Invoice.objects.filter(auction=auction).exists():
+            return redirect('winner_checkout', auction_id=auction.id)
+            
             # Check if invoice exists for this auction
             try:
                 invoice = Invoice.objects.get(auction=auction)
