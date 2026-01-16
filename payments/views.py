@@ -98,9 +98,8 @@ def pay_invoice(request, invoice_id):
         if hasattr(invoice.auction, "escrow") and hasattr(invoice.auction.escrow, "shipping"):
             invoice.transport_charge = invoice.auction.escrow.shipping.delivery_charge
             invoice.save(update_fields=["transport_charge"])
-    
-        invoice.status = "PAID"
-        invoice.save()
+
+        message.info("upload_patyment_proof", auction_id=invoice.auction.id)
         return redirect("invoice_view", auction_id=invoice.auction.id)
 
     return render(request, "payments/pay.html", {
