@@ -135,7 +135,7 @@
 
     <!-- Right Column: Bidding & Info -->
     <div style="flex: 0 0 400px; max-width: 100%;">
-      <div class="card" style="position: sticky; top: var(--header-height); margin-top: 1rem;">
+      <div class="card bidding-card" style="position: sticky; top: var(--header-height); margin-top: 1rem;">
         <div class="card-body">
           <h1 style="font-size: 1.8rem; margin-bottom: 0.5rem; line-height: 1.3;">{{ auction.title }}</h1>
           <div style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.95rem;">
@@ -280,4 +280,11 @@
     </div>
   </div>
 </div>
+
+<style>
+  @media (max-width: 900px) {
+    .bidding-card { position: static !important; }
+  }
+</style>
+
 {% endblock %}
