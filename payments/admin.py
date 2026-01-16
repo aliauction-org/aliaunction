@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Payment, Refund, PlatformPaymentDetails, UserPaymentProfile, PaymentProof, Invoice, InvoicePayment
 from django.utils import timezone
+from escrows.models import Escrow
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
@@ -19,7 +20,24 @@ def verify_payment(modeladmin, request, queryset):
         payment.verified_by = request.user
         payment.verified_at = timezone.now()
         payment.save()
-verify_payment.short_description = "Verify selected payments"
+
+try:
+            invoice = Invoice.objects.get(auction=proof.auction)
+            invoice.status = "PAID"
+            invoice.is_paid = True
+            invoice.save(update_fields=["status", "is_paid"])
+        except Invoice.DoesNotExist:
+            pass
+
+        # ✅ Mark escrow as paid (if exists)
+        try:
+            escrow = Escrow.objects.get(auction=proof.auction)
+            escrow.status = "PAID"
+            escrow.save(update_fields=["status"])
+        except Escrow.DoesNotExist:
+            pass
+            
+verify_payment.short_description = "Verify selected payments (mark Invoice+Escrow PAID)"
 
 def reject_payment(modeladmin, request, queryset):
     queryset.update(status='rejected')
