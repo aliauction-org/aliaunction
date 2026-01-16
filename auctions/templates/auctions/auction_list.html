@@ -98,6 +98,16 @@
       <a href="{% url 'auction_detail' auction.id %}" style="text-decoration: none; color: inherit; display: block;">
         <!-- Image Aspect Ratio Wrapper -->
         <div style="aspect-ratio: 4/3; overflow: hidden; background-color: #f1f5f9; position: relative;">
+
+          <!-- ❤️ Watchlist Heart -->
+    <button
+      class="watchlist-btn {% if auction.id in watchlist_ids %}active{% endif %}"
+      data-auction-id="{{ auction.id }}"
+      title="Add to Watchlist"
+    >
+      ♥
+    </button>
+          
           {% if auction.image %}
           <img src="{{ auction.image.url }}" alt="{{ auction.title }}"
             style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
