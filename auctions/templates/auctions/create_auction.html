@@ -66,19 +66,19 @@
       </label>
 
       <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items: center;">
-        <input type="text" maxlength="2" placeholder="DD" id="day"
+        <input type="number" min="1" max="31" required placeholder="DD" id="day" ...>
           style="width:60px; padding:0.75rem; text-align:center; border: 1px solid var(--border-color); border-radius: 8px;">
         <span style="color: var(--text-secondary);">/</span>
-        <input type="text" maxlength="2" placeholder="MM" id="month"
+        <input type="number" min="1" max="12" required placeholder="MM" id="Month" ...>
           style="width:60px; padding:0.75rem; text-align:center; border: 1px solid var(--border-color); border-radius: 8px;">
         <span style="color: var(--text-secondary);">/</span>
-        <input type="text" maxlength="4" placeholder="YYYY" id="year"
+        <input type="number" maxlength="4" placeholder="YYYY" id="year"
           style="width:80px; padding:0.75rem; text-align:center; border: 1px solid var(--border-color); border-radius: 8px;">
         <span style="margin-left:0.5rem;">⏰</span>
-        <input type="text" maxlength="2" placeholder="HH" id="hour"
+        <input type="number" maxlength="2" placeholder="HH" id="hour"
           style="width:60px; padding:0.75rem; text-align:center; border: 1px solid var(--border-color); border-radius: 8px;">
         <span style="color: var(--text-secondary);">:</span>
-        <input type="text" maxlength="2" placeholder="MM" id="minute"
+        <input type="number" maxlength="2" placeholder="MM" id="minute"
           style="width:60px; padding:0.75rem; text-align:center; border: 1px solid var(--border-color); border-radius: 8px;">
       </div>
 
@@ -181,18 +181,44 @@
   });
 
   function updateHiddenDateTime() {
-    const d = document.getElementById('day').value.padStart(2, '0');
-    const m = document.getElementById('month').value.padStart(2, '0');
-    const y = document.getElementById('year').value;
-    const h = document.getElementById('hour').value.padStart(2, '0');
-    const min = document.getElementById('minute').value.padStart(2, '0');
+    const dayRaw = document.getElementById('day').value;
+    const monthRaw = document.getElementById('month').value;
+    const yearRaw = document.getElementById('year').value;
+    const hourRaw = document.getElementById('hour').value;
+    const minuteRaw = document.getElementById('minute').value;
 
-    if (d && m && y && y.length === 4 && h && min) {
-      const dateTimeValue = `${y}-${m}-${d}T${h}:${min}`;
-      document.getElementById('id_end_time').value = dateTimeValue;
-      console.log('DateTime set to:', dateTimeValue);
+    // Only build the hidden field when ALL inputs exist and have expected lengths
+    if (!dayRaw || !monthRaw || !yearRaw || !hourRaw || !minuteRaw) {
+      document.getElementById('id_end_time').value = "";
+      return;
     }
+    if (yearRaw.length !== 4) {
+      document.getElementById('id_end_time').value = "";
+      return;
+    }
+
+    const d = String(dayRaw).padStart(2, '0');
+    const m = String(monthRaw).padStart(2, '0');
+    const h = String(hourRaw).padStart(2, '0');
+    const min = String(minuteRaw).padStart(2, '0');
+
+    document.getElementById('id_end_time').value = ${yearRaw}-${m}-${d}T${h}:${min};
   }
+
+  // ALSO update on blur/change for mobile keyboards
+  ['day','month','year','hour','minute'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('blur', updateHiddenDateTime);
+    el.addEventListener('change', updateHiddenDateTime);
+  });
+
+  document.getElementById('auctionForm').addEventListener('submit', function (e) {
+    updateHiddenDateTime();
+    const endTime = document.getElementById('id_end_time').value;
+    if (!endTime) {
+      e.preventDefault();
+      alert('Please fill in the complete end date and time.');
+    }
 
   function updateImageName(input) {
     const fileName = input.files[0] ? input.files[0].name : 'Click to upload product image';
