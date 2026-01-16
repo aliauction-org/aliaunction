@@ -59,14 +59,26 @@ class PlatformPaymentDetails(models.Model):
         super().save(*args, **kwargs)
 
 class UserPaymentProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='payment_profile')
-    bank_name = models.CharField(max_length=100)
-    account_number = models.CharField(max_length=50)
-    ifsc_code = models.CharField(max_length=20)
-    account_holder_name = models.CharField(max_length=100)
-    upi_id = models.CharField(max_length=50, blank=True)
-    qr_code = models.ImageField(upload_to='user_payment_profiles/', blank=True)
-    additional_instructions = models.TextField(blank=True)
+   class UserPaymentProfile(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='payment_profile'
+    )
+    bank_name = models.CharField(max_length=100, blank=True, default="")
+    account_number = models.CharField(max_length=50, blank=True, default="")
+    ifsc_code = models.CharField(max_length=20, blank=True, default="")
+    account_holder_name = models.CharField(max_length=100, blank=True, default="")
+    upi_id = models.CharField(max_length=50, blank=True, default="")
+    qr_code = models.ImageField(
+        upload_to='user_payment_profiles/',
+        blank=True,
+        null=True
+    )
+    additional_instructions = models.TextField(blank=True, default="")
+
+    def __str__(self):
+        return f"{self.user.username} – Payment Profile"    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
