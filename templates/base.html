@@ -21,10 +21,13 @@
                 <a href="{% url 'auction_list' %}">Auctions</a>
                 <a href="{% url 'news:article_list' %}">News</a>
                 <a href="{% url 'discover_auctions' %}">Discover</a>
+                <a href="{% url 'my_watchlist' %}">Watchlist</a>
+                
 
                 {% if user.is_authenticated %}
                 <a href="{% url 'create_auction' %}">Create Auction</a>
                 <a href="{% url 'dashboard_home' %}">Dashboard</a>
+                <a href="{% url 'my_watchlist' %}">Watchlist</a>
                 <a href="{% url 'notifications_list' %}" id="notification-bell">🔔 <span id="notification-count"
                         style="color:var(--accent-color); font-weight:bold;"></span></a>
 
