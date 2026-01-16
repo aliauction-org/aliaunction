@@ -210,11 +210,12 @@ def auction_detail(request, auction_id):
     in_watchlist = False
     has_invoice = False
     invoice_id = None
+    watchlist_ids = []
     
     if request.user.is_authenticated:
         has_bid = bids.filter(user=request.user).exists()
         # Check if in watchlist
-        in_watchlist = Watchlist.objects.filter(user=request.user, auction=auction).exists()
+        in_watchlist = watchlist_ids = list(Watchlist.objects.filter(user=request.user).values_list('auction_id', flat=True)
         # Check if user is the winner (highest bidder)
         highest_bid = auction.bids.order_by('-amount', '-timestamp').first()
         if highest_bid and highest_bid.user == request.user:
@@ -301,6 +302,7 @@ def auction_detail(request, auction_id):
         'in_watchlist': in_watchlist,
         'has_invoice': has_invoice,
         'invoice_id': invoice_id,
+        'watchlist_ids':  watchlist_ids,
         'status': get_auction_status(auction),
         'reserve_status': reserve_status(auction),
         'seller_reputation': get_reputation(auction.owner),
