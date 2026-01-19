@@ -66,10 +66,10 @@
       </label>
 
       <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items: center;">
-        <input type="number" min="1" max="31" required placeholder="DD" id="day" ...>
+        <input type="number" min="1" max="31" required placeholder="DD" id="day" maxlength="2"
           style="width:60px; padding:0.75rem; text-align:center; border: 1px solid var(--border-color); border-radius: 8px;">
         <span style="color: var(--text-secondary);">/</span>
-        <input type="number" min="1" max="12" required placeholder="MM" id="Month" ...>
+        <input type="number" min="1" max="12" required placeholder="MM" id="month" maxlength="2"
           style="width:60px; padding:0.75rem; text-align:center; border: 1px solid var(--border-color); border-radius: 8px;">
         <span style="color: var(--text-secondary);">/</span>
         <input type="number" maxlength="4" placeholder="YYYY" id="year"
@@ -166,6 +166,7 @@
 
   fields.forEach((fieldId, index) => {
     const field = document.getElementById(fieldId);
+    if (!field) return;
     field.addEventListener('input', function () {
       // Only allow numbers
       this.value = this.value.replace(/[^0-9]/g, '');
@@ -202,23 +203,17 @@
     const h = String(hourRaw).padStart(2, '0');
     const min = String(minuteRaw).padStart(2, '0');
 
-    document.getElementById('id_end_time').value = ${yearRaw}-${m}-${d}T${h}:${min};
+    document.getElementById('id_end_time').value = `${yearRaw}-${m}-${d}T${h}:${min}`;
   }
 
   // ALSO update on blur/change for mobile keyboards
-  ['day','month','year','hour','minute'].forEach(id => {
+  ['day', 'month', 'year', 'hour', 'minute'].forEach(id => {
     const el = document.getElementById(id);
-    el.addEventListener('blur', updateHiddenDateTime);
-    el.addEventListener('change', updateHiddenDateTime);
-  });
-
-  document.getElementById('auctionForm').addEventListener('submit', function (e) {
-    updateHiddenDateTime();
-    const endTime = document.getElementById('id_end_time').value;
-    if (!endTime) {
-      e.preventDefault();
-      alert('Please fill in the complete end date and time.');
+    if (el) {
+      el.addEventListener('blur', updateHiddenDateTime);
+      el.addEventListener('change', updateHiddenDateTime);
     }
+  });
 
   function updateImageName(input) {
     const fileName = input.files[0] ? input.files[0].name : 'Click to upload product image';
@@ -231,6 +226,7 @@
 
   // Form validation before submit
   document.getElementById('auctionForm').addEventListener('submit', function (e) {
+    updateHiddenDateTime();
     const endTime = document.getElementById('id_end_time').value;
     if (!endTime) {
       e.preventDefault();

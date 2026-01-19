@@ -90,7 +90,9 @@
               </h3>
 
               <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
-                <span style="font-weight: 700; color: var(--text-main);">₹{{ auction.current_price|indian_format }}</span>
+                <span style="font-weight: 700; color: var(--text-main);">
+                  ₹{{ auction.current_price|indian_format }}
+                </span>
                 <span style="font-size: 0.8rem; color: var(--text-secondary);">
                   {% if auction.end_time|date:'U' < now|date:'U' %} <span style="color: var(--danger-color);">
                     Ended</span>

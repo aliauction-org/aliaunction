@@ -17,17 +17,18 @@
   </div>
   {% endif %}
 
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem;">
+  <!-- 3-Column Layout: 3fr : 3fr : 2fr -->
+  <div class="auction-grid" style="display: grid; grid-template-columns: 3fr 3fr 2fr; gap: 2rem;">
 
-    <!-- Left Column: Image & Description -->
-    <div style="flex: 1;">
+    <!-- Column 1: Image & Description -->
+    <div class="auction-col-left">
       <div class="card"
         style="padding: 1rem; margin-bottom: 2rem; border: none; box-shadow: none; background: transparent;">
         <div
-          style="background-color: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; padding: 2rem; display: flex; align-items: center; justify-content: center; min-height: 400px;">
+          style="background-color: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; padding: 2rem; display: flex; align-items: center; justify-content: center; min-height: 350px;">
           {% if auction.image %}
           <img src="{{ auction.image.url }}" alt="{{ auction.title }}" id="auction-main-image" onclick="openImageZoom()"
-            style="max-width: 100%; max-height: 500px; object-fit: contain; cursor: zoom-in; transition: transform 0.3s ease;">
+            style="max-width: 100%; max-height: 400px; object-fit: contain; cursor: zoom-in; transition: transform 0.3s ease;">
           {% else %}
           <div style="color: var(--text-muted); font-size: 1.2rem;">No Image Available</div>
           {% endif %}
@@ -122,23 +123,20 @@
 
       <div class="card" style="margin-bottom: 2rem;">
         <div class="card-body">
-          <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">Description</h2>
-          <div style="line-height: 1.7; color: var(--text-secondary);">
+          <h2 style="font-size: 1.3rem; margin-bottom: 1rem;">Description</h2>
+          <div style="line-height: 1.7; color: var(--text-secondary); font-size: 0.95rem;">
             {{ auction.description|linebreaks }}
           </div>
         </div>
       </div>
-
-      <!-- Reviews Section if needed -->
-      <!-- Use standard card if reviews are implemented -->
     </div>
 
-    <!-- Right Column: Bidding & Info -->
-    <div style="flex: 0 0 400px; max-width: 100%;">
-      <div class="card bidding-card" style="position: sticky; top: var(--header-height); margin-top: 1rem;">
+    <!-- Column 2: Bidding & Info -->
+    <div class="auction-col-middle">
+      <div class="card bidding-card" style="position: sticky; top: var(--header-height);">
         <div class="card-body">
-          <h1 style="font-size: 1.8rem; margin-bottom: 0.5rem; line-height: 1.3;">{{ auction.title }}</h1>
-          <div style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.95rem;">
+          <h1 style="font-size: 1.6rem; margin-bottom: 0.5rem; line-height: 1.3;">{{ auction.title }}</h1>
+          <div style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
             Listed by <a href="#" style="font-weight: 500;">{{ auction.owner.username }}</a>
           </div>
 
@@ -146,36 +144,38 @@
           {% if user.is_authenticated and user != auction.owner %}
           <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
             <a href="{% url 'toggle_watchlist' auction.id %}" class="btn btn-outline btn-sm"
-              style="display: flex; align-items: center; gap: 0.3rem;">
-              {% if in_watchlist %}❤️ Remove from Watchlist{% else %}🤍 Add to Watchlist{% endif %}
+              style="display: flex; align-items: center; gap: 0.3rem; font-size: 0.85rem;">
+              {% if in_watchlist %}❤️ Remove{% else %}🤍 Watchlist{% endif %}
             </a>
             <a href="{% url 'report_auction' auction.id %}" class="btn btn-outline btn-sm"
-              style="display: flex; align-items: center; gap: 0.3rem; color: var(--text-secondary);">
+              style="display: flex; align-items: center; gap: 0.3rem; color: var(--text-secondary); font-size: 0.85rem;">
               🚩 Report
             </a>
             {% if has_bid %}
             <a href="{% url 'raise_dispute' auction.id %}" class="btn btn-outline btn-sm"
-              style="display: flex; align-items: center; gap: 0.3rem; color: #ef4444;">
-              ⚠️ Raise Dispute
+              style="display: flex; align-items: center; gap: 0.3rem; color: #ef4444; font-size: 0.85rem;">
+              ⚠️ Dispute
             </a>
             {% endif %}
           </div>
           {% endif %}
 
           <div
-            style="background-color: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-md); text-align: center; margin-bottom: 1.5rem;">
+            style="background-color: var(--bg-secondary); padding: 1.25rem; border-radius: var(--radius-md); text-align: center; margin-bottom: 1.5rem;">
             <div
-              style="font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">
+              style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">
               Current Price</div>
-            <div style="font-size: 2.5rem; font-weight: 700; color: var(--text-main);">₹{{ auction.current_price|indian_format }}</div>
+            <div style="font-size: 2.2rem; font-weight: 700; color: var(--text-main);">
+              ₹{{ auction.current_price|indian_format }}
+            </div>
           </div>
 
-          <div style="margin-bottom: 2rem;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.95rem;">
+          <div style="margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem;">
               <span style="color: var(--text-secondary);">End Time:</span>
               <span style="font-weight: 500;">{{ auction.end_time|date:"M d, Y, h:i a" }}</span>
             </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.95rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem;">
               <span style="color: var(--text-secondary);">Status:</span>
               <span
                 style="font-weight: 600; color: {% if auction.is_active %}var(--success-color){% else %}var(--danger-color){% endif %};">
@@ -195,15 +195,17 @@
           <form method="post" action="{% url 'place_bid' auction.id %}">
             {% csrf_token %}
             <div class="form-group">
-              <label for="bid_amount">Your Bid (Min ₹{{ min_bid_amount|indian_format }})</label>
+              <label for="bid_amount" style="font-size: 0.9rem;">
+                Your Bid (Min ₹{{ min_bid_amount|indian_format }})
+              </label>
               <div style="display: flex; gap: 0.5rem;">
                 <span
-                  style="padding: 0.75rem; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); border-right: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; display: flex; align-items: center;">₹</span>
+                  style="padding: 0.65rem; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); border-right: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; display: flex; align-items: center;">₹</span>
                 <input type="number" name="amount" id="bid_amount" step="0.01" min="{{ min_bid_amount }}" required
                   value="{{ min_bid_amount }}" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
               </div>
             </div>
-            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem;">Place
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem; font-size: 1rem;">Place
               Bid</button>
           </form>
           {% endif %}
@@ -212,7 +214,9 @@
             style="background-color: var(--bg-secondary); padding: 1rem; border-radius: 4px; text-align: center; font-weight: 500;">
             This auction has ended.
             {% if auction.highest_bid %}
-            <div style="margin-top: 0.5rem; color: var(--success-color);">Winner: {{ auction.highest_bid.user.username }}</div>
+            <div style="margin-top: 0.5rem; color: var(--success-color);">
+              Winner: {{ auction.highest_bid.user.username }}
+            </div>
             {% endif %}
           </div>
 
@@ -221,16 +225,16 @@
           <div style="margin-top: 1rem;">
             {% if has_invoice %}
             <a href="{% url 'invoice_view' auction.id %}" class="btn btn-primary"
-              style="width: 100%; padding: 0.8rem; margin-bottom: 0.5rem;">
+              style="width: 100%; padding: 0.75rem; margin-bottom: 0.5rem;">
               📄 View Invoice
             </a>
             <a href="{% url 'pay_invoice' invoice_id %}" class="btn btn-success"
-              style="width: 100%; padding: 0.8rem; background: var(--success-color); border-color: var(--success-color);">
+              style="width: 100%; padding: 0.75rem; background: var(--success-color); border-color: var(--success-color);">
               💳 Pay Now
             </a>
             {% else %}
             <a href="{% url 'winner_checkout' auction.id %}" class="btn btn-primary"
-              style="width: 100%; padding: 0.8rem;">
+              style="width: 100%; padding: 0.75rem;">
               🏆 Proceed to Checkout
             </a>
             {% endif %}
@@ -239,39 +243,61 @@
           {% endif %}
           {% else %}
           <div class="alert"
-            style="background-color: var(--bg-secondary); padding: 1.5rem; border-radius: 4px; text-align: center;">
+            style="background-color: var(--bg-secondary); padding: 1.25rem; border-radius: 4px; text-align: center;">
             <p style="margin-bottom: 1rem;">Please log in to place a bid.</p>
             <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-outline btn-sm">Log In</a>
           </div>
           {% endif %}
         </div>
       </div>
+    </div>
 
-      <!-- Bid History -->
-      <div class="card" style="margin-top: 2rem; position: relative; z-index: 1;">
+    <!-- Column 3: Bid History -->
+    <div class="auction-col-right">
+      <div class="card" style="position: sticky; top: var(--header-height);">
         <div class="card-body">
-          <h3 style="font-size: 1.2rem; margin-bottom: 1rem;">Bid History</h3>
+          <h3 style="font-size: 1.1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+            📊 Bid History
+            {% if bids %}
+            <span
+              style="background: var(--bg-secondary); color: var(--text-secondary); font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 12px;">
+              {{ bids|length }}
+            </span>
+            {% endif %}
+          </h3>
           {% if bids %}
-          <div style="max-height: 400px; overflow-y: auto;">
-            <ul style="border-top: 1px solid var(--border-color); list-style: none; padding: 0; margin: 0;">
+          <div style="max-height: 500px; overflow-y: auto;">
+            <ul style="list-style: none; padding: 0; margin: 0;">
               {% for bid in bids %}
               <li
-                style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--border-color);">
-                <div>
-                  <span style="font-weight: 600; color: var(--text-main);">{{ bid.user.username }}</span>
-                  {% if forloop.first %}<span
-                    style="background: #10b981; color: white; font-size: 0.7rem; padding: 0.1rem 0.4rem; border-radius: 4px; margin-left: 0.5rem;">Highest</span>
-                  {% endif %}
-                  <div style="font-size: 0.8rem; color: var(--text-secondary);">{{ bid.timestamp|date:"M d, h:i a" }}
+                style="padding: 0.75rem; margin-bottom: 0.5rem; background: {% if forloop.first %}linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%){% else %}var(--bg-secondary){% endif %}; border-radius: var(--radius-md); {% if forloop.first %}border: 1px solid #86efac;{% endif %}">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                  <div>
+                    <span style="font-weight: 600; color: var(--text-main); font-size: 0.9rem;">
+                      {{ bid.user.username }}
+                    </span>
+                    {% if forloop.first %}
+                    <span
+                      style="background: #10b981; color: white; font-size: 0.65rem; padding: 0.1rem 0.4rem; border-radius: 4px; margin-left: 0.3rem;">HIGHEST</span>
+                    {% endif %}
                   </div>
+                  <div
+                    style="font-weight: 700; color: {% if forloop.first %}#059669{% else %}var(--text-main){% endif %}; font-size: 0.95rem;">
+                    ₹{{ bid.amount|indian_format }}</div>
                 </div>
-                <div style="font-weight: 600; color: var(--text-main);">₹{{ bid.amount|indian_format }}</div>
+                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                  {{ bid.timestamp|date:"M d, h:i a" }}
+                </div>
               </li>
               {% endfor %}
             </ul>
           </div>
           {% else %}
-          <p style="color: var(--text-secondary); text-align: center; margin: 1rem 0;">No bids yet.</p>
+          <div style="text-align: center; padding: 2rem 1rem; color: var(--text-secondary);">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🏷️</div>
+            <p style="margin: 0; font-size: 0.9rem;">No bids yet.</p>
+            <p style="margin: 0.5rem 0 0; font-size: 0.8rem;">Be the first to bid!</p>
+          </div>
           {% endif %}
         </div>
       </div>
@@ -280,8 +306,32 @@
 </div>
 
 <style>
-  @media (max-width: 900px) {
-    .bidding-card { position: static !important; }
+  .auction-grid {
+    align-items: start;
+  }
+
+  @media (max-width: 1200px) {
+    .auction-grid {
+      grid-template-columns: 1fr 1fr !important;
+    }
+
+    .auction-col-right {
+      grid-column: span 2;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .auction-grid {
+      grid-template-columns: 1fr !important;
+    }
+
+    .auction-col-right {
+      grid-column: span 1;
+    }
+
+    .bidding-card {
+      position: static !important;
+    }
   }
 </style>
 
