@@ -1,31 +1,46 @@
 # AuctionVistas: Online Auction System
 
 ## Overview
-AuctionVistas is a full-featured online auction platform built with Django, designed for real-time, secure, and user-friendly bidding, payments, and management. It supports manual payment flows, in-app and email notifications, reviews, and a robust admin dashboard. The platform features a modern, responsive design with comprehensive marketplace functionality and new features like **anti-sniping**, **bulk uploads**, and **advanced rate limiting**.
+AuctionVistas is a full-featured online auction platform built with Django, designed for real-time, secure, and user-friendly bidding, payments, and management. It supports manual payment flows, in-app and email notifications, reviews, and a robust admin dashboard. The platform features a modern, responsive design with comprehensive marketplace functionality and advanced features like **anti-sniping**, **real-time WebSocket updates**, **bulk uploads**, and **rate limiting**.
 
 ---
 ## 🗂 COMPLETE PROJECT STRUCTURE
 
 ```text
-Aliauction_website_2026/
+aliaunction/
 │
 ├── manage.py
 ├── db.sqlite3
 ├── README.md
 ├── requirements.txt
 │
-├── aliauction/                  # Main project configuration
+├── aliaunction/                 # Main project configuration
 ├── auctions/                    # Core auction system & Bulk Upload
-├── users/                       # User accounts & profiles
-├── payments/                    # Payments & invoices
-├── escrow/                      # Escrow & transaction tracking
-├── shipping/                    # Shipping & delivery
-├── disputes/                    # Dispute management
-├── ratings/                     # Buyer & seller ratings
-├── bid_protection/              # Anti-sniping & Rate limiting
-├── dashboard/                   # User dashboards
+├── auction_discovery/           # Discover & explore auctions
 ├── auction_status/              # Real-time status utils
+├── auction_close/               # Anti-sniping & auction closing
+├── auction_workflow/            # Auction state management
+├── auction_ws/                  # WebSocket real-time updates
+├── bid_protection/              # Bid validation & Rate limiting
+├── commission/                  # Commission calculations
+├── contact/                     # Contact forms
+├── dashboard/                   # User dashboards
+├── deposits/                    # Deposit management
+├── disputes/                    # Dispute management
+├── escrow/                      # Escrow & transaction tracking
+├── marketplace/                 # Marketplace pages
+├── news/                        # News articles
+├── newsletter/                  # Newsletter subscriptions
+├── notifications/               # In-app notifications
+├── payments/                    # Payments & invoices
+├── reports/                     # User & auction reporting
 ├── reserve_price/               # Reserve price logic
+├── reviews/                     # Buyer & seller ratings
+├── seller_verification/         # Seller verification
+├── shipping/                    # Shipping & delivery
+├── users/                       # User accounts & profiles
+├── watchlist/                   # Watchlist functionality
+├── static/                      # Static files (CSS, JS, images)
 └── templates/                   # Global templates
 ```
 
@@ -33,7 +48,9 @@ Aliauction_website_2026/
 
 ### 🔨 Core Auction & Bidding
 - **Auction Status**: *Upcoming / Live / Ended* with real-time countdowns.
-- **Anti-Sniping**: Auctions automatically extend by X minutes if a bid is placed in the last Y minutes (configurable).
+- **Anti-Sniping**: Auctions automatically extend by X minutes if a bid is placed in the last Y minutes (configurable per auction).
+- **Real-Time Updates**: WebSocket-powered live bid updates without page refresh.
+- **3-Column Auction Layout**: Image/Description | Bidding | Bid History for optimal UX.
 - **Bid Protection**:
   - Negative bid validation
   - Seller cannot bid on own auction
@@ -44,9 +61,11 @@ Aliauction_website_2026/
 
 ### 🏪 Marketplace Enhanced
 - **Categories**: Browse auctions by categories (Electronics, Art, Vehicles, etc.)
-- **Advanced Search**: Filter by price, live status, and category.
+- **Advanced Search**: Filter by price range, live status, and category.
+- **Price Filtering**: Min/Max price filters on search.
 - **Featured Auctions**: Highlighted auctions on the homepage.
 - **Watchlist**: Users can watch items and get "Ending Soon" notifications.
+- **Auction Discovery**: Explore trending and recommended auctions.
 
 ### 💳 Payments & Commission
 - **Winner Checkout**: Seamless flow for winning bidders.
@@ -54,26 +73,29 @@ Aliauction_website_2026/
 - **Commission System**:
   - *10% commission from Seller*
   - *3% commission from Buyer*
-- **Escrow-like Transaction**: `Pending Payment` → `Paid` → `Shipped` → `Delivered` → `Completed`.
+- **Payment Proof Upload**: Users upload payment screenshots for verification.
+- **Escrow Flow**: `Pending Payment` → `Paid` → `Shipped` → `Delivered` → `Completed`.
 
 ### 🧾 Invoice & Receipts
 - Automatic generation of detailed invoices.
 - **PDF Download**: Support for downloading payment receipts (via WeasyPrint).
 
 ### ⭐ User System & Dashboard
-- **Dashboards**: Dedicated "My Auctions" (for sellers) and "My Bids" (for buyers) views with stats.
-- **Reputation**: Buyer ↔ Seller ratings (1–5 stars) after completed transactions.
+- **Clean Dashboard**: Stats cards for My Bids, My Auctions, Watchlist, Payments, and Disputes.
+- **Reputation System**: Buyer ↔ Seller ratings (1–5 stars) after completed transactions.
 - **Notifications**: Email & In-app alerts for outbid, won, paid, shipped events.
+- **Report System**: Users can report auctions or other users.
+- **Dispute Management**: Raise and track disputes on transactions.
 
 ---
 
 ## 🛠 Tech Stack
 
-- **Backend**: Django 5.2, Python 3.12
+- **Backend**: Django 6.0, Python 3.12
 - **Database**: SQLite (Dev) / PostgreSQL compatible
-- **Frontend**: HTML5, CSS3, Vanilla JS, Bootstrap (optional components)
+- **Frontend**: HTML5, CSS3, Vanilla JS
+- **Real-Time**: Django Channels (WebSockets)
 - **PDF Generation**: WeasyPrint
-- **Task Queue**: Custom management commands & tasks
 
 ---
 
@@ -131,15 +153,28 @@ python manage.py runserver 8001
 | Admin | http://localhost:8001/admin/ |
 | Marketplace | http://localhost:8001/marketplace/live-auctions/ |
 | Dashboard | http://localhost:8001/dashboard/ |
+| Auctions | http://localhost:8001/auctions/ |
+| Discover | http://localhost:8001/discover/ |
 
 ---
 
-## � Security Features
+## 🔒 Security Features
 - **CSRF & XSS Protection**: Native Django security.
 - **Rate Limiting**: Custom decorators for sensitive actions.
 - **Input Validation**: Extensive model and form validation.
 - **Secure File Uploads**: Validated image uploads.
 
 ---
-**Version: 2.1 - Feature Update (Jan 2026)**
+
+## 📋 Recent Updates
+
+**Version 2.2 - Jan 19, 2026**
+- Redesigned auction detail page with 3-column layout
+- Fixed template namespacing for reports and disputes apps
+- Removed animations from dashboard for cleaner UX
+- Fixed create auction form syntax errors
+- Code formatting and cleanup
+
+**Version 2.1 - Jan 2026**
 - Added: Anti-Sniping, Rate Limiting, Bulk Upload, Watchlist Notifications, Escrow Services.
+
