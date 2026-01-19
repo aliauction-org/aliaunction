@@ -59,7 +59,6 @@ class PlatformPaymentDetails(models.Model):
         super().save(*args, **kwargs)
 
 class UserPaymentProfile(models.Model):
-   class UserPaymentProfile(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
@@ -76,11 +75,11 @@ class UserPaymentProfile(models.Model):
         null=True
     )
     additional_instructions = models.TextField(blank=True, default="")
-
-    def __str__(self):
-        return f"{self.user.username} – Payment Profile"    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username} – Payment Profile"
 
 class Invoice(models.Model):
     auction = models.OneToOneField(

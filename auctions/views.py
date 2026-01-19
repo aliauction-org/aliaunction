@@ -215,14 +215,15 @@ def auction_detail(request, auction_id):
     if request.user.is_authenticated:
         has_bid = bids.filter(user=request.user).exists()
         # Check if in watchlist
-        in_watchlist = watchlist_ids = list(Watchlist.objects.filter(user=request.user).values_list('auction_id', flat=True)
+        watchlist_ids = list(Watchlist.objects.filter(user=request.user).values_list('auction_id', flat=True))
+        in_watchlist = auction.id in watchlist_ids
         # Check if user is the winner (highest bidder)
         highest_bid = auction.bids.order_by('-amount', '-timestamp').first()
         if highest_bid and highest_bid.user == request.user:
             is_winner = True
             if auction.end_time <= timezone.now():
-                 if not Invoice.objects.filter(auction=auction).exists():
-            return redirect('winner_checkout', auction_id=auction.id)
+                if not Invoice.objects.filter(auction=auction).exists():
+                    return redirect('winner_checkout', auction_id=auction.id)
             
             # Check if invoice exists for this auction
             try:
