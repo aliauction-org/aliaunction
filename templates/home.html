@@ -19,7 +19,7 @@
       <select name="category" style="width: auto; min-width: 200px;">
         <option value="">All Categories</option>
         {% for category in categories %}
-        <option value="{{ category.slug }}" {% if request.GET.category==category.slug %}selected{% endif %}>
+        <option value="{{ category.slug }}" {% if request.GET.category == category.slug %}selected{% endif %}>
           {{ category.name }}
         </option>
         {% endfor %}

@@ -167,8 +167,7 @@
             <div
               style="font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">
               Current Price</div>
-            <div style="font-size: 2.5rem; font-weight: 700; color: var(--text-main);">₹{{
-              auction.current_price|indian_format }}</div>
+            <div style="font-size: 2.5rem; font-weight: 700; color: var(--text-main);">₹{{ auction.current_price|indian_format }}</div>
           </div>
 
           <div style="margin-bottom: 2rem;">
@@ -213,8 +212,7 @@
             style="background-color: var(--bg-secondary); padding: 1rem; border-radius: 4px; text-align: center; font-weight: 500;">
             This auction has ended.
             {% if auction.highest_bid %}
-            <div style="margin-top: 0.5rem; color: var(--success-color);">Winner: {{ auction.highest_bid.user.username
-              }}</div>
+            <div style="margin-top: 0.5rem; color: var(--success-color);">Winner: {{ auction.highest_bid.user.username }}</div>
             {% endif %}
           </div>
 
@@ -262,8 +260,8 @@
                 <div>
                   <span style="font-weight: 600; color: var(--text-main);">{{ bid.user.username }}</span>
                   {% if forloop.first %}<span
-                    style="background: #10b981; color: white; font-size: 0.7rem; padding: 0.1rem 0.4rem; border-radius: 4px; margin-left: 0.5rem;">Highest</span>{%
-                  endif %}
+                    style="background: #10b981; color: white; font-size: 0.7rem; padding: 0.1rem 0.4rem; border-radius: 4px; margin-left: 0.5rem;">Highest</span>
+                  {% endif %}
                   <div style="font-size: 0.8rem; color: var(--text-secondary);">{{ bid.timestamp|date:"M d, h:i a" }}
                   </div>
                 </div>

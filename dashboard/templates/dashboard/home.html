@@ -24,7 +24,7 @@
                 <span
                     style="background: rgba(37, 99, 235, 0.1); color: var(--accent-color); padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.8rem;">Active</span>
             </div>
-            <div style="font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1;">{{ my_bid_count
+            <div style="font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1;">{{ my_bid_count }}
                 }}</div>
             <div style="color: var(--text-secondary); margin-top: 0.5rem; font-weight: 500;">My Bids</div>
         </a>
@@ -37,8 +37,7 @@
                 <span
                     style="background: #ecfdf5; color: #10b981; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.8rem;">Seller</span>
             </div>
-            <div style="font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1;">{{
-                my_auction_count }}</div>
+            <div style="font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1;">{{ my_auction_count }}</div>
             <div style="color: var(--text-secondary); margin-top: 0.5rem; font-weight: 500;">My Auctions</div>
         </a>
 
@@ -50,8 +49,7 @@
                 <span
                     style="background: #fffbeb; color: #f59e0b; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.8rem;">Saved</span>
             </div>
-            <div style="font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1;">{{
-                watchlist_count }}</div>
+            <div style="font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1;">{{ watchlist_count }}</div>
             <div style="color: var(--text-secondary); margin-top: 0.5rem; font-weight: 500;">Watchlist</div>
         </a>
 
@@ -111,11 +109,10 @@
             <a href="{% url 'auction_detail' bid.auction.id %}"
                 style="text-decoration: none; color: inherit; display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-radius: 8px; background: #f8fafc; transition: background 0.2s;">
                 <div>
-                    <div style="font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">{{ bid.auction.title
+                    <div style="font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">{{ bid.auction.title }}
                         }}</div>
                     <div style="font-size: 0.9rem; color: var(--text-secondary);">
-                        Bid Amount: <span style="color: var(--text-main); font-weight: 600;">₹{{
-                            bid.amount|indian_format }}</span>
+                        Bid Amount: <span style="color: var(--text-main); font-weight: 600;">₹{{ bid.amount|indian_format }}</span>
                     </div>
                 </div>
                 <div style="text-align: right;">
